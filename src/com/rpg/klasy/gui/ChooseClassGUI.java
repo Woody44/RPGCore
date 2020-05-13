@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.rpg.klasy.MainKlasy;
 
-public class ChooseClass implements Listener
+public class ChooseClassGUI implements Listener
 {
 	ItemStack palladyn = createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn");
 	ItemStack obronca = createGuiItem(Material.DIAMOND_CHESTPLATE, "§lObronca");
@@ -26,7 +26,7 @@ public class ChooseClass implements Listener
 	public MainKlasy main;
 	private final Inventory inv;
 
-    public ChooseClass()
+    public ChooseClassGUI()
     {
         inv = Bukkit.createInventory(null, 9, "Klasy");
         initializeItems();
@@ -64,64 +64,67 @@ public class ChooseClass implements Listener
     public void onInventoryClick(final InventoryClickEvent e)
     {
         Player player = (Player) e.getWhoClicked();
-        final ItemStack clickedItem = e.getCurrentItem();
-        e.setCancelled(true);
-        if(clickedItem == palladyn)
+        ItemStack clickedItem = e.getCurrentItem();
+        if(e.getView().getTitle().equalsIgnoreCase("Klasy"))
         {
-        	try
+        	e.setCancelled(true);
+        	if(clickedItem.getType() == Material.DIAMOND_SWORD)
             {
-                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
+            	try
+                {
+                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
+                }
+                catch (SQLException a)
+                {
+                    a.printStackTrace();
+                }
             }
-            catch (SQLException a)
+            else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)
             {
-                a.printStackTrace();
+            	try
+                {
+                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221);
+                }
+                catch (SQLException a)
+                {
+                    a.printStackTrace();
+                }
             }
+            else if(clickedItem.getType() == Material.BLAZE_ROD)
+            {
+            	try
+                {
+                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331);
+                }
+                catch (SQLException a)
+                {
+                    a.printStackTrace();
+                }
+            }
+            else if(clickedItem.getType() == Material.GOLDEN_SWORD)
+            {
+            	try
+                {
+                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441);
+                }
+                catch (SQLException a)
+                {
+                    a.printStackTrace();
+                }
+            }
+            else if(clickedItem.getType() == Material.BOW)
+            {
+            	try
+                {
+                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551);
+                }
+                catch (SQLException a)
+                {
+                    a.printStackTrace();
+                }
+            }
+            player.closeInventory();
         }
-        else if(clickedItem == obronca)
-        {
-        	try
-            {
-                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221);
-            }
-            catch (SQLException a)
-            {
-                a.printStackTrace();
-            }
-        }
-        else if(clickedItem == mag)
-        {
-        	try
-            {
-                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331);
-            }
-            catch (SQLException a)
-            {
-                a.printStackTrace();
-            }
-        }
-        else if(clickedItem == zabojca)
-        {
-        	try
-            {
-                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441);
-            }
-            catch (SQLException a)
-            {
-                a.printStackTrace();
-            }
-        }
-        else if(clickedItem == strzelec)
-        {
-        	try
-            {
-                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551);
-            }
-            catch (SQLException a)
-            {
-                a.printStackTrace();
-            }
-        }
-        player.closeInventory();
     }
 
     @EventHandler
