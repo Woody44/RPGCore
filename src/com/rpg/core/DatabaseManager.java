@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Bukkit;
+
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class DatabaseManager
 {
+	DatabaseManager instance = this;
 	private Connection con;
 	private String adr, db, usr, pass;
 	private int port;
@@ -60,7 +63,6 @@ public class DatabaseManager
 	
 	public int GetPlayerClass(String UUID) throws SQLException 
 	{
-		
 		PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Klasy WHERE UUID = ?");
         sql.setString(1, UUID);
         ResultSet result = sql.executeQuery();
@@ -68,5 +70,31 @@ public class DatabaseManager
         	return result.getInt(1);
         }
         return -1;
+	}
+	
+	public void UpdatePlayerClass(String UUID, int klasa) 
+	{
+		try {
+			
+			PreparedStatement sql;
+			if(klasa > 0)
+			{
+				sql = con.prepareStatement("UPDATE Klasy SET Klasa = ? WHERE UUID = ?");
+				
+				sql.setInt(1, klasa);
+				sql.setString(2, UUID);
+			}
+			else
+			{
+				sql = con.prepareStatement("DELETE FROM Klasy WHERE UUID = ?");
+				sql.setString(1, UUID);
+			}
+			
+			sql.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

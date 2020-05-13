@@ -5,6 +5,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.rpg.klasy.MainKlasy;
 import com.rpg.items.MainItems;
 
+import com.rpg.core.commands.CommandTest;
+
 public class Main extends JavaPlugin implements Listener {
 	
 	public DatabaseManager dbmg;
@@ -20,6 +22,10 @@ public class Main extends JavaPlugin implements Listener {
 		dbmg.Setup();
 		mk = new MainKlasy();
 		mi = new MainItems();
+		
+		CommandTest CT = new CommandTest();
+		CT.main = this;
+		getServer().getPluginCommand("test").setExecutor(CT);;
 		
 		
 		mk.Setup(this);
