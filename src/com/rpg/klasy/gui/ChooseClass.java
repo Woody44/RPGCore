@@ -1,9 +1,11 @@
-package com.rpg.klasy;
+package com.rpg.klasy.gui;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,19 +14,26 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class UpgradeClassGUI implements Listener
+import com.rpg.klasy.MainKlasy;
+
+public class ChooseClass implements Listener
 {
+	public MainKlasy main;
 	private final Inventory inv;
 
-    public UpgradeClassGUI()
+    public ChooseClass()
     {
-        inv = Bukkit.createInventory(null, 9, "                   Ulepszanie klasy");
+        inv = Bukkit.createInventory(null, 9, "Klasy");
         initializeItems();
     }
 
     public void initializeItems()
     {
-    	inv.setItem(4, createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy"));
+    	inv.addItem(createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn"));
+    	inv.addItem(createGuiItem(Material.DIAMOND_CHESTPLATE, "§lObronca"));
+    	inv.addItem(createGuiItem(Material.BLAZE_ROD, "§lMag"));
+    	inv.addItem(createGuiItem(Material.GOLDEN_SWORD, "§lZabojca"));
+    	inv.addItem(createGuiItem(Material.BOW, "§lStrzelec"));
     }
 
     protected ItemStack createGuiItem(final Material material, final String name, final String... lore)
@@ -49,10 +58,19 @@ public class UpgradeClassGUI implements Listener
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e)
     {
-    	ItemStack test = createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy");
-        if(e.getInventory().contains(test))
+    	ItemStack palladyn = createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn");
+        if(e.getInventory().contains(palladyn))
         {
+        	Player player = (Player) e.getWhoClicked();
         	e.setCancelled(true);
+        	try
+        	{
+                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
+            } catch (SQLException a)
+        	{
+                a.printStackTrace();
+            }
+        	player.closeInventory();
         }
     }
 

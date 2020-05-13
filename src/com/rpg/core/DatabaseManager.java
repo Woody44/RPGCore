@@ -7,12 +7,15 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
-public final class DatabaseManager{
+public class DatabaseManager
+{
 	private Connection con;
 	private String adr, db, usr, pass;
 	private int port;
+	
 	public void Setup() 
 	{
+		System.out.println("[RPGcore - Db Manager] Loading...");
 		adr = "mysql.titanaxe.com";
 		port = 3306;
         db = "srv73958";
@@ -21,12 +24,12 @@ public final class DatabaseManager{
         
         try 
         {
-        	System.out.println("[Database Manager] Laczenie z Baza danych " + adr + "@" + db);
+        	System.out.println("[RPGcore - Db Manager] Connecting to Database located at " + adr + "@" + db + "...");
         	connect();
         } catch (ClassNotFoundException e) 
         {
         	e.printStackTrace();
-        	System.out.println("[Database Manager] Blad polaczenia z baza!");
+        	System.out.println("[RPGcore - Db Manager] Error occured while attempting to connect.");
         }catch(SQLException e) 
         {
         	e.printStackTrace();
@@ -44,6 +47,7 @@ public final class DatabaseManager{
 		source.setPassword(pass);
 		
 		con = source.getConnection();
+		System.out.println("[RPGcore - Db Manager] Connected!");
 	}
 	
 	public void SetPlayerClass(String UUID, int klasa) throws SQLException 

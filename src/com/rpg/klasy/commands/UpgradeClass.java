@@ -1,9 +1,11 @@
-package com.rpg.klasy;
+package com.rpg.klasy.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.rpg.klasy.gui.UpgradeClassGUI;
 
 public class UpgradeClass implements CommandExecutor
 {
