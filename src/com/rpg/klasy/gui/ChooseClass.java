@@ -18,6 +18,11 @@ import com.rpg.klasy.MainKlasy;
 
 public class ChooseClass implements Listener
 {
+	ItemStack palladyn = createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn");
+	ItemStack obronca = createGuiItem(Material.DIAMOND_CHESTPLATE, "§lObronca");
+	ItemStack mag = createGuiItem(Material.BLAZE_ROD, "§lMag");
+	ItemStack zabojca = createGuiItem(Material.GOLDEN_SWORD, "§lZabojca");
+	ItemStack strzelec = createGuiItem(Material.BOW, "§lStrzelec");
 	public MainKlasy main;
 	private final Inventory inv;
 
@@ -29,11 +34,11 @@ public class ChooseClass implements Listener
 
     public void initializeItems()
     {
-    	inv.addItem(createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn"));
-    	inv.addItem(createGuiItem(Material.DIAMOND_CHESTPLATE, "§lObronca"));
-    	inv.addItem(createGuiItem(Material.BLAZE_ROD, "§lMag"));
-    	inv.addItem(createGuiItem(Material.GOLDEN_SWORD, "§lZabojca"));
-    	inv.addItem(createGuiItem(Material.BOW, "§lStrzelec"));
+    	inv.addItem(palladyn);
+    	inv.addItem(obronca);
+    	inv.addItem(mag);
+    	inv.addItem(zabojca);
+    	inv.addItem(strzelec);
     }
 
     protected ItemStack createGuiItem(final Material material, final String name, final String... lore)
@@ -58,20 +63,65 @@ public class ChooseClass implements Listener
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e)
     {
-    	ItemStack palladyn = createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn");
-        if(e.getInventory().contains(palladyn))
+        Player player = (Player) e.getWhoClicked();
+        final ItemStack clickedItem = e.getCurrentItem();
+        e.setCancelled(true);
+        if(clickedItem == palladyn)
         {
-        	Player player = (Player) e.getWhoClicked();
-        	e.setCancelled(true);
         	try
-        	{
+            {
                 main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
-            } catch (SQLException a)
-        	{
+            }
+            catch (SQLException a)
+            {
                 a.printStackTrace();
             }
-        	player.closeInventory();
         }
+        else if(clickedItem == obronca)
+        {
+        	try
+            {
+                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221);
+            }
+            catch (SQLException a)
+            {
+                a.printStackTrace();
+            }
+        }
+        else if(clickedItem == mag)
+        {
+        	try
+            {
+                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331);
+            }
+            catch (SQLException a)
+            {
+                a.printStackTrace();
+            }
+        }
+        else if(clickedItem == zabojca)
+        {
+        	try
+            {
+                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441);
+            }
+            catch (SQLException a)
+            {
+                a.printStackTrace();
+            }
+        }
+        else if(clickedItem == strzelec)
+        {
+        	try
+            {
+                main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551);
+            }
+            catch (SQLException a)
+            {
+                a.printStackTrace();
+            }
+        }
+        player.closeInventory();
     }
 
     @EventHandler
