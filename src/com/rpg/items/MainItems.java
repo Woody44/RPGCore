@@ -1,11 +1,12 @@
 package com.rpg.items;
-import org.bukkit.event.Listener;
+
+import com.rpg.core.Extension;
 import com.rpg.core.Main;
 import com.rpg.items.events.*;
 
-public class MainItems implements Listener 
+public class MainItems extends Extension
 {	
-	Main main; 
+	@Override
 	public void Setup(Main newMain) 
 	{
 		main = newMain;
@@ -17,6 +18,7 @@ public class MainItems implements Listener
 		System.out.println("[RPGcore - Items] Is ready to use!");
 	}
 	
+	@Override
 	public void Unload() 
 	{
     	System.out.println("[RPGcore - Items] Unloading.");

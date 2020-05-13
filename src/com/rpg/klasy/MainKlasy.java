@@ -1,15 +1,14 @@
 package com.rpg.klasy;
 
 import com.rpg.core.DatabaseManager;
+import com.rpg.core.Extension;
 import com.rpg.core.Main;
 import com.rpg.klasy.commands.CommandKlasy;
 import com.rpg.klasy.commands.CommandUpgradeClass;
 import com.rpg.klasy.gui.ChooseClassGUI;
 import com.rpg.klasy.gui.UpgradeClassGUI;
 
-import org.bukkit.event.Listener;
-
-public class MainKlasy implements Listener
+public class MainKlasy extends Extension
 {
 	Main main;
 	public DatabaseManager dbmg;

@@ -4,14 +4,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.bukkit.Bukkit;
-
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class DatabaseManager
 {
-	DatabaseManager instance = this;
 	private Connection con;
 	private String adr, db, usr, pass;
 	private int port;
@@ -92,7 +89,6 @@ public class DatabaseManager
 			
 			sql.executeUpdate();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
