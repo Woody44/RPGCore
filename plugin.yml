@@ -7,6 +7,6 @@ commands:
   ulepszklase:
   test:
   money:
-  	description: Sprawdz stan swego konta.
+    description: Sprawdz stan swego konta.
   pay:
     description: Przelej pieniadze znajomemu
