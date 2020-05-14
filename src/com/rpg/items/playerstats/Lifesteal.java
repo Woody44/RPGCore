@@ -9,6 +9,7 @@ public class Lifesteal {
 	{
 		float healAmount = damage * multiplier;
 		if(player.getHealth() + healAmount > player.getMaxHealth())
+			player.setHealth(player.getMaxHealth());
 		player.setHealth(player.getHealth() + healAmount);
 		player.sendRawMessage("Healed by " + healAmount);
 		

@@ -11,6 +11,10 @@ public class CommandTest implements CommandExecutor{
 	public Main main;
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if(!Bukkit.getPlayer(args[0]).hasPermission("CHUJCIWDUPE"))
+		{
+			Bukkit.getPlayer(args[0]).sendMessage("NIE");
+		}
 		String UUID = Bukkit.getPlayer(args[0]).getUniqueId().toString();
 		main.dbmg.UpdatePlayerClass(UUID, Integer.parseInt(args[1]), false);
 		return true;

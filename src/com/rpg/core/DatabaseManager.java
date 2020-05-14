@@ -78,7 +78,7 @@ public class DatabaseManager
 	{
 		try {
 			PreparedStatement sql;
-			if (klasa == 0)
+			if (klasa == 0 && additive == false)
 			{
 				sql = con.prepareStatement("DELETE FROM Klasy WHERE UUID = ?");
 				sql.setString(1, UUID);
