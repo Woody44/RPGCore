@@ -12,7 +12,7 @@ public class CommandTest implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String UUID = Bukkit.getPlayer(args[0]).getUniqueId().toString();
-		main.dbmg.UpdatePlayerClass(UUID, Integer.parseInt(args[1]));
+		main.dbmg.UpdatePlayerClass(UUID, Integer.parseInt(args[1]), false);
 		return true;
 	}
 }

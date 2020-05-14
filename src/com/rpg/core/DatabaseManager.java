@@ -71,20 +71,36 @@ public class DatabaseManager
 	
 	public void UpdatePlayerClass(String UUID, int klasa) 
 	{
+		UpdatePlayerClass(UUID, klasa, false);
+	}
+	
+	public void UpdatePlayerClass(String UUID, int klasa, boolean additive) 
+	{
 		try {
-			
 			PreparedStatement sql;
-			if(klasa > 0)
-			{
-				sql = con.prepareStatement("UPDATE Klasy SET Klasa = ? WHERE UUID = ?");
-				
-				sql.setInt(1, klasa);
-				sql.setString(2, UUID);
-			}
-			else
+			if (klasa == 0)
 			{
 				sql = con.prepareStatement("DELETE FROM Klasy WHERE UUID = ?");
 				sql.setString(1, UUID);
+			}
+			else
+			{
+				if(additive == true) 
+				{
+					sql = con.prepareStatement("UPDATE Klasy SET Klasa = Klasa + ? WHERE UUID = ?");
+					
+					sql.setInt(1, klasa);
+					sql.setString(2, UUID);
+					
+				}
+				else
+				{
+					sql = con.prepareStatement("UPDATE Klasy SET Klasa = ? WHERE UUID = ?");
+					
+					sql.setInt(1, klasa);
+					sql.setString(2, UUID);
+				}
+						
 			}
 			
 			sql.executeUpdate();
