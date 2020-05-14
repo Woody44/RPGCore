@@ -1,6 +1,5 @@
 package com.rpg.klasy.gui;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -72,63 +71,28 @@ public class ChooseClassGUI implements Listener
         	e.setCancelled(true);
         	if(clickedItem.getType() == Material.DIAMOND_SWORD)
             {
-            	try
-                {
-                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
-                }
-                catch (SQLException a)
-                {
-                    a.printStackTrace();
+                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111)==-1);
                     player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
-                }
             }
             else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)
             {
-            	try
-                {
-                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221);
-                }
-                catch (SQLException a)
-                {
-                    a.printStackTrace();
-                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
-                }
+                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221)==-1)
+                	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BLAZE_ROD)
             {
-            	try
-                {
-                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331);
-                }
-                catch (SQLException a)
-                {
-                    a.printStackTrace();
-                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
-                }
+                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331)==-1)
+                	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.GOLDEN_SWORD)
             {
-            	try
-                {
-                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441);
-                }
-                catch (SQLException a)
-                {
-                    a.printStackTrace();
-                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
-                }
+                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441) == -1)
+                	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BOW)
             {
-            	try
-                {
-                    main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551);
-                }
-                catch (SQLException a)
-                {
-                    a.printStackTrace();
-                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
-                }
+                    if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551) == -1)
+                    	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.COAL)
             {

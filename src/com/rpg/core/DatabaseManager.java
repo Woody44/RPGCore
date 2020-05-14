@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.rpg.core.economy.Wallet;
 
 public class DatabaseManager
 {
@@ -50,22 +51,34 @@ public class DatabaseManager
 		System.out.println("[RPGcore - Db Manager] Connected!");
 	}
 	
-	public void SetPlayerClass(String UUID, int klasa) throws SQLException 
+	public int SetPlayerClass(String UUID, int klasa)
 	{
-		PreparedStatement sql = con.prepareStatement("INSERT INTO Klasy VALUES (?, ?)");
-        sql.setString(1, UUID);
-        sql.setInt(2, klasa);
-        sql.execute();
+		try 
+		{
+			PreparedStatement sql = con.prepareStatement("INSERT INTO Klasy VALUES (?, ?)");
+	        sql.setString(1, UUID);
+	        sql.setInt(2, klasa);
+	        sql.execute();
+	        return 0;
+		} 
+		catch (SQLException e) {
+			return -1;
+		}
 	}
 	
 	public int GetPlayerClass(String UUID) throws SQLException 
 	{
-		PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Klasy WHERE UUID = ?");
-        sql.setString(1, UUID);
-        ResultSet result = sql.executeQuery();
-        if(result.next()){
-        	return result.getInt(1);
-        }
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Klasy WHERE UUID = ?");
+	        sql.setString(1, UUID);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next()){
+	        	return result.getInt(1);
+	        }
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
         return -1;
 	}
 	
@@ -108,5 +121,51 @@ public class DatabaseManager
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public Wallet GetPlayerWallet(String UUID)
+	{
+		try {
+			Wallet w = new Wallet();
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Wallet WHERE UUID = ?");
+	        sql.setString(1, UUID);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	w.uuid = result.getString(1);
+	        	w.Money = result.getInt(2);
+	        }
+	        return w;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return null;		
+		}
+	}
+	
+	public void AddPlayerWallet(Wallet w)
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("INSERT INTO Wallet VALUES (?,?)");
+	        sql.setString(1, w.uuid);
+	        sql.setInt(2, w.Money);
+	        sql.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();	
+		}
+	}
+	
+	public void SetPlayerWallet(Wallet w)
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = ? WHERE UUID = ?");
+	        sql.setInt(1, w.Money);
+	        sql.setString(2, w.uuid);
+	        sql.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();	
+		}
 	}
 }

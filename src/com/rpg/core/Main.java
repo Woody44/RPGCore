@@ -6,6 +6,7 @@ import com.rpg.klasy.MainKlasy;
 import com.rpg.items.MainItems;
 
 import com.rpg.core.commands.CommandTest;
+import com.rpg.core.economy.CommandWallet;
 
 public class Main extends JavaPlugin implements Listener {
 	
@@ -13,6 +14,7 @@ public class Main extends JavaPlugin implements Listener {
 	MainKlasy mk;
 	MainItems mi;
 	
+	public void XD() {}
 	@Override
 	public void onEnable()
 	{
@@ -25,8 +27,10 @@ public class Main extends JavaPlugin implements Listener {
 		
 		CommandTest CT = new CommandTest();
 		CT.main = this;
-		getServer().getPluginCommand("test").setExecutor(CT);;
-		
+		getServer().getPluginCommand("test").setExecutor(CT);
+		CommandWallet CW = new CommandWallet();
+		CW.main = this;
+		getServer().getPluginCommand("wallet").setExecutor(CW);
 		
 		mk.Setup(this);
 		mi.Setup(this);
