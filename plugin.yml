@@ -6,4 +6,7 @@ commands:
   klasy:
   ulepszklase:
   test:
-  wallet:
+  money:
+  	description: Sprawdz stan swego konta.
+  pay:
+    description: Przelej pieniadze znajomemu

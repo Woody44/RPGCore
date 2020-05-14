@@ -5,11 +5,10 @@ import com.rpg.core.DatabaseManager;
 public class Wallet {
 	public String uuid;
 	public int Money;
-	private DatabaseManager dbmg;
 	
-	public void Setup(DatabaseManager newdbmg) 
+	public void SetOwner(String newUUID) 
 	{
-		dbmg = newdbmg;
+		uuid = newUUID;
 	}
 	
 	public void AddMoney(int value) 
@@ -20,6 +19,6 @@ public class Wallet {
 	
 	public void UpdateMoney()
 	{
-		dbmg.SetPlayerWallet(this);
+		DatabaseManager.SetPlayerWallet(this);
 	}
 }

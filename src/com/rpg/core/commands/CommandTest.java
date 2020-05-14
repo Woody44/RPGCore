@@ -5,17 +5,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import com.rpg.core.DatabaseManager;
 import com.rpg.core.Main;
 import com.rpg.core.economy.Wallet;
 
 public class CommandTest implements CommandExecutor{
-	public Main main;
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Wallet w = new Wallet();
 		w.uuid = Bukkit.getPlayer(args[0]).getUniqueId().toString();
 		w.Money = Integer.parseInt(args[1]);
-		main.dbmg.SetPlayerWallet(w);
+		DatabaseManager.SetPlayerWallet(w);
 		return true;
 	}
 }

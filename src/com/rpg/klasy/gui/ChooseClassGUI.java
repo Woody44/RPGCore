@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.rpg.klasy.MainKlasy;
+import com.rpg.core.DatabaseManager;
 
 public class ChooseClassGUI implements Listener
 {
@@ -23,7 +23,6 @@ public class ChooseClassGUI implements Listener
 	ItemStack zabojca = createGuiItem(Material.GOLDEN_SWORD, "§lZabojca");
 	ItemStack strzelec = createGuiItem(Material.BOW, "§lStrzelec");
 	ItemStack reset = createGuiItem(Material.COAL, "§lReset klasy");
-	public MainKlasy main;
 	private final Inventory inv;
 
     public ChooseClassGUI()
@@ -71,37 +70,37 @@ public class ChooseClassGUI implements Listener
         	e.setCancelled(true);
         	if(clickedItem.getType() == Material.DIAMOND_SWORD)
             {
-        		int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
+        		int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 1111);
                 if(r != 0);
                     player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)
             {
-            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221);
+            	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 2221);
                 if(r != 0)
                 	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BLAZE_ROD)
             {
-            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331);
+            	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 3331);
                 if(r != 0)
                 	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.GOLDEN_SWORD)
             {
-            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441);
+            	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 4441);
                 if(r != 0)
                 	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BOW)
             {
-            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551);
+            	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 5551);
                 if( r != 0)
                     	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.COAL)
             {
-            	main.dbmg.UpdatePlayerClass(player.getUniqueId().toString(), 0);
+            	DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 0);
             }
             player.closeInventory();
         }

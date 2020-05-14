@@ -21,11 +21,9 @@ public class MainKlasy extends Extension
 		main.getCommand("ulepszklase").setExecutor(new CommandUpgradeClass());
 		ChooseClassGUI cc = new ChooseClassGUI();
 		
-		cc.main = this;
 		main.getServer().getPluginManager().registerEvents(cc, main);
 		
 		UpgradeClassGUI ucg = new UpgradeClassGUI();
-		ucg.main = this;
 		main.getServer().getPluginManager().registerEvents(ucg, main);
 		
 		System.out.println("[RPGcore - Klasy] Is ready to use!");

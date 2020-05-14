@@ -13,11 +13,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.rpg.klasy.MainKlasy;
+import com.rpg.core.DatabaseManager;
 
 public class UpgradeClassGUI implements Listener
 {
-	public MainKlasy main;
 	private final Inventory inv;
 
     public UpgradeClassGUI()
@@ -57,7 +56,7 @@ public class UpgradeClassGUI implements Listener
     	Player player = (Player) e.getWhoClicked();
         if(e.getInventory().contains(test))
         {
-        	main.dbmg.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
+        	DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
         	e.setCancelled(true);
         	player.closeInventory();
         }

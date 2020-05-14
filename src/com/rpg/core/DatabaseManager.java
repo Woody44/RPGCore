@@ -4,17 +4,19 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.bukkit.Bukkit;
+
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.rpg.core.economy.Wallet;
 
 public class DatabaseManager
 {
-	private Connection con;
-	private String adr, db, usr, pass;
-	private int port;
+	static private Connection con;
+	static private String adr, db, usr, pass;
+	static private int port;
 	
-	public void Setup() 
+	static public void Setup() 
 	{
 		System.out.println("[RPGcore - Db Manager] Loading...");
 		adr = "mysql.titanaxe.com";
@@ -37,7 +39,7 @@ public class DatabaseManager
         }
 	}
 	
-	public void connect() throws ClassNotFoundException, SQLException
+	static public void connect() throws ClassNotFoundException, SQLException
 	{
 		Class.forName("com.mysql.jdbc.Driver");
 		MysqlDataSource source = new MysqlDataSource();
@@ -51,7 +53,7 @@ public class DatabaseManager
 		System.out.println("[RPGcore - Db Manager] Connected!");
 	}
 	
-	public int SetPlayerClass(String UUID, int klasa)
+	static public int SetPlayerClass(String UUID, int klasa)
 	{
 		try 
 		{
@@ -66,7 +68,7 @@ public class DatabaseManager
 		}
 	}
 	
-	public int GetPlayerClass(String UUID) throws SQLException 
+	static public int GetPlayerClass(String UUID) throws SQLException 
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Klasy WHERE UUID = ?");
@@ -82,12 +84,12 @@ public class DatabaseManager
         return -1;
 	}
 	
-	public void UpdatePlayerClass(String UUID, int klasa) 
+	static public void UpdatePlayerClass(String UUID, int klasa) 
 	{
 		UpdatePlayerClass(UUID, klasa, false);
 	}
 	
-	public void UpdatePlayerClass(String UUID, int klasa, boolean additive) 
+	static public void UpdatePlayerClass(String UUID, int klasa, boolean additive) 
 	{
 		try {
 			PreparedStatement sql;
@@ -123,7 +125,7 @@ public class DatabaseManager
 		
 	}
 	
-	public Wallet GetPlayerWallet(String UUID)
+	static public Wallet GetPlayerWallet(String UUID)
 	{
 		try {
 			Wallet w = new Wallet();
@@ -143,7 +145,7 @@ public class DatabaseManager
 		}
 	}
 	
-	public void AddPlayerWallet(Wallet w)
+	static public void AddPlayerWallet(Wallet w)
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("INSERT INTO Wallet VALUES (?,?)");
@@ -156,8 +158,9 @@ public class DatabaseManager
 		}
 	}
 	
-	public void SetPlayerWallet(Wallet w)
+	static public void SetPlayerWallet(Wallet w)
 	{
+		Bukkit.broadcastMessage("Passes: " + adr + ":" + port + "@" + db + "#" + " " + pass);
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = ? WHERE UUID = ?");
 	        sql.setInt(1, w.Money);
