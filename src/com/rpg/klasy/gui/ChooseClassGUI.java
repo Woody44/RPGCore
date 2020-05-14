@@ -23,6 +23,7 @@ public class ChooseClassGUI implements Listener
 	ItemStack mag = createGuiItem(Material.BLAZE_ROD, "§lMag");
 	ItemStack zabojca = createGuiItem(Material.GOLDEN_SWORD, "§lZabojca");
 	ItemStack strzelec = createGuiItem(Material.BOW, "§lStrzelec");
+	ItemStack reset = createGuiItem(Material.COAL, "§lReset klasy");
 	public MainKlasy main;
 	private final Inventory inv;
 
@@ -34,11 +35,12 @@ public class ChooseClassGUI implements Listener
 
     public void initializeItems()
     {
-    	inv.addItem(palladyn);
-    	inv.addItem(obronca);
-    	inv.addItem(mag);
-    	inv.addItem(zabojca);
-    	inv.addItem(strzelec);
+    	inv.setItem(0, palladyn);
+    	inv.setItem(1, obronca);
+    	inv.setItem(2, mag);
+    	inv.setItem(3, zabojca);
+    	inv.setItem(4, strzelec);
+    	inv.setItem(8, reset);
     }
 
     protected ItemStack createGuiItem(final Material material, final String name, final String... lore)
@@ -77,6 +79,7 @@ public class ChooseClassGUI implements Listener
                 catch (SQLException a)
                 {
                     a.printStackTrace();
+                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
                 }
             }
             else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)
@@ -88,6 +91,7 @@ public class ChooseClassGUI implements Listener
                 catch (SQLException a)
                 {
                     a.printStackTrace();
+                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
                 }
             }
             else if(clickedItem.getType() == Material.BLAZE_ROD)
@@ -99,6 +103,7 @@ public class ChooseClassGUI implements Listener
                 catch (SQLException a)
                 {
                     a.printStackTrace();
+                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
                 }
             }
             else if(clickedItem.getType() == Material.GOLDEN_SWORD)
@@ -110,6 +115,7 @@ public class ChooseClassGUI implements Listener
                 catch (SQLException a)
                 {
                     a.printStackTrace();
+                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
                 }
             }
             else if(clickedItem.getType() == Material.BOW)
@@ -121,7 +127,12 @@ public class ChooseClassGUI implements Listener
                 catch (SQLException a)
                 {
                     a.printStackTrace();
+                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
                 }
+            }
+            else if(clickedItem.getType() == Material.COAL)
+            {
+            	main.dbmg.UpdatePlayerClass(player.getUniqueId().toString(), 0);
             }
             player.closeInventory();
         }
