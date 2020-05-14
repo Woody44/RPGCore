@@ -71,27 +71,32 @@ public class ChooseClassGUI implements Listener
         	e.setCancelled(true);
         	if(clickedItem.getType() == Material.DIAMOND_SWORD)
             {
-                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111)==-1);
+        		int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 1111);
+                if(r != 0);
                     player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)
             {
-                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221)==-1)
+            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 2221);
+                if(r != 0)
                 	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BLAZE_ROD)
             {
-                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331)==-1)
+            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 3331);
+                if(r != 0)
                 	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.GOLDEN_SWORD)
             {
-                if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441) == -1)
+            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 4441);
+                if(r != 0)
                 	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BOW)
             {
-                    if(main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551) == -1)
+            	int r = main.dbmg.SetPlayerClass(player.getUniqueId().toString(), 5551);
+                if( r != 0)
                     	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.COAL)
