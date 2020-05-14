@@ -4,6 +4,7 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -53,9 +54,12 @@ public class UpgradeClassGUI implements Listener
     public void onInventoryClick(final InventoryClickEvent e)
     {
     	ItemStack test = createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy");
+    	Player player = (Player) e.getWhoClicked();
         if(e.getInventory().contains(test))
         {
+        	main.dbmg.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
         	e.setCancelled(true);
+        	player.closeInventory();
         }
     }
 
