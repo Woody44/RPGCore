@@ -55,36 +55,47 @@ public class ChooseClassGUI implements Listener
         	if(clickedItem.getType() == Material.DIAMOND_SWORD)
             {
         		int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 1111);
-                if(r != 0)
-                    player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
+                if(r == 0)
+                	player.sendMessage("§6Pomyslnie wybrano klase: Palladyn!");
+                else
+                    player.sendMessage("§6Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)
             {
             	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 2221);
-                if(r != 0)
-                	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
+            	if(r == 0)
+                	player.sendMessage("§6Pomyslnie wybrano klase: Obronca!");
+                else
+                    player.sendMessage("§6Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BLAZE_ROD)
             {
             	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 3331);
-                if(r != 0)
-                	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
+            	if(r == 0)
+                	player.sendMessage("§6Pomyslnie wybrano klase: Mag!");
+                else
+                    player.sendMessage("§6Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.GOLDEN_SWORD)
             {
             	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 4441);
-                if(r != 0)
-                	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
+            	if(r == 0)
+                	player.sendMessage("§6Pomyslnie wybrano klase: Zabójca!");
+                else
+                    player.sendMessage("§6Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.BOW)
             {
             	int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 5551);
-                if( r != 0)
-                    	player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
+            	if(r == 0)
+                	player.sendMessage("§6Pomyslnie wybrano klase: Strzelec!");
+                else
+                    player.sendMessage("§6Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.COAL)
             {
             	DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 0);
+            	player.sendMessage("§6Pomyslnie zresetowano klase!");
             }
             player.closeInventory();
         }

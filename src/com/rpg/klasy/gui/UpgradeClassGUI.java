@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import com.rpg.core.DatabaseManager;
 import com.rpg.core.ItemManager;
+import com.rpg.core.economy.Wallet;
 
 public class UpgradeClassGUI implements Listener
 {
@@ -47,19 +48,33 @@ public class UpgradeClassGUI implements Listener
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e)
     {
-    	Player player = (Player) e.getWhoClicked();
-        if(e.getRawSlot() == 4)
+        if(e.getView().getTitle() == "                   Ulepszanie klasy")
         {
-        	if(DatabaseManager.GetClassUpgradePrice(Integer.parseInt(("" +DatabaseManager.GetPlayerClass(player.getUniqueId().toString())).substring(3))) != 0)
+        	if(e.getRawSlot() == 4)
         	{
-        		DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
-            	e.setCancelled(true);
-            	player.closeInventory();
-        	}
-        	else if(DatabaseManager.GetClassUpgradePrice(Integer.parseInt(("" +DatabaseManager.GetPlayerClass(player.getUniqueId().toString())).substring(3))) == 0)
-        	{
+        		Player player = (Player) e.getWhoClicked();
         		e.setCancelled(true);
-            	player.closeInventory();
+	        	if(DatabaseManager.GetClassUpgradePrice(Integer.parseInt(("" +DatabaseManager.GetPlayerClass(player.getUniqueId().toString())).substring(3))) != 0)
+	        	{
+	        		int cena = (int) ItemManager.CheckLore(e.getCurrentItem(), "Koszt");
+	        		Wallet w = DatabaseManager.GetPlayerWallet(player.getUniqueId().toString());
+	        		if(w.Money > cena)
+	        		{
+	        			DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
+	        			w.AddMoney(cena * -1);
+	                	player.closeInventory();
+	                	player.sendMessage("§6Ulepszono klase!");
+	        		}
+	        		else
+	        		{
+	        			player.sendMessage("§6Nie masz tyle pieniêdzy!");
+	        			player.closeInventory();
+	        		}
+	        	}
+	        	else if(DatabaseManager.GetClassUpgradePrice(Integer.parseInt(("" +DatabaseManager.GetPlayerClass(player.getUniqueId().toString())).substring(3))) == 0)
+	        	{
+	            	player.closeInventory();
+	        	}
         	}
         }
     }
