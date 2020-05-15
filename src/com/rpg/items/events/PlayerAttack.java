@@ -1,12 +1,12 @@
 package com.rpg.items.events;
 
-import java.util.ArrayList;
-
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+
+import com.rpg.core.ItemManager;
 import com.rpg.items.playerstats.*;
 
 public class PlayerAttack implements Listener{
@@ -17,16 +17,12 @@ public class PlayerAttack implements Listener{
 		if(event.getDamager().getType() == EntityType.PLAYER)
 		{
 			Player attacker = (Player)event.getDamager();
-			ArrayList<String> lore = (ArrayList<String>) attacker.getInventory().getItemInMainHand().getItemMeta().getLore();
-			for(String line : lore) 
-			{
-				if(line.contains("Lifesteal")) 
+			if(attacker.getInventory().getItemInMainHand() != null) {
+				Float value = ItemManager.CheckLore(attacker.getInventory().getItemInMainHand(), "Lifesteal");
+				if(value != 0)
 				{
-					line = line.replaceAll("Lifesteal:", "");
-					float multiplier = Float.parseFloat(line);
 					Lifesteal ls = new Lifesteal();
-					
-					ls.Use(attacker, (float)event.getDamage(), multiplier);
+					ls.Use(attacker, (float)event.getDamage(), value);
 				}
 			}
 		}
