@@ -1,6 +1,7 @@
 package com.rpg.items.playerstats;
 
 import org.bukkit.Particle;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 public class Lifesteal {
@@ -8,9 +9,9 @@ public class Lifesteal {
 	public void Use(Player player, float damage, float multiplier) 
 	{
 		float healAmount = damage * multiplier;
-		if(player.getHealth() + healAmount > player.getMaxHealth())
-			player.setHealth(player.getMaxHealth());
-		player.setHealth(player.getHealth() + healAmount);
+		if(player.getHealth() + healAmount > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() + healAmount);
 		player.sendRawMessage("Healed by " + healAmount);
 		
 		int partCount = 0;

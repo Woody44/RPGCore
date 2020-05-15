@@ -1,18 +1,18 @@
 package com.rpg.core;
 
 import java.util.ArrayList;
+
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.rpg.klasy.MainKlasy;
 import com.rpg.items.MainItems;
-import com.rpg.core.commands.CommandTest;
 import com.rpg.core.economy.CommandPay;
 import com.rpg.core.economy.CommandMoney;
-import com.rpg.core.events.OnJoin;
+import com.rpg.core.events.*;
 
 public class Main extends JavaPlugin implements Listener {
 	
-	public DatabaseManager dbmg;
 	public ArrayList<Extension> extensions;
 	
 	@Override
@@ -22,7 +22,7 @@ public class Main extends JavaPlugin implements Listener {
 		Setup();
 		LoadAddons();
 		RegisterCommands();
-		LoadEvents();
+		RegisterEvents();
 		System.out.println("[RPGcore] Loading Done.");
 	}
 	
@@ -32,14 +32,20 @@ public class Main extends JavaPlugin implements Listener {
 	public void onDisable() 
 	{
 		System.out.println("[RPGcore] Disabling...");
-		for(Extension ex : extensions) 
-			ex.Unload();
-		
+		for(Extension ex : extensions)
+		{
+			System.out.println("[RPGcore] Disabling Addon " + ex.getClass().getSimpleName() + " ...");
+			if(ex.disable()!= 0)
+				System.out.println("[RPGcore] Forcing Addon " + ex.getClass().getSimpleName() + " to disable ...");
+			else
+				System.out.println("[RPGcore] Addon " + ex.getClass().getSimpleName() + " disabled.");
+		}
 		System.out.println("[RPGcore] Disabled!");
 	}
 	
 	public void Setup() 
 	{
+		saveDefaultConfig();
 		DatabaseManager.Setup();
 	}
 	
@@ -51,18 +57,36 @@ public class Main extends JavaPlugin implements Listener {
 		extensions.add(new MainKlasy());
 		
 		for(Extension ex : extensions) 
-			ex.Setup(this);
+		{
+			System.out.println("[RPGcore] Loading " + ex.getClass().getSimpleName().replaceAll("Main", "").toLowerCase() + " ...");
+			if(ex.setup()!=0) 
+			{
+				System.out.println("[RPGcore] Error While Loading" + ex.getClass().getSimpleName().replaceAll("Main", "").toLowerCase() + " ... Disabling!");
+				ex.disable();
+			}
+			else
+				System.out.println("[RPGcore] " + ex.getClass().getSimpleName().replaceAll("Main", "").toLowerCase() + " Is ready to use!");
+		}
 	}
 	
 	public void RegisterCommands() 
 	{
-		getServer().getPluginCommand("test").setExecutor(new CommandTest());
-		getServer().getPluginCommand("money").setExecutor(new CommandMoney());
-		getServer().getPluginCommand("pay").setExecutor(new CommandPay());
+		Manager.AddCommand(new CommandMoney());
+		Manager.AddCommand(new CommandPay());
+		for(CommandExecutor ce: Manager.commands)
+		{
+			String cname = ce.getClass().getSimpleName().replaceAll("Command", "").toLowerCase();
+			getServer().getPluginCommand(cname).setExecutor(ce);
+		}
 	}
 	
-	public void LoadEvents() 
+	public void RegisterEvents() 
 	{
-		getServer().getPluginManager().registerEvents(new OnJoin(), this);
+		Manager.AddEvent(new OnJoin());
+		for(Listener event: Manager.events)
+		{
+			getServer().getPluginManager().registerEvents(event, this);
+		}
+		
 	}
 }

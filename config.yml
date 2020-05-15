@@ -1,0 +1,10 @@
+Announcemets:
+  announce-first-join: true
+  first-join-message: Gracz {player} wszedl na serwer po raz pierwszy!
+  
+  announce-join: true
+  join-message: {player} -
+
+  announce-left-message: true
+  left-message: {player} -
+  

@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.rpg.core.DatabaseManager;
-import com.rpg.core.Main;
 import com.rpg.core.economy.Wallet;
 
 public class CommandTest implements CommandExecutor{

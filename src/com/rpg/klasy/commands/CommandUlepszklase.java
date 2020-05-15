@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.rpg.klasy.gui.UpgradeClassGUI;
 
-public class CommandUpgradeClass implements CommandExecutor
+public class CommandUlepszklase implements CommandExecutor
 {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
