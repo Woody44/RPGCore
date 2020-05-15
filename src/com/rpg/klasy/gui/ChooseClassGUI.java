@@ -56,10 +56,7 @@ public class ChooseClassGUI implements Listener
             {
         		int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 1111);
                 if(r == 0)
-                {
                 	player.sendMessage("§6Pomyslnie wybrano klase: Palladyn!");
-                	player.getInventory().addItem(ItemManager.createItemStack(Material.BOOK, "§6Regeneracja"));
-                }
                 else
                     player.sendMessage("§6Aby zmienic klase, musisz ja zresetowac!");
             }
