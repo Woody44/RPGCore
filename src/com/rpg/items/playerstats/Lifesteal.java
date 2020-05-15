@@ -11,8 +11,8 @@ public class Lifesteal {
 		float healAmount = damage * multiplier;
 		if(player.getHealth() + healAmount > player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
 			player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() + healAmount);
-		player.sendRawMessage("Healed by " + healAmount);
+		else
+			player.setHealth(player.getHealth() + healAmount);
 		
 		int partCount = 0;
 		if(healAmount <= 1)
