@@ -62,6 +62,7 @@ public class DatabaseManager
 	        return 0;
 		} 
 		catch (SQLException e) {
+			e.printStackTrace();
 			return -1;
 		}
 	}
@@ -167,5 +168,26 @@ public class DatabaseManager
 		catch(SQLException e) {
 			e.printStackTrace();	
 		}
+	}
+	
+	static public int GetClassUpgradePrice(int actuallvl) 
+	{
+		if(actuallvl >= 7)
+			return 0;
+		
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT Cena FROM Cennik WHERE Poziom = ?");
+	        sql.setInt(1, actuallvl+1);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	return result.getInt(1);
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return 0;		
+		}
+		return 0;
 	}
 }
