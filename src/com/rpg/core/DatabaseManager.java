@@ -190,4 +190,9 @@ public class DatabaseManager
 		}
 		return 0;
 	}
+	
+	static public int GetPlayerClassLevel(String UUID) 
+	{
+		return Integer.parseInt(("" + GetPlayerClass(UUID)).substring(3));
+	}
 }
