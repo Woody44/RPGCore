@@ -17,10 +17,11 @@ public class CommandMoney implements CommandExecutor
 		if(w == null) {
 			w = new Wallet();
 			w.uuid = uuid;
-			w.Money = Integer.parseInt(args[1]);
+			w.Money = 0;
 			DatabaseManager.AddPlayerWallet(w);
 		}
 		
+		player.sendMessage("Aktualny stan konta: " + w.Money);
 		
 		
 		return true;

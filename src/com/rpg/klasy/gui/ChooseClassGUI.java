@@ -71,7 +71,7 @@ public class ChooseClassGUI implements Listener
         	if(clickedItem.getType() == Material.DIAMOND_SWORD)
             {
         		int r = DatabaseManager.SetPlayerClass(player.getUniqueId().toString(), 1111);
-                if(r != 0);
+                if(r != 0)
                     player.sendMessage("Aby zmienic klase, musisz ja zresetowac!");
             }
             else if(clickedItem.getType() == Material.DIAMOND_CHESTPLATE)

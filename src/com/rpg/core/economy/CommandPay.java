@@ -20,13 +20,14 @@ public class CommandPay implements CommandExecutor{
 		
 		if(count < 0)
 		{
-			Bukkit.getPlayer(sender.getName()).sendMessage("");
+			Bukkit.getPlayer(sender.getName()).sendMessage("Nice Try");
 			return false;
 		}
 		if(w[0] != null && w[1] != null) 
 		{
+			p[0].sendMessage("Przes³ano graczowi " + p[1].getName() + " " + count + "$");
 			w[0].AddMoney(count * -1);
-			
+			p[1].sendMessage("Otrzymano " + count + "$ od gracza " + p[1].getName());
 			w[1].AddMoney(count);
 		}
 		return true;
