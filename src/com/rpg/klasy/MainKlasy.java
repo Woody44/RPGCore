@@ -3,6 +3,7 @@ package com.rpg.klasy;
 import com.rpg.core.Extension;
 import com.rpg.core.Manager;
 import com.rpg.core.commands.NoCommand;
+import com.rpg.klasy.abilities.PalladynAbilities;
 import com.rpg.klasy.commands.CommandKlasy;
 import com.rpg.klasy.commands.CommandUlepszklase;
 import com.rpg.klasy.gui.ChooseClassGUI;
@@ -22,6 +23,7 @@ public class MainKlasy extends Extension
 		
 		Manager.AddEvent(new ChooseClassGUI());
 		Manager.AddEvent(new UpgradeClassGUI());
+		Manager.AddEvent(new PalladynAbilities());
 		System.out.println("[RPGcore] " + getClass().getSimpleName().replaceAll("Main", "").toLowerCase() + " Is ready to use!");
 	}
 	
