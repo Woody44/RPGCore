@@ -89,7 +89,6 @@ public class Main extends JavaPlugin implements Listener {
 		Manager.AddEvent(new OnLeft());
 		Manager.AddEvent(new DefaultStuff());
 		Manager.AddEvent(new OnCooldown(this));
-		Manager.AddEvent(new OnFallDamage());
 		for(Listener event: Manager.events)
 		{
 			getServer().getPluginManager().registerEvents(event, this);
