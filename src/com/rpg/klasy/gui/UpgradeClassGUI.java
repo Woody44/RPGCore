@@ -50,13 +50,13 @@ public class UpgradeClassGUI implements Listener
     	Player player = (Player) e.getWhoClicked();
         if(e.getRawSlot() == 4)
         {
-        	if(DatabaseManager.GetClassUpgradePrice(DatabaseManager.GetPlayerClass(player.getUniqueId().toString().substring(3))) != 0)
+        	if(DatabaseManager.GetClassUpgradePrice(Integer.parseInt(("" +DatabaseManager.GetPlayerClass(player.getUniqueId().toString())).substring(3))) != 0)
         	{
         		DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
             	e.setCancelled(true);
             	player.closeInventory();
         	}
-        	else if(DatabaseManager.GetClassUpgradePrice(7) == 0)
+        	else if(DatabaseManager.GetClassUpgradePrice(Integer.parseInt(("" +DatabaseManager.GetPlayerClass(player.getUniqueId().toString())).substring(3))) == 0)
         	{
         		e.setCancelled(true);
             	player.closeInventory();

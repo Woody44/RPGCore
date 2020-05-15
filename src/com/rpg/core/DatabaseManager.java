@@ -177,7 +177,7 @@ public class DatabaseManager
 		
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Cena FROM Cennik WHERE Poziom = ?");
-	        sql.setInt(1, actuallvl+1);
+	        sql.setInt(1, actuallvl);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
 	        {
