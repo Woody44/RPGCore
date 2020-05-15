@@ -18,6 +18,7 @@ import com.rpg.core.DatabaseManager;
 public class UpgradeClassGUI implements Listener
 {
 	private final Inventory inv;
+	private Player player;
 
     public UpgradeClassGUI()
     {
@@ -27,7 +28,9 @@ public class UpgradeClassGUI implements Listener
 
     public void initializeItems()
     {
-    	inv.setItem(4, createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy"));
+    	String test = "" + DatabaseManager.GetPlayerClass(player.getUniqueId().toString());
+    	if(Integer.parseInt(test.substring(3)) == 1)
+    		inv.setItem(4, createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: 500"));
     }
 
     protected ItemStack createGuiItem(final Material material, final String name, final String... lore)
@@ -46,6 +49,7 @@ public class UpgradeClassGUI implements Listener
 
     public void openInventory(final HumanEntity ent)
     {
+    	player = (Player) ent;
         ent.openInventory(inv);
     }
 

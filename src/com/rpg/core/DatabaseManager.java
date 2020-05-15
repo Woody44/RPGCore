@@ -66,7 +66,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public int GetPlayerClass(String UUID) throws SQLException 
+	static public int GetPlayerClass(String UUID)
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Klasy WHERE UUID = ?");

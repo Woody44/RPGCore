@@ -83,6 +83,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void RegisterEvents() 
 	{
 		Manager.AddEvent(new OnJoin());
+		Manager.AddEvent(new DefaultStuff());
 		for(Listener event: Manager.events)
 		{
 			getServer().getPluginManager().registerEvents(event, this);
