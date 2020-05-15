@@ -21,7 +21,19 @@ public class UpgradeClassGUI implements Listener
     {
     	String test = "" + DatabaseManager.GetPlayerClass(uuid);
     	if(Integer.parseInt(test.substring(3)) == 1)
-    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: 500"));
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: " + DatabaseManager.GetClassUpgradePrice(1)));
+    	else if(Integer.parseInt(test.substring(3)) == 2)
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: " + DatabaseManager.GetClassUpgradePrice(2)));
+    	else if(Integer.parseInt(test.substring(3)) == 3)
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: " + DatabaseManager.GetClassUpgradePrice(3)));
+    	else if(Integer.parseInt(test.substring(3)) == 4)
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: " + DatabaseManager.GetClassUpgradePrice(4)));
+    	else if(Integer.parseInt(test.substring(3)) == 5)
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: " + DatabaseManager.GetClassUpgradePrice(5)));
+    	else if(Integer.parseInt(test.substring(3)) == 6)
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: " + DatabaseManager.GetClassUpgradePrice(6)));
+    	else if(Integer.parseInt(test.substring(3)) == 7)
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "§4Masz Maksymalny poziom klasy!"));
     }
 
     public void openInventory(final HumanEntity ent)
@@ -38,9 +50,17 @@ public class UpgradeClassGUI implements Listener
     	Player player = (Player) e.getWhoClicked();
         if(e.getRawSlot() == 4)
         {
-        	DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
-        	e.setCancelled(true);
-        	player.closeInventory();
+        	if(DatabaseManager.GetClassUpgradePrice(DatabaseManager.GetPlayerClass(player.getUniqueId().toString().substring(3))) != 0)
+        	{
+        		DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
+            	e.setCancelled(true);
+            	player.closeInventory();
+        	}
+        	else if(DatabaseManager.GetClassUpgradePrice(7) == 0)
+        	{
+        		e.setCancelled(true);
+            	player.closeInventory();
+        	}
         }
     }
 
