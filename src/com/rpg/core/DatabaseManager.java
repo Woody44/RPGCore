@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.bukkit.Bukkit;
-
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import com.rpg.core.economy.Wallet;
@@ -160,7 +158,6 @@ public class DatabaseManager
 	
 	static public void SetPlayerWallet(Wallet w)
 	{
-		Bukkit.broadcastMessage("Passes: " + adr + ":" + port + "@" + db + "#" + " " + pass);
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = ? WHERE UUID = ?");
 	        sql.setInt(1, w.Money);

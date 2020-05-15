@@ -27,7 +27,7 @@ public class CommandPay implements CommandExecutor{
 		{
 			p[0].sendMessage("Przes³ano graczowi " + p[1].getName() + " " + count + "$");
 			w[0].AddMoney(count * -1);
-			p[1].sendMessage("Otrzymano " + count + "$ od gracza " + p[1].getName());
+			p[1].sendMessage("Otrzymano " + count + "$ od gracza " + p[0].getName());
 			w[1].AddMoney(count);
 		}
 		return true;
