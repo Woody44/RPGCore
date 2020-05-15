@@ -55,7 +55,7 @@ public class DatabaseManager
 	{
 		try 
 		{
-			PreparedStatement sql = con.prepareStatement("INSERT INTO Klasy VALUES (?, ?)");
+			PreparedStatement sql = con.prepareStatement("INSERT INTO Gracze VALUES (?, ?)");
 	        sql.setString(1, UUID);
 	        sql.setInt(2, klasa);
 	        sql.execute();
@@ -69,7 +69,7 @@ public class DatabaseManager
 	static public int GetPlayerClass(String UUID)
 	{
 		try {
-			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Klasy WHERE UUID = ?");
+			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next()){
@@ -93,14 +93,14 @@ public class DatabaseManager
 			PreparedStatement sql;
 			if (klasa == 0 && additive == false)
 			{
-				sql = con.prepareStatement("DELETE FROM Klasy WHERE UUID = ?");
+				sql = con.prepareStatement("DELETE FROM Gracze WHERE UUID = ?");
 				sql.setString(1, UUID);
 			}
 			else
 			{
 				if(additive == true) 
 				{
-					sql = con.prepareStatement("UPDATE Klasy SET Klasa = Klasa + ? WHERE UUID = ?");
+					sql = con.prepareStatement("UPDATE Gracze SET Klasa = Klasa + ? WHERE UUID = ?");
 					
 					sql.setInt(1, klasa);
 					sql.setString(2, UUID);
@@ -108,7 +108,7 @@ public class DatabaseManager
 				}
 				else
 				{
-					sql = con.prepareStatement("UPDATE Klasy SET Klasa = ? WHERE UUID = ?");
+					sql = con.prepareStatement("UPDATE Gracze SET Klasa = ? WHERE UUID = ?");
 					
 					sql.setInt(1, klasa);
 					sql.setString(2, UUID);
