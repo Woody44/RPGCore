@@ -33,8 +33,9 @@ public class OnCooldown implements Listener{
 		{
 			if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) 
 			{
-				if (player.getItemInHand().getType() == Material.END_ROD) 
+				if (player.getInventory().getItemInMainHand().getType() == Material.END_ROD) 
 				{
+					event.setCancelled(true);
 					player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 50, 5));
 					cooldown.add(player);
 					Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> 
