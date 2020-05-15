@@ -3,6 +3,7 @@ package com.rpg.core;
 public final class CoreConfig {
 	public static boolean announceFirstJoin, announceJoin, announceLeft, itemsEnabled, klasyEnabled;
 	public static String firstJoinMessage, joinMessage, leftMessage, infoColor, warnColor, errorColor, otherColor, addonDisabled;
+	public static Double fallDamageMultiplier;
 	CoreConfig(Main main) 
 	{
 		announceFirstJoin = main.getConfig().getBoolean("core.announce.first-join");
@@ -20,5 +21,6 @@ public final class CoreConfig {
 		klasyEnabled = main.getConfig().getBoolean("addons.klasy.enabled");
 		
 		addonDisabled = main.getConfig().getString("addons.messages.disabled");
+		fallDamageMultiplier = main.getConfig().getDouble("core.fall-damage-multiplier");
 	}
 }
