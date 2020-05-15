@@ -1,6 +1,5 @@
 package com.rpg.klasy.gui;
 
-import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -10,55 +9,34 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import com.rpg.core.DatabaseManager;
+import com.rpg.core.ItemManager;
 
 public class UpgradeClassGUI implements Listener
 {
-	private final Inventory inv;
-	private Player player;
-
-    public UpgradeClassGUI()
-    {
-        inv = Bukkit.createInventory(null, 9, "                   Ulepszanie klasy");
-        initializeItems();
-    }
+	private Inventory inv;
+	private String uuid;
 
     public void initializeItems()
     {
-    	String test = "" + DatabaseManager.GetPlayerClass(player.getUniqueId().toString());
+    	String test = "" + DatabaseManager.GetPlayerClass(uuid);
     	if(Integer.parseInt(test.substring(3)) == 1)
-    		inv.setItem(4, createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: 500"));
-    }
-
-    protected ItemStack createGuiItem(final Material material, final String name, final String... lore)
-    {
-        final ItemStack item = new ItemStack(material, 1);
-        final ItemMeta meta = item.getItemMeta();
-
-        meta.setDisplayName(name);
-
-        meta.setLore(Arrays.asList(lore));
-
-        item.setItemMeta(meta);
-
-        return item;
+    		inv.setItem(4, ItemManager.createItemStack(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy", "Koszt: 500"));
     }
 
     public void openInventory(final HumanEntity ent)
     {
-    	player = (Player) ent;
+    	inv = Bukkit.createInventory(null, 9, "                   Ulepszanie klasy");
+    	uuid = ent.getUniqueId().toString();
+        initializeItems();
         ent.openInventory(inv);
     }
 
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent e)
     {
-    	ItemStack test = createGuiItem(Material.EXPERIENCE_BOTTLE, "§aUlepszenie klasy");
     	Player player = (Player) e.getWhoClicked();
-        if(e.getInventory().contains(test))
+        if(e.getRawSlot() == 4)
         {
         	DatabaseManager.UpdatePlayerClass(player.getUniqueId().toString(), 1, true);
         	e.setCancelled(true);

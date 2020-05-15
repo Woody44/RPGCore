@@ -1,6 +1,5 @@
 package com.rpg.klasy.gui;
 
-import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -11,18 +10,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
 import com.rpg.core.DatabaseManager;
+import com.rpg.core.ItemManager;
 
 public class ChooseClassGUI implements Listener
 {
-	ItemStack palladyn = createGuiItem(Material.DIAMOND_SWORD, "§lPalladyn");
-	ItemStack obronca = createGuiItem(Material.DIAMOND_CHESTPLATE, "§lObronca");
-	ItemStack mag = createGuiItem(Material.BLAZE_ROD, "§lMag");
-	ItemStack zabojca = createGuiItem(Material.GOLDEN_SWORD, "§lZabojca");
-	ItemStack strzelec = createGuiItem(Material.BOW, "§lStrzelec");
-	ItemStack reset = createGuiItem(Material.COAL, "§lReset klasy");
+	ItemStack palladyn = ItemManager.createItemStack(Material.DIAMOND_SWORD, "§lPalladyn");
+	ItemStack obronca = ItemManager.createItemStack(Material.DIAMOND_CHESTPLATE, "§lObronca");
+	ItemStack mag = ItemManager.createItemStack(Material.BLAZE_ROD, "§lMag");
+	ItemStack zabojca = ItemManager.createItemStack(Material.GOLDEN_SWORD, "§lZabojca");
+	ItemStack strzelec = ItemManager.createItemStack(Material.BOW, "§lStrzelec");
+	ItemStack reset = ItemManager.createItemStack(Material.COAL, "§lReset klasy");
 	private final Inventory inv;
 
     public ChooseClassGUI()
@@ -39,20 +37,6 @@ public class ChooseClassGUI implements Listener
     	inv.setItem(3, zabojca);
     	inv.setItem(4, strzelec);
     	inv.setItem(8, reset);
-    }
-
-    protected ItemStack createGuiItem(final Material material, final String name, final String... lore)
-    {
-        final ItemStack item = new ItemStack(material, 1);
-        final ItemMeta meta = item.getItemMeta();
-
-        meta.setDisplayName(name);
-
-        meta.setLore(Arrays.asList(lore));
-
-        item.setItemMeta(meta);
-
-        return item;
     }
 
     public void openInventory(final HumanEntity ent)
