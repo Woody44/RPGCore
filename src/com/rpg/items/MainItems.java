@@ -6,12 +6,23 @@ import com.rpg.items.events.*;
 
 public class MainItems extends Extension
 {	
-	@Override
-	public Integer setup() 
+	public MainItems(boolean enabled) 
 	{
-		//getServer().getPluginManager().registerEvents(new OnJoin(), this);
+		if(!enabled)
+		{
+			disabled();
+			return;
+		}
+		
 		Manager.AddEvent(new PlayerAttack());
-		return 0;
+		
+		System.out.println("[RPGcore] " + getClass().getSimpleName().replaceAll("Main", "").toLowerCase() + " Is ready to use!");
+	}
+	
+	@Override
+	public void disabled() 
+	{
+		
 	}
 	
 	@Override

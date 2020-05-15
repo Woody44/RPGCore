@@ -1,7 +1,7 @@
 core:
   announce:
     first-join: true
-    first-join-message: "Gracz {player} wszedl na serwer po raz pierwszy!"
+    first-join-message: "Gracz PLAYER wszedl na serwer po raz pierwszy!"
     
     join: true
     join-message: "PLAYER +"
@@ -14,10 +14,16 @@ core:
   error-color: "&4"
   other-color: "&a&l"
   
-klasy:
-  lvl-start: 1
-  lvl-max: 7
+addons:
+  klasy:
+    enabled: true
+    level:
+      lvl-start: 1
+      lvl-max: 7
 
-items:
-  stats:
-    lifesteal: true
+  items:
+    enabled: true
+    stats:
+      lifesteal: true
+  messages:
+    disabled: "To rozszerzenie zostalo chwilowo wylaczone!"

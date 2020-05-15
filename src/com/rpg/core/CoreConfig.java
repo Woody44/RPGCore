@@ -1,10 +1,9 @@
 package com.rpg.core;
 
 public final class CoreConfig {
-	public static boolean announceFirstJoin, announceJoin, announceLeft;
-	public static String firstJoinMessage, joinMessage, leftMessage, infoColor, warnColor, errorColor, otherColor;
-	public Main main;
-	public final void CoreConfig() 
+	public static boolean announceFirstJoin, announceJoin, announceLeft, itemsEnabled, klasyEnabled;
+	public static String firstJoinMessage, joinMessage, leftMessage, infoColor, warnColor, errorColor, otherColor, addonDisabled;
+	CoreConfig(Main main) 
 	{
 		announceFirstJoin = main.getConfig().getBoolean("core.announce.first-join");
 		announceJoin = main.getConfig().getBoolean("core.announce.join");
@@ -16,5 +15,10 @@ public final class CoreConfig {
 		warnColor = main.getConfig().getString("core.warn-color");
 		errorColor = main.getConfig().getString("core.error-color");
 		otherColor = main.getConfig().getString("core.other-color");
+		
+		itemsEnabled = main.getConfig().getBoolean("addons.items.enabled");
+		klasyEnabled = main.getConfig().getBoolean("addons.klasy.enabled");
+		
+		addonDisabled = main.getConfig().getString("addons.messages.disabled");
 	}
 }
