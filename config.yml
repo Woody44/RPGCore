@@ -1,10 +1,23 @@
-Announcemets:
-  announce-first-join: true
-  first-join-message: Gracz {player} wszedl na serwer po raz pierwszy!
+core:
+  announce:
+    first-join: true
+    first-join-message: "Gracz {player} wszedl na serwer po raz pierwszy!"
+    
+    join: true
+    join-message: "PLAYER +"
+    
+    left: true
+    left-message: "PLAYER -"
+    
+  info-color: "&6"
+  warn-color: "&e"
+  error-color: "&4"
+  other-color: "&a&l"
   
-  announce-join: true
-  join-message: {player} -
+klasy:
+  lvl-start: 1
+  lvl-max: 7
 
-  announce-left-message: true
-  left-message: {player} -
-  
+items:
+  stats:
+    lifesteal: true

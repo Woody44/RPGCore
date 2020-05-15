@@ -14,6 +14,7 @@ import com.rpg.core.events.*;
 public class Main extends JavaPlugin implements Listener {
 	
 	public ArrayList<Extension> extensions;
+	CoreConfig cfg;
 	
 	@Override
 	public void onEnable()
@@ -47,6 +48,9 @@ public class Main extends JavaPlugin implements Listener {
 	{
 		saveDefaultConfig();
 		DatabaseManager.Setup();
+		cfg = new CoreConfig();
+		cfg.main = this;
+		cfg.CoreConfig();
 	}
 	
 	public void LoadAddons() 
@@ -83,6 +87,7 @@ public class Main extends JavaPlugin implements Listener {
 	public void RegisterEvents() 
 	{
 		Manager.AddEvent(new OnJoin());
+		Manager.AddEvent(new OnLeft());
 		Manager.AddEvent(new DefaultStuff());
 		for(Listener event: Manager.events)
 		{
