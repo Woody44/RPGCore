@@ -27,5 +27,8 @@ addons:
     enabled: true
     stats:
       lifesteal: true
+  
+      
+      
   messages:
     disabled: "To rozszerzenie zostalo chwilowo wylaczone!"

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.rpg.items.MainItems;
 import com.rpg.core.economy.CommandPay;
 import com.rpg.core.commands.NoCommand;
 import com.rpg.core.economy.CommandMoney;
@@ -54,9 +53,6 @@ public class Main extends JavaPlugin implements Listener {
 	public void LoadAddons() 
 	{
 		System.out.println("[RPGcore] Loading Addons...");
-		extensions = new ArrayList<Extension>();
-		
-		extensions.add(new MainItems(CoreConfig.itemsEnabled));
 	}
 	
 	public void RegisterCommands() 
