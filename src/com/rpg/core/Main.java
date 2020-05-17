@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.rpg.klasy.MainKlasy;
 import com.rpg.items.MainItems;
 import com.rpg.core.economy.CommandPay;
 import com.rpg.core.commands.NoCommand;
@@ -58,7 +57,6 @@ public class Main extends JavaPlugin implements Listener {
 		extensions = new ArrayList<Extension>();
 		
 		extensions.add(new MainItems(CoreConfig.itemsEnabled));
-		extensions.add(new MainKlasy(CoreConfig.klasyEnabled));
 	}
 	
 	public void RegisterCommands() 
