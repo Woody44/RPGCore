@@ -14,4 +14,7 @@ core:
   error-color: "&4"
   other-color: "&a&l"
   
+economy:
+  currency-symbol: "$"
+  
   fall-damage-multiplier: 2.5

@@ -5,6 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.rpg.core.ChatManager;
+import com.rpg.core.CoreConfig;
 import com.rpg.core.DatabaseManager;
 
 public class CommandMoney implements CommandExecutor
@@ -21,9 +23,7 @@ public class CommandMoney implements CommandExecutor
 			DatabaseManager.AddPlayerWallet(w);
 		}
 		
-		player.sendMessage("Aktualny stan konta: " + w.Money);
-		
-		
+		player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "Aktualny stan konta: " + "&a" + w.Money + CoreConfig.currencySymbol));
 		return true;
 	}
 }
