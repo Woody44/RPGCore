@@ -15,20 +15,3 @@ core:
   other-color: "&a&l"
   
   fall-damage-multiplier: 2.5
-  
-addons:
-  klasy:
-    enabled: true
-    level:
-      lvl-start: 1
-      lvl-max: 7
-
-  items:
-    enabled: true
-    stats:
-      lifesteal: true
-  
-      
-      
-  messages:
-    disabled: "To rozszerzenie zostalo chwilowo wylaczone!"
