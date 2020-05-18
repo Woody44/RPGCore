@@ -8,32 +8,24 @@ import com.rpg.core.events.*;
 
 public class Main extends ModuleMain implements Listener {
 	
-	CoreConfig cfg;
-	
 	@Override
-	public void onEnable()
+	public void OnSetup() 
 	{
-		System.out.println("[RPGcore] Starting Core.");
-		Setup();
-		RegisterCommands();
-		RegisterEvents();
-		System.out.println("[RPGcore] Loading Done.");
-	}
-	
-	@Override
-	public void onDisable() 
-	{
-		System.out.println("[RPGcore] Disabling...");
-		System.out.println("[RPGcore] Disabled!");
-	}
-	
-	public void Setup() 
-	{
+		LogInfo("Starting Core.");
 		saveDefaultConfig();
 		DatabaseManager.Setup();
-		cfg = new CoreConfig(this);
+		
+		if (getServer().getPluginManager().getPlugin("AuthMe") == null) 
+		{
+			LogError("SERVER DOES NOT MEET REQUIREMENTS:");
+			LogError("I can not find AuthMe!");
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		LogInfo("Loading Done.");
 	}
 	
+	@Override
 	public void RegisterCommands() 
 	{
 		Manager.AddCommand(new CommandMoney());
@@ -46,15 +38,21 @@ public class Main extends ModuleMain implements Listener {
 		}
 	}
 	
+	@Override
 	public void RegisterEvents() 
 	{
-		Manager.AddEvent(new OnJoin());
-		Manager.AddEvent(new OnLeft());
+		Manager.AddEvent(new Announcing());
 		Manager.AddEvent(new Basics());
 		Manager.AddEvent(new OnCooldown(this));
 		for(Listener event: Manager.events)
 		{
 			getServer().getPluginManager().registerEvents(event, this);
 		}
+	}
+
+	@Override
+	public void ShutDown() {
+		LogWarn("Disabling...");
+		LogWarn("Disabled!");
 	}
 }

@@ -1,13 +1,18 @@
-core:
-  announce:
-    first-join: true
-    first-join-message: "Gracz PLAYER wszedl na serwer po raz pierwszy!"
-    
-    join: true
-    join-message: "PLAYER +"
-    
-    left: true
-    left-message: "PLAYER -"
+announce:
+  first-join: true
+  first-join-message: "&dGracz  {PLAYER}  wszedl na serwer po raz pierwszy!"
+  
+  join: true
+  join-message: " (green)  {PLAYER} +"
+  
+  left: true
+  left-message: " (red)  {PLAYER} -"
+
+chat:
+  restrict-chat: true
+  chat-lvl-min: 10
+  chat-low-lvl-message: " (red) Musisz mieæ conajmniej  {LEVEL_MIN}  poziom by uzywac chatu!"
+  chat-message-format: " (orange) [&7 {LEVEL} &6]&6  {PLAYER} :&f  {MESSAGE} "
     
   info-color: "&6"
   warn-color: "&e"

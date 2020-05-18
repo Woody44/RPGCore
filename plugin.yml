@@ -2,9 +2,13 @@ name: RPGcore
 main: com.rpg.core.Main
 version: 1.0
 api-version: 1.15
+softdepend:
+    - PermissionsEx
+    - AuthMe
 commands:
-  test:
   money:
     description: Sprawdz stan swego konta.
   pay:
     description: Przelej pieniadze znajomemu
+  system:
+    description: Informacje na temat pluginu

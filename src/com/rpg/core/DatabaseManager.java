@@ -16,7 +16,7 @@ public class DatabaseManager
 	
 	static public void Setup() 
 	{
-		System.out.println("[RPGcore - Db Manager] Loading...");
+		Main.LogInfo("Db Manager", "Loading...");
 		adr = "mysql.titanaxe.com";
 		port = 3306;
         db = "srv73958";
@@ -25,12 +25,12 @@ public class DatabaseManager
         
         try 
         {
-        	System.out.println("[RPGcore - Db Manager] Connecting to Database located at " + adr + "@" + db + "...");
+        	Main.LogInfo("Db Manager", "Connecting to Database located at " + adr + "@" + db + "...");
         	connect();
         } catch (ClassNotFoundException e) 
         {
         	e.printStackTrace();
-        	System.out.println("[RPGcore - Db Manager] Error occured while attempting to connect.");
+        	Main.LogInfo("Db Manager", "Error occured while attempting to connect.");
         }catch(SQLException e) 
         {
         	e.printStackTrace();
@@ -48,7 +48,7 @@ public class DatabaseManager
 		source.setPassword(pass);
 		
 		con = source.getConnection();
-		System.out.println("[RPGcore - Db Manager] Connected!");
+		Main.LogInfo("Db Manager", "Connected!");
 	}
 	
 	static public int SetPlayerClass(String UUID, int klasa)
@@ -194,5 +194,23 @@ public class DatabaseManager
 	static public int GetPlayerClassLevel(String UUID) 
 	{
 		return Integer.parseInt(("" + GetPlayerClass(UUID)).substring(3));
+	}
+	
+	static public int GetPlayerLevel(String UUID) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT Level FROM Gracze WHERE UUID = ?");
+	        sql.setString(1, UUID);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	return result.getInt(1);
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return 0;		
+		}
+		return 0;
 	}
 }
