@@ -2,8 +2,8 @@ package com.rpg.core;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
-import com.rpg.core.economy.CommandPay;
-import com.rpg.core.economy.CommandMoney;
+import com.rpg.core.commands.*;
+import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
 
 public class Main extends ModuleMain implements Listener {
@@ -11,6 +11,8 @@ public class Main extends ModuleMain implements Listener {
 	@Override
 	public void OnSetup() 
 	{
+		CoreConfig cfg = new CoreConfig(this);
+		
 		LogInfo("Starting Core.");
 		saveDefaultConfig();
 		DatabaseManager.Setup();
@@ -23,6 +25,7 @@ public class Main extends ModuleMain implements Listener {
 			return;
 		}
 		LogInfo("Loading Done.");
+		CoreConfig.logger();
 	}
 	
 	@Override
@@ -30,6 +33,7 @@ public class Main extends ModuleMain implements Listener {
 	{
 		Manager.AddCommand(new CommandMoney());
 		Manager.AddCommand(new CommandPay());
+		Manager.AddCommand(new CommandSystem());
 		for(CommandExecutor ce: Manager.commands)
 		{
 			String cname = ce.getClass().getSimpleName();
