@@ -1,5 +1,7 @@
 package com.rpg.core;
 
+import com.rpg.core.framework.Logger;
+
 public final class CoreConfig {
 	public static boolean announceFirstJoin, announceJoin, announceLeft;
 	public static String 
@@ -35,21 +37,21 @@ public final class CoreConfig {
 	
 	public static void logger() 
 	{
-		Main.LogInfo("announceFirstJoin: " + announceFirstJoin);
-		Main.LogInfo("announceJoin: " + announceJoin);
-		Main.LogInfo("announceLeft: " + announceLeft);
-		Main.LogInfo("LeftMessage: " + leftMessage);
-		Main.LogInfo("JoinMessage: " + joinMessage);
-		Main.LogInfo("FirstJoinMessage: " + firstJoinMessage);
-		Main.LogInfo("CurrencySymbol: " + currencySymbol);
-		Main.LogInfo("FallDamageMultiplier: " + fallDamageMultiplier);
-		Main.LogInfo("restrictChat: " + restrictChat);
-		Main.LogInfo("ChatLvlMin: " + chatLvlMin);
-		Main.LogInfo("chatLowLvlMessage: " + chatLowLvlMessage);
-		Main.LogInfo("chatMessageFormat: " + chatMessageFormat);
-		Main.LogInfo("infoColor: " + infoColor);
-		Main.LogInfo("warnColor: " + warnColor);
-		Main.LogInfo("errorColor: " + errorColor);
-		Main.LogInfo("otherColor: " + otherColor);
+		Logger.LogInfo("announceFirstJoin: " + announceFirstJoin);
+		Logger.LogInfo("announceJoin: " + announceJoin);
+		Logger.LogInfo("announceLeft: " + announceLeft);
+		Logger.LogInfo("LeftMessage: " + leftMessage);
+		Logger.LogInfo("JoinMessage: " + joinMessage);
+		Logger.LogInfo("FirstJoinMessage: " + firstJoinMessage);
+		Logger.LogInfo("CurrencySymbol: " + currencySymbol);
+		Logger.LogInfo("FallDamageMultiplier: " + fallDamageMultiplier);
+		Logger.LogInfo("restrictChat: " + restrictChat);
+		Logger.LogInfo("ChatLvlMin: " + chatLvlMin);
+		Logger.LogInfo("chatLowLvlMessage: " + chatLowLvlMessage);
+		Logger.LogInfo("chatMessageFormat: " + chatMessageFormat);
+		Logger.LogInfo("infoColor: " + infoColor);
+		Logger.LogInfo("warnColor: " + warnColor);
+		Logger.LogInfo("errorColor: " + errorColor);
+		Logger.LogInfo("otherColor: " + otherColor);
 	}
 }

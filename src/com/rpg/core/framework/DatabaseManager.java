@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import com.rpg.core.Main;
 
 public class DatabaseManager
 {
@@ -16,7 +15,7 @@ public class DatabaseManager
 	
 	static public void Setup() 
 	{
-		Main.LogInfo("Db Manager", "Loading...");
+		Logger.LogInfo("Db Manager", "Loading...");
 		adr = "mysql.titanaxe.com";
 		port = 3306;
         db = "srv73958";
@@ -25,12 +24,12 @@ public class DatabaseManager
         
         try 
         {
-        	Main.LogInfo("Db Manager", "Connecting to Database located at " + adr + "@" + db + "...");
+        	Logger.LogInfo("Db Manager", "Connecting to Database located at " + adr + "@" + db + "...");
         	connect();
         } catch (ClassNotFoundException e) 
         {
         	e.printStackTrace();
-        	Main.LogInfo("Db Manager", "Error occured while attempting to connect.");
+        	Logger.LogInfo("Db Manager", "Error occured while attempting to connect.");
         }catch(SQLException e) 
         {
         	e.printStackTrace();
@@ -48,7 +47,7 @@ public class DatabaseManager
 		source.setPassword(pass);
 		
 		con = source.getConnection();
-		Main.LogInfo("Db Manager", "Connected!");
+		Logger.LogInfo("Db Manager", "Connected!");
 	}
 	
 	static public int SetPlayerClass(String UUID, int klasa)

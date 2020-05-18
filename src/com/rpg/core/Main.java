@@ -2,39 +2,50 @@ package com.rpg.core;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import com.rpg.core.commands.*;
 import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
 import com.rpg.core.framework.DatabaseManager;
+import com.rpg.core.framework.Logger;
 import com.rpg.core.framework.Misc;
-import com.rpg.core.framework.ModuleMain;
 
-public class Main extends ModuleMain implements Listener {
+public class Main extends JavaPlugin implements Listener{
 	
 	@Override
-	public void OnSetup() 
+	public void onEnable() 
 	{
 		@SuppressWarnings("unused")
 		CoreConfig cfg = new CoreConfig(this);
 		@SuppressWarnings("unused")
 		Misc misc = new Misc(this);
 		
-		LogInfo("Starting Core.");
+		Logger.LogInfo("Starting Core.");
+		
+		RegisterCommands();
+		RegisterEvents();
+		
 		saveDefaultConfig();
 		DatabaseManager.Setup();
 		
 		if (getServer().getPluginManager().getPlugin("AuthMe") == null) 
 		{
-			LogError("SERVER DOES NOT MEET REQUIREMENTS:");
-			LogError("I can not find AuthMe!");
+			Logger.LogError("SERVER DOES NOT MEET REQUIREMENTS:");
+			Logger.LogError("I can not find AuthMe!");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		LogInfo("Loading Done.");
-		CoreConfig.logger();
+		Logger.LogInfo("Loading Done.");
 	}
 	
 	@Override
+	public void onDisable() 
+	{
+		Logger.LogWarn("Disabling...");
+		Logger.LogWarn("Disabled!");
+	}
+	
 	public void RegisterCommands() 
 	{
 		Manager.AddCommand(new CommandMoney());
@@ -48,7 +59,6 @@ public class Main extends ModuleMain implements Listener {
 		}
 	}
 	
-	@Override
 	public void RegisterEvents() 
 	{
 		Manager.AddEvent(new Announcing());
@@ -58,11 +68,5 @@ public class Main extends ModuleMain implements Listener {
 		{
 			getServer().getPluginManager().registerEvents(event, this);
 		}
-	}
-
-	@Override
-	public void ShutDown() {
-		LogWarn("Disabling...");
-		LogWarn("Disabled!");
 	}
 }

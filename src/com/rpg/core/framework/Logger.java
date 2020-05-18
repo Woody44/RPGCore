@@ -1,34 +1,6 @@
 package com.rpg.core.framework;
 
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
-
-public abstract class ModuleMain extends JavaPlugin implements Listener{
-	
-	@Override
-	public void onEnable() 
-	{
-		Setup();
-		
-	}
-	
-	@Override
-	public void onDisable() 
-	{
-		ShutDown();
-	}
-	
-	public void Setup() 
-	{
-		RegisterCommands();
-		RegisterEvents();
-		OnSetup();
-	}
-	public abstract void OnSetup();
-	public abstract void RegisterCommands();
-	public abstract void RegisterEvents();
-	public abstract void ShutDown();
-	
+public class Logger {
 	public static void LogError(String message)
 	{
 		System.out.println("\u001B[31m" + "[ERROR] [RPGcore]" + message + "\u001B[37m" );
