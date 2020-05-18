@@ -4,8 +4,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.rpg.core.ChatManager;
+
 import com.rpg.core.CoreConfig;
+import com.rpg.core.framework.ChatManager;
 
 public class CommandSystem implements CommandExecutor{
 

@@ -1,6 +1,8 @@
-package com.rpg.core;
+package com.rpg.core.framework;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import com.rpg.core.CoreConfig;
 
 public class ChatManager {
 		

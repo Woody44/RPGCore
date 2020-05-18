@@ -1,4 +1,4 @@
-package com.rpg.core;
+package com.rpg.core.framework;
 
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;

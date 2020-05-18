@@ -1,6 +1,4 @@
-package com.rpg.core.economy;
-
-import com.rpg.core.DatabaseManager;
+package com.rpg.core.framework;
 
 public class Wallet {
 	public String uuid;

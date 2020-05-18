@@ -1,4 +1,4 @@
-package com.rpg.core;
+package com.rpg.core.framework;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,7 +1,5 @@
 package com.rpg.core.events;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
+import com.rpg.core.framework.Misc;
 
 import org.bukkit.event.block.Action;
 
@@ -22,7 +21,6 @@ public class OnCooldown implements Listener{
 	{
 		this.main = main;
 	}
-	private ArrayList<Player> cooldown = new ArrayList<>();
 
 	@EventHandler
 	public void OnCooldown(PlayerInteractEvent event) 
@@ -31,17 +29,17 @@ public class OnCooldown implements Listener{
 		if (action.equals(Action.RIGHT_CLICK_AIR) || action.equals(Action.RIGHT_CLICK_BLOCK)) 
 		{
 			Player player = event.getPlayer();
-			if (!cooldown.contains(player)) 
+			if (!Misc.getCooldown(player.getDisplayName(), "ENDROD")) 
 			{
 				if (player.getInventory().getItemInMainHand().getType() == Material.END_ROD) 
 				{
 					event.setCancelled(true);
 					player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 50, 5));
-					cooldown.add(player);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> { cooldown.remove(player); }, 200);
+					Misc.Cooldown(player.getDisplayName(), "ENDROD");
+					Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> { Misc.resetCooldown(player.getDisplayName(), "ENDROD"); }, 200);
 				}
 			}
-			else 
+			else
 			{
 				event.setCancelled(true);
 				player.sendMessage(CoreConfig.infoColor + "Nie mozesz teraz tego zrobic.");

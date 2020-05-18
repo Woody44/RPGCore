@@ -7,9 +7,9 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
-import com.rpg.core.ChatManager;
 import com.rpg.core.CoreConfig;
-import com.rpg.core.DatabaseManager;
+import com.rpg.core.framework.ChatManager;
+import com.rpg.core.framework.DatabaseManager;
 
 public class Basics implements Listener
 {

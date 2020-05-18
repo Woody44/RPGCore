@@ -5,6 +5,8 @@ import org.bukkit.event.Listener;
 import com.rpg.core.commands.*;
 import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
+import com.rpg.core.framework.DatabaseManager;
+import com.rpg.core.framework.ModuleMain;
 
 public class Main extends ModuleMain implements Listener {
 	

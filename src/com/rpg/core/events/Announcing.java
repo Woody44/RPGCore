@@ -5,11 +5,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.rpg.core.ChatManager;
 import com.rpg.core.CoreConfig;
-import com.rpg.core.DatabaseManager;
 import com.rpg.core.Main;
-import com.rpg.core.economy.Wallet;
+import com.rpg.core.framework.ChatManager;
+import com.rpg.core.framework.DatabaseManager;
+import com.rpg.core.framework.Wallet;
 
 public class Announcing implements Listener{
 	

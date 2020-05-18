@@ -1,4 +1,4 @@
-package com.rpg.core;
+package com.rpg.core.framework;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-import com.rpg.core.economy.Wallet;
+import com.rpg.core.Main;
 
 public class DatabaseManager
 {
