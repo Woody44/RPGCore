@@ -6,6 +6,7 @@ import com.rpg.core.commands.*;
 import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
 import com.rpg.core.framework.DatabaseManager;
+import com.rpg.core.framework.Misc;
 import com.rpg.core.framework.ModuleMain;
 
 public class Main extends ModuleMain implements Listener {
@@ -13,7 +14,10 @@ public class Main extends ModuleMain implements Listener {
 	@Override
 	public void OnSetup() 
 	{
+		@SuppressWarnings("unused")
 		CoreConfig cfg = new CoreConfig(this);
+		@SuppressWarnings("unused")
+		Misc misc = new Misc(this);
 		
 		LogInfo("Starting Core.");
 		saveDefaultConfig();

@@ -1,6 +1,5 @@
 package com.rpg.core.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,8 +34,7 @@ public class OnCooldown implements Listener{
 				{
 					event.setCancelled(true);
 					player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 50, 5));
-					Misc.Cooldown(player.getDisplayName(), "ENDROD");
-					Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> { Misc.resetCooldown(player.getDisplayName(), "ENDROD"); }, 200);
+					Misc.Cooldown(player.getDisplayName(), "ENDROD", 10);
 				}
 			}
 			else
