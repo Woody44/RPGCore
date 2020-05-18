@@ -50,13 +50,14 @@ public class DatabaseManager
 		Logger.LogInfo("Db Manager", "Connected!");
 	}
 	
-	static public int SetPlayerClass(String UUID, int klasa)
+	static public int SetPlayerClass(String UUID, int klasa, int poziom)
 	{
 		try 
 		{
-			PreparedStatement sql = con.prepareStatement("INSERT INTO Gracze VALUES (?, ?)");
+			PreparedStatement sql = con.prepareStatement("INSERT INTO Gracze VALUES (?, ?, ?)");
 	        sql.setString(1, UUID);
 	        sql.setInt(2, klasa);
+	        sql.setInt(3, poziom);
 	        sql.execute();
 	        return 0;
 		} 
