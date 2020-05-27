@@ -1,18 +1,24 @@
 package com.rpg.core;
 
-import com.rpg.core.framework.Logger;
-
 public final class CoreConfig {
+	Main main;
 	public static boolean announceFirstJoin, announceJoin, announceLeft;
 	public static String 
 	firstJoinMessage, joinMessage, leftMessage, 
 	infoColor, warnColor, errorColor, otherColor,
 	currencySymbol,
-	chatLowLvlMessage, chatMessageFormat;
+	chatLowLvlMessage, chatMessageFormat,
+	dbhost,dbname,dbusr,dbpass;
 	public static Double fallDamageMultiplier;
 	public static boolean restrictChat;
-	public static int chatLvlMin;
+	public static int chatLvlMin, dbport;
 	CoreConfig(Main main)
+	{
+		this.main = main;
+		LoadConfig();
+	}
+	
+	private void LoadConfig() 
 	{
 		announceFirstJoin = main.getConfig().getBoolean("announce.first-join");
 		announceJoin = main.getConfig().getBoolean("announce.join");
@@ -33,25 +39,16 @@ public final class CoreConfig {
 		warnColor = main.getConfig().getString("chat.warn-color");
 		errorColor = main.getConfig().getString("chat.error-color");
 		otherColor = main.getConfig().getString("chat.other-color");
+		
+		dbhost = main.getConfig().getString("database.host");
+		dbname = main.getConfig().getString("database.name");
+		dbpass = main.getConfig().getString("database.password");
+		dbusr = main.getConfig().getString("database.username");
+		dbport = main.getConfig().getInt("database.port");
 	}
 	
-	public static void logger() 
+	public void Reload() 
 	{
-		Logger.LogInfo("announceFirstJoin: " + announceFirstJoin);
-		Logger.LogInfo("announceJoin: " + announceJoin);
-		Logger.LogInfo("announceLeft: " + announceLeft);
-		Logger.LogInfo("LeftMessage: " + leftMessage);
-		Logger.LogInfo("JoinMessage: " + joinMessage);
-		Logger.LogInfo("FirstJoinMessage: " + firstJoinMessage);
-		Logger.LogInfo("CurrencySymbol: " + currencySymbol);
-		Logger.LogInfo("FallDamageMultiplier: " + fallDamageMultiplier);
-		Logger.LogInfo("restrictChat: " + restrictChat);
-		Logger.LogInfo("ChatLvlMin: " + chatLvlMin);
-		Logger.LogInfo("chatLowLvlMessage: " + chatLowLvlMessage);
-		Logger.LogInfo("chatMessageFormat: " + chatMessageFormat);
-		Logger.LogInfo("infoColor: " + infoColor);
-		Logger.LogInfo("warnColor: " + warnColor);
-		Logger.LogInfo("errorColor: " + errorColor);
-		Logger.LogInfo("otherColor: " + otherColor);
+		LoadConfig();
 	}
 }

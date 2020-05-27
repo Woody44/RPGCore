@@ -1,3 +1,12 @@
+fall-damage-multiplier: 2.5
+
+database:
+  host: ""
+  name: ""
+  username: ""
+  password: ""
+  port: 3306
+  
 announce:
   first-join: true
   first-join-message: "&dGracz  {PLAYER}  wszedl na serwer po raz pierwszy!"
@@ -21,5 +30,3 @@ chat:
   
 economy:
   currency-symbol: "$"
-  
-  fall-damage-multiplier: 2.5

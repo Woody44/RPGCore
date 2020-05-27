@@ -6,21 +6,29 @@ import java.sql.SQLException;
 
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.rpg.core.CoreConfig;
 
 public class DatabaseManager
 {
-	static private Connection con;
+	public static Connection con;
 	static private String adr, db, usr, pass;
 	static private int port;
 	
 	static public void Setup() 
 	{
+		try {
+		if (con != null && con.isClosed() == false)
+				con.close();
+		
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 		Logger.LogInfo("Db Manager", "Loading...");
-		adr = "mysql.titanaxe.com";
-		port = 3306;
-        db = "srv73958";
-        usr = "srv73958";
-        pass = "nVJfnvXZ";
+		adr = CoreConfig.dbhost;
+		port = CoreConfig.dbport;
+        db = CoreConfig.dbname;
+        usr = CoreConfig.dbusr;
+        pass = CoreConfig.dbpass;
         
         try 
         {
@@ -29,7 +37,8 @@ public class DatabaseManager
         } catch (ClassNotFoundException e) 
         {
         	e.printStackTrace();
-        	Logger.LogInfo("Db Manager", "Error occured while attempting to connect.");
+        	Logger.LogError("Db Manager", "Error occured while attempting to connect.");
+        	Logger.LogError("Core", "PLUGIN MAY BE BROKEN BECAUSE CAN'T CONNECT TO SPECIFIED DATABASE");
         }catch(SQLException e) 
         {
         	e.printStackTrace();
