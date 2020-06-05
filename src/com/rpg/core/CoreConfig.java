@@ -9,9 +9,11 @@ public final class CoreConfig {
 	currencySymbol,
 	chatLowLvlMessage, chatMessageFormat,
 	dbhost,dbname,dbusr,dbpass;
-	public static Double fallDamageMultiplier;
+	public static double fallDamageMultiplier, defPlayerSpeed;
 	public static boolean restrictChat;
-	public static int chatLvlMin, dbport;
+	public static int chatLvlMin, 
+	dbport;
+	public static int[] levels;
 	CoreConfig(Main main)
 	{
 		this.main = main;
@@ -30,6 +32,8 @@ public final class CoreConfig {
 		currencySymbol = main.getConfig().getString("economy.currency-symbol");
 		
 		fallDamageMultiplier = main.getConfig().getDouble("fall-damage-multiplier");
+		levels = new int[main.getConfig().getInt("levels.count") + 1];
+		defPlayerSpeed = main.getConfig().getDouble("default-player-speed");
 		
 		restrictChat = main.getConfig().getBoolean("chat.restrict-chat");
 		chatLvlMin = main.getConfig().getInt("chat.chat-lvl-min");
@@ -45,6 +49,12 @@ public final class CoreConfig {
 		dbpass = main.getConfig().getString("database.password");
 		dbusr = main.getConfig().getString("database.username");
 		dbport = main.getConfig().getInt("database.port");
+		
+		for(int i = 0; i < levels.length; i++)
+			if(i==0)
+				continue;
+			else
+				levels[i] = main.getConfig().getInt("levels." + i);
 	}
 	
 	public void Reload() 

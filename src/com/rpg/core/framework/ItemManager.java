@@ -17,13 +17,14 @@ public class ItemManager {
 		item.getItemMeta().setLore(lore);
 	}
 	
-	public static void SetLore(ItemStack item, String value) 
+	public static ItemStack SetLore(ItemStack item, String value) 
 	{
 		ArrayList<String> lore = new ArrayList<String>();
 		String[] newLore = value.split("||");
 		for(String str : newLore)
 			lore.add(ChatManager.GetColorized(str));
 		item.getItemMeta().setLore(lore);
+		return item;
 	}
 	
 	public static void ResetLore(ItemStack item) 
@@ -59,7 +60,12 @@ public class ItemManager {
 	
 	public static float CheckLore(ItemStack item, String value) 
 	{
+		if(item == null)
+			return 0;
+		
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		if(lore == null || lore.size() <=0)
+			return 0;
 		for(String line : lore) 
 		{
 			if(line.contains(value)) 

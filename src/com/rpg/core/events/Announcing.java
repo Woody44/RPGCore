@@ -1,5 +1,6 @@
 package com.rpg.core.events;
 
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -8,7 +9,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.rpg.core.CoreConfig;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.DatabaseManager;
-import com.rpg.core.framework.Logger;
+import com.rpg.core.framework.InventoryInfo;
+import com.rpg.core.framework.ItemManager;
+import com.rpg.core.framework.PlayerInfo;
 import com.rpg.core.framework.Wallet;
 
 public class Announcing implements Listener{
@@ -16,15 +19,29 @@ public class Announcing implements Listener{
 	@EventHandler
     public void OnJoin(PlayerJoinEvent event)
     {
+		ItemManager.createItemStack(Material.ACACIA_BOAT, "xD", "a");
 		String uuid = event.getPlayer().getUniqueId().toString();
-		if (DatabaseManager.GetPlayerWallet(uuid).uuid == null) {
+		if (DatabaseManager.GetPlayerInfo(uuid) == null) {
+			
+			PlayerInfo pi = new PlayerInfo();
+			pi.UUID = uuid;
+			pi.Klasa = 0;
+			pi.KlasaLevel = 0;
+			pi.Experience = 0;
+			InventoryInfo ii = new InventoryInfo();
+			ii.UUID = uuid;
+			ii.bracelet_0 = 0;
+			ii.bracelet_1 = 0;
+			ii.earring_0 = 0;
+			ii.earring_1 = 0;
+			ii.necklake_0 = 0;
+			ii.ring_0 = 0;
+			ii.ring_1 = 0;
 			Wallet w = new Wallet();
 			w.SetOwner(uuid);
 			w.Money = 0;
-			DatabaseManager.AddPlayerWallet(w);
-			
-			Logger.LogInfo("Eco", "Tworzenie Portfela dla Gracza " + event.getPlayer().getDisplayName());
-		}
+			DatabaseManager.RegisterNewPlayer(pi, ii, w);
+			}
 		
 		if (!CoreConfig.announceJoin)
 			event.setJoinMessage(null);

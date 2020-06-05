@@ -1,4 +1,5 @@
 fall-damage-multiplier: 2.5
+default-player-speed: 0.18
 
 database:
   host: ""
@@ -27,6 +28,24 @@ chat:
   warn-color: "&e"
   error-color: "&4"
   other-color: "&a&l"
+  
+levels:
+  count: 15
+  1: 100
+  2: 250
+  3: 500
+  4: 750
+  5: 1000
+  6: 1400
+  7: 1850
+  8: 2300
+  9: 2800
+  10: 3300
+  11: 3800
+  12: 4400
+  13: 5000
+  14: 5750
+  15: 6750
   
 economy:
   currency-symbol: "$"

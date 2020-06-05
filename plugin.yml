@@ -1,7 +1,10 @@
 name: RPGcore
 main: com.rpg.core.Main
-version: 1.1.4
+version: 1.2
 api-version: 1.15
+authors: [_woody44_, damian5466]
+database: true
+
 softdepend:
     - PermissionsEx
 depend:
@@ -9,8 +12,16 @@ depend:
 commands:
   money:
     description: Sprawdz stan swego konta.
+    permission: RPG.core.eco.money
+    usage: /money
   pay:
     description: Przelej pieniadze znajomemu
+    permission: RPG.core.eco.pay
+    usage: /pay <player> <count>
   system:
-    description: Informacje na temat pluginu
+    description: Informacje na temat pluginu.
+    permission: RPG.core.system
+    usage: /system
 load: STARTUP
+
+description: Podstawa dla pluginow zwiazanych z systemami RPG.

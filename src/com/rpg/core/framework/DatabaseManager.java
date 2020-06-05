@@ -63,10 +63,10 @@ public class DatabaseManager
 	{
 		try 
 		{
-			PreparedStatement sql = con.prepareStatement("INSERT INTO Gracze VALUES (?, ?, ?)");
-	        sql.setString(1, UUID);
-	        sql.setInt(2, klasa);
-	        sql.setInt(3, poziom);
+			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET klasa = ?, poziom = ? WHERE UUID = ?;");
+	        sql.setString(3, UUID);
+	        sql.setInt(1, klasa);
+	        sql.setInt(2, poziom);
 	        sql.execute();
 	        return 0;
 		} 
@@ -208,12 +208,20 @@ public class DatabaseManager
 	static public int GetPlayerLevel(String UUID) 
 	{
 		try {
-			PreparedStatement sql = con.prepareStatement("SELECT Level FROM Gracze WHERE UUID = ?");
+			PreparedStatement sql = con.prepareStatement("SELECT Experience FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
 	        {
-	        	return result.getInt(1);
+	        	int exp = result.getInt(1);
+	        	for(int i=0; i < CoreConfig.levels.length; i++)
+	        		if(i < CoreConfig.levels.length-1) {
+		        		if(exp >= CoreConfig.levels[i] && exp < CoreConfig.levels[i+1])
+		        			return i;
+		        		else continue;
+	        		}
+	        		else
+	        			return CoreConfig.levels.length -1;
 	        }
 		}
 		catch(SQLException e) {
@@ -222,4 +230,99 @@ public class DatabaseManager
 		}
 		return 0;
 	}
+	
+	static public void CreatePlayerInfo(PlayerInfo pi) 
+	{
+		String sqlq = "INSERT INTO Gracze VALUES (?, ?, ?, ?);";
+		try {
+			PreparedStatement sql = con.prepareStatement(sqlq);
+	        sql.setString(1, pi.UUID);
+	        sql.setInt(2, pi.Klasa);
+	        sql.setInt(3, pi.KlasaLevel);
+	        sql.setInt(4, pi.Experience);
+	        sql.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();	
+		}
+	}
+	
+	static public PlayerInfo GetPlayerInfo(String UUID) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Inventory WHERE UUID = ?");
+	        sql.setString(1, UUID);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	PlayerInfo pi = new PlayerInfo();
+	        	pi.UUID = result.getString(1);
+	        	pi.Klasa = result.getInt(2);
+	        	pi.KlasaLevel = result.getInt(3);
+	        	pi.Experience = result.getInt(4);
+	        	return pi;
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
+	
+	static public void CreatePlayerInventory(InventoryInfo ii) 
+	{
+		String sqlq = "INSERT INTO Inventory VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+		try {
+			PreparedStatement sql = con.prepareStatement(sqlq);
+	        sql.setString(1, ii.UUID);
+	        sql.setInt(2, ii.earring_0);
+	        sql.setInt(3, ii.earring_1);
+	        sql.setInt(4, ii.necklake_0);
+	        sql.setInt(5, ii.ring_0);
+	        sql.setInt(6, ii.ring_1);
+	        sql.setInt(7, ii.bracelet_0);
+	        sql.setInt(8, ii.bracelet_1);
+	        sql.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();	
+		}
+	}
+	
+	static public InventoryInfo GetInventoryInfo(String UUID) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM WHERE UUID = ?");
+	        sql.setString(1, UUID);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	InventoryInfo ii = new InventoryInfo();
+	        	ii.UUID = result.getString(1);
+	        	ii.earring_0= result.getInt(2);
+	        	ii.earring_1 = result.getInt(3);
+	        	ii.necklake_0 = result.getInt(4);
+	        	
+	        	ii.ring_0 = result.getInt(5);
+	        	ii.ring_1 = result.getInt(6);
+	        	ii.bracelet_0 = result.getInt(7);
+	        	ii.bracelet_1 = result.getInt(8);
+	        	return ii;
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return null;
+	}
+	
+	static public void RegisterNewPlayer(PlayerInfo pi, InventoryInfo ii, Wallet w) 
+	{
+		CreatePlayerInfo(pi);
+		CreatePlayerInventory(ii);
+		AddPlayerWallet(w);
+	}
+	
 }
