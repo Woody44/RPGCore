@@ -63,7 +63,7 @@ public class DatabaseManager
 	{
 		try 
 		{
-			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET klasa = ?, poziom = ? WHERE UUID = ?;");
+			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET klasa = ?, KlasaLevel = ? WHERE UUID = ?;");
 	        sql.setString(3, UUID);
 	        sql.setInt(1, klasa);
 	        sql.setInt(2, poziom);
