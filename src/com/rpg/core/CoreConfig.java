@@ -1,5 +1,7 @@
 package com.rpg.core;
 
+import java.util.ArrayList;
+
 public final class CoreConfig {
 	Main main;
 	public static boolean announceFirstJoin, announceJoin, announceLeft;
@@ -7,13 +9,18 @@ public final class CoreConfig {
 	firstJoinMessage, joinMessage, leftMessage, 
 	infoColor, warnColor, errorColor, otherColor,
 	currencySymbol,
-	chatLowLvlMessage, chatMessageFormat,
+	chatLowLvlMessage, chatMessageFormat, chestLoggerFormat,
 	dbhost,dbname,dbusr,dbpass;
 	public static double fallDamageMultiplier, defPlayerSpeed;
-	public static boolean restrictChat;
+	public static boolean restrictChat, logChests;
 	public static int chatLvlMin, 
 	dbport;
 	public static int[] levels;
+	
+	public static boolean preventExplosions;
+	public static ArrayList<String> preventExplosionsWorlds;
+	
+	
 	CoreConfig(Main main)
 	{
 		this.main = main;
@@ -50,6 +57,11 @@ public final class CoreConfig {
 		dbusr = main.getConfig().getString("database.username");
 		dbport = main.getConfig().getInt("database.port");
 		
+		logChests = main.getConfig().getBoolean("other.chest-log.enabled");
+		chestLoggerFormat = main.getConfig().getString("other.chest-log.format");
+		
+		preventExplosions = main.getConfig().getBoolean("protect.explosions.enabled");
+		preventExplosionsWorlds = (ArrayList<String>) main.getConfig().getStringList("protect.explosions.worlds");
 		for(int i = 0; i < levels.length; i++)
 			if(i==0)
 				continue;

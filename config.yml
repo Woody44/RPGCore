@@ -49,3 +49,13 @@ levels:
   
 economy:
   currency-symbol: "$"
+  
+other:
+  chest-log:
+    enabled: true
+    format: "Gracz  {PLAYER}  Otworzyl skrzynie na koordynatach  {WORLD}  {X}  {Y}  {Z}"
+protect:
+  explosions:
+    enabled: true
+    worlds:
+        - system_spawn

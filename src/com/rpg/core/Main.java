@@ -12,10 +12,11 @@ import com.rpg.core.framework.Logger;
 import com.rpg.core.framework.Misc;
 
 public class Main extends JavaPlugin implements Listener{
-	
+	public static Main instance;
 	@Override
 	public void onEnable() 
 	{
+		saveDefaultConfig();
 		@SuppressWarnings("unused")
 		CoreConfig cfg = new CoreConfig(this);
 		@SuppressWarnings("unused")
@@ -26,7 +27,6 @@ public class Main extends JavaPlugin implements Listener{
 		RegisterCommands();
 		RegisterEvents();
 		
-		saveDefaultConfig();
 		DatabaseManager.Setup();
 		
 		if (getServer().getPluginManager().getPlugin("AuthMe") == null) 
@@ -37,6 +37,7 @@ public class Main extends JavaPlugin implements Listener{
 			return;
 		}
 		Logger.LogInfo("Loading Done.");
+		instance = this;
 	}
 	
 	@Override
@@ -63,9 +64,19 @@ public class Main extends JavaPlugin implements Listener{
 	{
 		Manager.AddEvent(new Announcing());
 		Manager.AddEvent(new Basics());
+		
+		if(CoreConfig.logChests)
+			Manager.AddEvent(new OnChestOpen());
+		
+		Manager.AddEvent(new protect());
 		for(Listener event: Manager.events)
 		{
 			getServer().getPluginManager().registerEvents(event, this);
 		}
+	}
+	
+	public static Main GetMe() 
+	{
+		return instance;
 	}
 }
