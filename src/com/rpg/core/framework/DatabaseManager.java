@@ -101,13 +101,6 @@ public class DatabaseManager
 	{
 		try {
 			PreparedStatement sql;
-			if (klasa == 0 && additive == false)
-			{
-				sql = con.prepareStatement("DELETE FROM Gracze WHERE UUID = ?");
-				sql.setString(1, UUID);
-			}
-			else
-			{
 				if(additive == true) 
 				{
 					sql = con.prepareStatement("UPDATE Gracze SET Klasa = Klasa + ? WHERE UUID = ?");
@@ -123,8 +116,6 @@ public class DatabaseManager
 					sql.setInt(1, klasa);
 					sql.setString(2, UUID);
 				}
-						
-			}
 			
 			sql.executeUpdate();
 		} catch (SQLException e) {
