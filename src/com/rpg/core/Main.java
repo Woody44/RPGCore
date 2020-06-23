@@ -1,5 +1,7 @@
 package com.rpg.core;
 
+import java.util.ArrayList;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -7,18 +9,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.rpg.core.commands.*;
 import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
+import com.rpg.core.framework.CustomPlayer;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.Logger;
 import com.rpg.core.framework.Misc;
 
 public class Main extends JavaPlugin implements Listener{
 	public static Main instance;
+	public static ArrayList<CustomPlayer> Players;
+	
 	@Override
 	public void onEnable() 
 	{
+		instance = this;
 		saveDefaultConfig();
 		@SuppressWarnings("unused")
-		CoreConfig cfg = new CoreConfig(this);
+		CoreConfig cfg = new CoreConfig();
 		@SuppressWarnings("unused")
 		Misc misc = new Misc(this);
 		
@@ -36,8 +42,9 @@ public class Main extends JavaPlugin implements Listener{
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
+		
+		Players = new ArrayList<CustomPlayer>();
 		Logger.LogInfo("Loading Done.");
-		instance = this;
 	}
 	
 	@Override
@@ -52,6 +59,7 @@ public class Main extends JavaPlugin implements Listener{
 		Manager.AddCommand(new CommandMoney());
 		Manager.AddCommand(new CommandPay());
 		Manager.AddCommand(new CommandSystem());
+		Manager.AddCommand(new CommandReloadConfig());
 		for(CommandExecutor ce: Manager.commands)
 		{
 			String cname = ce.getClass().getSimpleName();
@@ -65,9 +73,6 @@ public class Main extends JavaPlugin implements Listener{
 		Manager.AddEvent(new Announcing());
 		Manager.AddEvent(new Basics());
 		
-		if(CoreConfig.logChests)
-			Manager.AddEvent(new OnChestOpen());
-		
 		Manager.AddEvent(new protect());
 		for(Listener event: Manager.events)
 		{
@@ -78,5 +83,12 @@ public class Main extends JavaPlugin implements Listener{
 	public static Main GetMe() 
 	{
 		return instance;
+	}
+	
+	public static void UnregisterPlayer(String UUID) 
+	{
+		for(CustomPlayer cp : Players)
+			if(cp.player.getUniqueId().toString() == UUID)
+				Main.Players.remove(cp);
 	}
 }

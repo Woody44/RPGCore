@@ -57,5 +57,7 @@ other:
 protect:
   explosions:
     enabled: true
+    drop: true
+    drop-rate: 1
     worlds:
         - system_spawn

@@ -2,6 +2,7 @@ package com.rpg.core.framework;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -94,5 +95,24 @@ public class ItemManager {
         
         SetLore(item, lore);
         return item;
+    }
+	
+	public static boolean isSimilar(ItemStack first,ItemStack second)
+    {
+        boolean similar = false;
+        if(first == null || second == null)
+        {
+            return similar;
+        }
+        boolean sameTypeId = (first.getType() == second.getType());
+        boolean sameAmount = (first.getAmount() == second.getAmount());
+        boolean sameHasItemMeta = (first.hasItemMeta() == second.hasItemMeta());
+        boolean sameEnchantments = (first.getEnchantments().equals(second.getEnchantments()));
+        boolean sameItemMeta = true;
+        if(sameHasItemMeta)
+            sameItemMeta = Bukkit.getItemFactory().equals(first.getItemMeta(), second.getItemMeta());
+        if(sameTypeId && sameAmount && sameHasItemMeta && sameEnchantments && sameItemMeta)
+            similar = true;
+        return similar;
     }
 }

@@ -1,17 +1,16 @@
 package com.rpg.core.events;
 
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.rpg.core.CoreConfig;
+import com.rpg.core.Main;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.InventoryInfo;
-import com.rpg.core.framework.ItemManager;
-import com.rpg.core.framework.PlayerInfo;
+import com.rpg.core.framework.CustomPlayer;
 import com.rpg.core.framework.Wallet;
 
 public class Announcing implements Listener{
@@ -19,29 +18,33 @@ public class Announcing implements Listener{
 	@EventHandler
     public void OnJoin(PlayerJoinEvent event)
     {
-		ItemManager.createItemStack(Material.ACACIA_BOAT, "xD", "a");
-		String uuid = event.getPlayer().getUniqueId().toString();
+		CustomPlayer pi = new CustomPlayer();
+		pi.player = event.getPlayer();
+		String uuid = pi.player.getUniqueId().toString();
 		if (DatabaseManager.GetPlayerInfo(uuid) == null) {
-			
-			PlayerInfo pi = new PlayerInfo();
 			pi.UUID = uuid;
 			pi.Klasa = 0;
 			pi.KlasaLevel = 0;
 			pi.Experience = 0;
-			InventoryInfo ii = new InventoryInfo();
-			ii.UUID = uuid;
-			ii.bracelet_0 = 0;
-			ii.bracelet_1 = 0;
-			ii.earring_0 = 0;
-			ii.earring_1 = 0;
-			ii.necklake_0 = 0;
-			ii.ring_0 = 0;
-			ii.ring_1 = 0;
-			Wallet w = new Wallet();
-			w.SetOwner(uuid);
-			w.Money = 0;
-			DatabaseManager.RegisterNewPlayer(pi, ii, w);
+			pi.wallet = new Wallet();
+			pi.wallet.SetOwner(uuid);
+			pi.wallet.Money = 0;
+			pi.inventoryInfo = new InventoryInfo();
+			pi.inventoryInfo.UUID = uuid;
+			pi.inventoryInfo.bracelet_0 = 0;
+			pi.inventoryInfo.bracelet_1 = 0;
+			pi.inventoryInfo.earring_0 = 0;
+			pi.inventoryInfo.earring_1 = 0;
+			pi.inventoryInfo.necklake_0 = 0;
+			pi.inventoryInfo.ring_0 = 0;
+			pi.inventoryInfo.ring_1 = 0;
+			DatabaseManager.RegisterNewPlayer(pi, pi.inventoryInfo, pi.wallet);
 			}
+		else 
+		{
+			pi = DatabaseManager.GetPlayerInfo(pi.player.getUniqueId().toString());
+			pi.player = event.getPlayer();
+		}
 		
 		if (!CoreConfig.announceJoin)
 			event.setJoinMessage(null);
@@ -56,7 +59,10 @@ public class Announcing implements Listener{
 				return;
 			}
 		}
-        //TO DO
+        
+		pi.player.setWalkSpeed((float)CoreConfig.defPlayerSpeed);
+		//Logger.LogInfo(pi.UUID);
+		Main.Players.add(pi);
     }
 	
 	@EventHandler
@@ -75,6 +81,8 @@ public class Announcing implements Listener{
 				return;
 			}
 		}
+		
+		Main.UnregisterPlayer(event.getPlayer().getUniqueId().toString());
 	}
 
 }

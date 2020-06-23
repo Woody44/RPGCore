@@ -3,15 +3,20 @@ package com.rpg.core.events;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
+import com.rpg.core.framework.ChatManager;
+import com.rpg.core.framework.Logger;
 
 public class protect implements Listener{
 	
@@ -37,7 +42,13 @@ public class protect implements Listener{
 					}
 					else 
 					{
-						b.breakNaturally();
+						if(CoreConfig.dropExplosions)
+						{
+							float chance = (float)Math.random();
+							Logger.LogInfo(chance + "/" + CoreConfig.explosionsDropRate);
+							if(chance <= CoreConfig.explosionsDropRate)
+								b.breakNaturally();
+						}
 						b.setType(Material.BEDROCK);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> { 
 							b.setType(mat);
@@ -45,9 +56,19 @@ public class protect implements Listener{
 					}
 				}
 			}
-			
-			
 		}
-		
+	}
+	
+	@EventHandler
+	public void OnChestOpen(PlayerInteractEvent event)
+	{
+		if(CoreConfig.logChests)
+			if(event.getClickedBlock().getType() == Material.CHEST)
+			{
+				Player player = event.getPlayer();
+				Location location = event.getClickedBlock().getLocation();
+				String message = ChatManager.FillVars(ChatManager.FillVars(CoreConfig.chestLoggerFormat, player), location);
+				Logger.LogInfo(message);
+			}
 	}
 }

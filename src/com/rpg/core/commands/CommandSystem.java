@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
+import com.rpg.core.Main;
 import com.rpg.core.framework.ChatManager;
 
 public class CommandSystem implements CommandExecutor{
@@ -15,8 +16,8 @@ public class CommandSystem implements CommandExecutor{
     	Player player = (Player) sender;
     	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "####################"));
     	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "######RPGcore#######"));
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "###&dAuthor:_woody44_" + CoreConfig.infoColor +"##"));
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "#####&aVersion: 1.0.0" + CoreConfig.infoColor + "####"));
+    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "###&dAuthors:_woody44_" + CoreConfig.infoColor + "," + "&ddamian5466" + CoreConfig.infoColor + "##"));
+    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "#####&aVersion:" + Main.GetMe().getDescription().getVersion() + CoreConfig.infoColor + "####"));
     	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "####################"));
         return true;
     }

@@ -222,12 +222,12 @@ public class DatabaseManager
 		return 0;
 	}
 	
-	static public void CreatePlayerInfo(PlayerInfo pi) 
+	static public void CreatePlayerInfo(CustomPlayer pi) 
 	{
 		String sqlq = "INSERT INTO Gracze VALUES (?, ?, ?, ?);";
 		try {
 			PreparedStatement sql = con.prepareStatement(sqlq);
-	        sql.setString(1, pi.UUID);
+	        sql.setString(1, pi.player.getUniqueId().toString());
 	        sql.setInt(2, pi.Klasa);
 	        sql.setInt(3, pi.KlasaLevel);
 	        sql.setInt(4, pi.Experience);
@@ -238,19 +238,42 @@ public class DatabaseManager
 		}
 	}
 	
-	static public PlayerInfo GetPlayerInfo(String UUID) 
+	static public CustomPlayer GetPlayerInfo(String UUID) 
 	{
+		Logger.Log("PlayerInfo");
 		try {
-			PreparedStatement sql = con.prepareStatement("SELECT * FROM Inventory WHERE UUID = ?");
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
 	        {
-	        	PlayerInfo pi = new PlayerInfo();
+	        	CustomPlayer pi = new CustomPlayer();
 	        	pi.UUID = result.getString(1);
 	        	pi.Klasa = result.getInt(2);
 	        	pi.KlasaLevel = result.getInt(3);
 	        	pi.Experience = result.getInt(4);
+	        	pi.wallet = new Wallet();
+	        	pi.wallet.Money = 0;
+	        	pi.wallet.SetOwner(result.getString(1));
+	        	
+	        	InventoryInfo ii = GetInventoryInfo(UUID);
+	        	if(ii != null)
+	        		pi.inventoryInfo = ii;
+	        	else
+	        	{
+	        		pi.inventoryInfo = new InventoryInfo();
+	        		pi.inventoryInfo.UUID = UUID;
+	        	}
+	        	
+	        	Wallet w = GetPlayerWallet(UUID);
+	        	if(w != null)
+	        		pi.wallet = w;
+	        	else
+	        	{
+	        		pi.wallet = new Wallet();
+	        		pi.wallet.SetOwner(UUID);
+	        		pi.wallet.Money = 0;
+	        	}
 	        	return pi;
 	        }
 		}
@@ -284,7 +307,7 @@ public class DatabaseManager
 	static public InventoryInfo GetInventoryInfo(String UUID) 
 	{
 		try {
-			PreparedStatement sql = con.prepareStatement("SELECT * FROM WHERE UUID = ?");
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Inventory WHERE UUID = ?");
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
@@ -309,8 +332,9 @@ public class DatabaseManager
 		return null;
 	}
 	
-	static public void RegisterNewPlayer(PlayerInfo pi, InventoryInfo ii, Wallet w) 
+	static public void RegisterNewPlayer(CustomPlayer pi, InventoryInfo ii, Wallet w) 
 	{
+		Logger.Log("NewPlayer");
 		CreatePlayerInfo(pi);
 		CreatePlayerInventory(ii);
 		AddPlayerWallet(w);

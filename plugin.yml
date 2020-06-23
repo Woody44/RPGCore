@@ -1,6 +1,6 @@
 name: RPGcore
 main: com.rpg.core.Main
-version: 1.2.3
+version: 1.2.6
 api-version: 1.15
 authors: [_woody44_, damian5466]
 database: true
@@ -22,6 +22,10 @@ commands:
     description: Informacje na temat pluginu.
     permission: RPG.core.system
     usage: /system
+  reloadconfig:
+    description: Pozwala przeladowac ponownie konfiguracje pluginu bez wymogu restartu serwera.
+    permission: RPG.core.reload
+    usage: /reloadconfig
 load: STARTUP
 
 description: Podstawa dla pluginow zwiazanych z systemami RPG.
