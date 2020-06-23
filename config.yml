@@ -52,7 +52,7 @@ economy:
   
 other:
   chest-log:
-    enabled: true
+    enabled: false
     format: "Gracz  {PLAYER}  Otworzyl skrzynie na koordynatach  {WORLD}  {X}  {Y}  {Z}"
 protect:
   explosions:

@@ -157,7 +157,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public void SetPlayerWallet(Wallet w)
+	static public void UpdatePlayerWallet(Wallet w)
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = ? WHERE UUID = ?");
@@ -240,7 +240,6 @@ public class DatabaseManager
 	
 	static public CustomPlayer GetPlayerInfo(String UUID) 
 	{
-		Logger.Log("PlayerInfo");
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
@@ -304,6 +303,27 @@ public class DatabaseManager
 		}
 	}
 	
+	static public void UpdateInventoryInfo(InventoryInfo ii) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("UPDATE Inventory SET earring_0 = ?, earring_1 = ?, necklake_0 = ?, ring_0 = ?, ring_1 = ?, bracelet_0 = ?, bracelet_1 = ? WHERE UUID = ?");
+			sql.setInt(1, ii.earring_0);
+			sql.setInt(2, ii.earring_1);
+			sql.setInt(3, ii.necklake_0);
+			sql.setInt(4, ii.earring_0);
+			sql.setInt(5, ii.earring_1);
+			sql.setInt(6, ii.ring_0);
+			sql.setInt(7, ii.ring_1);
+			sql.setInt(8, ii.bracelet_0);
+			sql.setInt(9, ii.bracelet_1);
+			sql.setString(10, ii.UUID);
+			sql.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	static public InventoryInfo GetInventoryInfo(String UUID) 
 	{
 		try {
@@ -334,10 +354,29 @@ public class DatabaseManager
 	
 	static public void RegisterNewPlayer(CustomPlayer pi, InventoryInfo ii, Wallet w) 
 	{
-		Logger.Log("NewPlayer");
 		CreatePlayerInfo(pi);
 		CreatePlayerInventory(ii);
 		AddPlayerWallet(w);
 	}
 	
+	static public void UpdatePlayerExp(String UUID, int exp) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET Experience = ? WHERE UUID = ?");
+			sql.setInt(1, exp);
+			sql.setString(2, UUID);
+			sql.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	static public void UpdatePlayer(CustomPlayer cp) 
+	{
+		DatabaseManager.UpdateInventoryInfo(cp.inventoryInfo);
+		DatabaseManager.UpdatePlayerClass(cp.UUID, cp.Klasa);
+		DatabaseManager.UpdatePlayerWallet(cp.wallet);
+		DatabaseManager.UpdatePlayerExp(cp.UUID, cp.Experience);
+	}
 }

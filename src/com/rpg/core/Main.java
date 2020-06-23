@@ -1,8 +1,8 @@
 package com.rpg.core;
 
-import java.util.ArrayList;
-
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.entity.Arrow;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,10 +13,10 @@ import com.rpg.core.framework.CustomPlayer;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.Logger;
 import com.rpg.core.framework.Misc;
+import com.rpg.core.framework.PlayersManager;
 
 public class Main extends JavaPlugin implements Listener{
 	public static Main instance;
-	public static ArrayList<CustomPlayer> Players;
 	
 	@Override
 	public void onEnable() 
@@ -42,9 +42,16 @@ public class Main extends JavaPlugin implements Listener{
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		
-		Players = new ArrayList<CustomPlayer>();
 		Logger.LogInfo("Loading Done.");
+		
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+		    @Override
+		    public void run() {
+		    	Logger.LogInfo("core", "Zapisywanie danych gracza do bazy.");
+		    	for (CustomPlayer cp : PlayersManager.Players)
+		    		PlayersManager.SendPlayerUpdate(cp);
+		    }
+		}, 0L, 6000L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
 	}
 	
 	@Override
@@ -83,12 +90,5 @@ public class Main extends JavaPlugin implements Listener{
 	public static Main GetMe() 
 	{
 		return instance;
-	}
-	
-	public static void UnregisterPlayer(String UUID) 
-	{
-		for(CustomPlayer cp : Players)
-			if(cp.player.getUniqueId().toString() == UUID)
-				Main.Players.remove(cp);
 	}
 }

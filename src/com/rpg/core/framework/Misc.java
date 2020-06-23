@@ -41,4 +41,19 @@ public class Misc {
 		else
 			return;
 	}
+	
+	public static boolean Chance(float chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues) 
+	{
+		if(chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues < 0)
+			chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues = 0;
+		else if (chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues > 100)
+			chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues = 100;
+		
+		float rv = (float)Math.random();
+		float value = rv * chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues;
+		
+		if(value <= chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues)
+			 return true;
+		else return false;
+	}
 }

@@ -6,10 +6,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.rpg.core.CoreConfig;
-import com.rpg.core.Main;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.InventoryInfo;
+import com.rpg.core.framework.PlayersManager;
 import com.rpg.core.framework.CustomPlayer;
 import com.rpg.core.framework.Wallet;
 
@@ -62,7 +62,7 @@ public class Announcing implements Listener{
         
 		pi.player.setWalkSpeed((float)CoreConfig.defPlayerSpeed);
 		//Logger.LogInfo(pi.UUID);
-		Main.Players.add(pi);
+		PlayersManager.RegisterPlayer(pi);
     }
 	
 	@EventHandler
@@ -81,8 +81,6 @@ public class Announcing implements Listener{
 				return;
 			}
 		}
-		
-		Main.UnregisterPlayer(event.getPlayer().getUniqueId().toString());
+		PlayersManager.UnregisterPlayer(event.getPlayer().getUniqueId().toString());
 	}
-
 }

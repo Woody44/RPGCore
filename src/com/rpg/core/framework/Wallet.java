@@ -17,6 +17,6 @@ public class Wallet {
 	
 	public void UpdateMoney()
 	{
-		DatabaseManager.SetPlayerWallet(this);
+		DatabaseManager.UpdatePlayerWallet(this);
 	}
 }
