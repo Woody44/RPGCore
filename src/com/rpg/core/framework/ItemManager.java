@@ -80,6 +80,7 @@ public class ItemManager {
 			if(line.contains(value)) 
 			{
 				line = line.replaceAll(value + ":", "");
+				line = ChatManager.NoColors(line);
 				if(line.contains("%"))
 				{
 					line = line.replaceAll("%", "");

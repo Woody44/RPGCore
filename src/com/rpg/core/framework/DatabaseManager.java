@@ -3,6 +3,10 @@ package com.rpg.core.framework;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 import java.sql.PreparedStatement;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
@@ -14,7 +18,7 @@ public class DatabaseManager
 	static private String adr, db, usr, pass;
 	static private int port;
 	
-	static public void Setup() 
+	public static void Setup() 
 	{
 		try {
 		if (con != null && con.isClosed() == false)
@@ -45,7 +49,7 @@ public class DatabaseManager
         }
 	}
 	
-	static public void connect() throws ClassNotFoundException, SQLException
+	public static void connect() throws ClassNotFoundException, SQLException
 	{
 		Class.forName("com.mysql.jdbc.Driver");
 		MysqlDataSource source = new MysqlDataSource();
@@ -59,7 +63,7 @@ public class DatabaseManager
 		Logger.LogInfo("Db Manager", "Connected!");
 	}
 	
-	static public int SetPlayerClass(String UUID, int klasa, int poziom)
+	public static int SetPlayerClass(String UUID, int klasa, int poziom)
 	{
 		try 
 		{
@@ -76,7 +80,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public int GetPlayerClass(String UUID)
+	public static int GetPlayerClass(String UUID)
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Gracze WHERE UUID = ?");
@@ -92,12 +96,12 @@ public class DatabaseManager
         return -1;
 	}
 	
-	static public void UpdatePlayerClass(String UUID, int klasa) 
+	public static void UpdatePlayerClass(String UUID, int klasa) 
 	{
 		UpdatePlayerClass(UUID, klasa, false);
 	}
 	
-	static public void UpdatePlayerClass(String UUID, int klasa, boolean additive) 
+	public static void UpdatePlayerClass(String UUID, int klasa, boolean additive) 
 	{
 		try {
 			PreparedStatement sql;
@@ -124,7 +128,7 @@ public class DatabaseManager
 		
 	}
 	
-	static public Wallet GetPlayerWallet(String UUID)
+	public static Wallet GetPlayerWallet(String UUID)
 	{
 		try {
 			Wallet w = new Wallet();
@@ -144,7 +148,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public void AddPlayerWallet(Wallet w)
+	public static void AddPlayerWallet(Wallet w)
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("INSERT INTO Wallet VALUES (?,?)");
@@ -157,7 +161,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public void UpdatePlayerWallet(Wallet w)
+	public static void UpdatePlayerWallet(Wallet w)
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = ? WHERE UUID = ?");
@@ -170,7 +174,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public int GetClassUpgradePrice(int actuallvl) 
+	public static int GetClassUpgradePrice(int actuallvl) 
 	{
 		if(actuallvl >= 7)
 			return 0;
@@ -191,12 +195,12 @@ public class DatabaseManager
 		return 0;
 	}
 	
-	static public int GetPlayerClassLevel(String UUID) 
+	public static int GetPlayerClassLevel(String UUID) 
 	{
 		return Integer.parseInt(("" + GetPlayerClass(UUID)).substring(3));
 	}
 	
-	static public int GetPlayerLevel(String UUID) 
+	public static int GetPlayerLevel(String UUID) 
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Experience FROM Gracze WHERE UUID = ?");
@@ -222,7 +226,7 @@ public class DatabaseManager
 		return 0;
 	}
 	
-	static public void CreatePlayerInfo(CustomPlayer pi) 
+	public static void CreatePlayerInfo(CustomPlayer pi) 
 	{
 		String sqlq = "INSERT INTO Gracze VALUES (?, ?, ?, ?);";
 		try {
@@ -238,7 +242,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public CustomPlayer GetPlayerInfo(String UUID) 
+	public static CustomPlayer GetPlayerInfo(String UUID) 
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Gracze WHERE UUID = ?");
@@ -283,7 +287,7 @@ public class DatabaseManager
 		return null;
 	}
 	
-	static public void CreatePlayerInventory(InventoryInfo ii) 
+	public static void CreatePlayerInventory(InventoryInfo ii) 
 	{
 		String sqlq = "INSERT INTO Inventory VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 		try {
@@ -303,20 +307,18 @@ public class DatabaseManager
 		}
 	}
 	
-	static public void UpdateInventoryInfo(InventoryInfo ii) 
+	public static void UpdateInventoryInfo(InventoryInfo ii) 
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Inventory SET earring_0 = ?, earring_1 = ?, necklake_0 = ?, ring_0 = ?, ring_1 = ?, bracelet_0 = ?, bracelet_1 = ? WHERE UUID = ?");
 			sql.setInt(1, ii.earring_0);
 			sql.setInt(2, ii.earring_1);
 			sql.setInt(3, ii.necklake_0);
-			sql.setInt(4, ii.earring_0);
-			sql.setInt(5, ii.earring_1);
-			sql.setInt(6, ii.ring_0);
-			sql.setInt(7, ii.ring_1);
-			sql.setInt(8, ii.bracelet_0);
-			sql.setInt(9, ii.bracelet_1);
-			sql.setString(10, ii.UUID);
+			sql.setInt(4, ii.ring_0);
+			sql.setInt(5, ii.ring_1);
+			sql.setInt(6, ii.bracelet_0);
+			sql.setInt(7, ii.bracelet_1);
+			sql.setString(8, ii.UUID);
 			sql.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -324,7 +326,7 @@ public class DatabaseManager
 		}
 	}
 	
-	static public InventoryInfo GetInventoryInfo(String UUID) 
+	public static InventoryInfo GetInventoryInfo(String UUID) 
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Inventory WHERE UUID = ?");
@@ -352,14 +354,14 @@ public class DatabaseManager
 		return null;
 	}
 	
-	static public void RegisterNewPlayer(CustomPlayer pi, InventoryInfo ii, Wallet w) 
+	public static void RegisterNewPlayer(CustomPlayer pi, InventoryInfo ii, Wallet w) 
 	{
 		CreatePlayerInfo(pi);
 		CreatePlayerInventory(ii);
 		AddPlayerWallet(w);
 	}
 	
-	static public void UpdatePlayerExp(String UUID, int exp) 
+	public static void UpdatePlayerExp(String UUID, int exp) 
 	{
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET Experience = ? WHERE UUID = ?");
@@ -372,11 +374,72 @@ public class DatabaseManager
 		}
 	}
 	
-	static public void UpdatePlayer(CustomPlayer cp) 
+	public static void UpdatePlayer(CustomPlayer cp) 
 	{
 		DatabaseManager.UpdateInventoryInfo(cp.inventoryInfo);
 		DatabaseManager.UpdatePlayerClass(cp.UUID, cp.Klasa);
 		DatabaseManager.UpdatePlayerWallet(cp.wallet);
 		DatabaseManager.UpdatePlayerExp(cp.UUID, cp.Experience);
+	}
+	
+	public static Location GetLocation(String name) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Lokacje WHERE Name = ?");
+			sql.setString(1, name);
+			ResultSet result = sql.executeQuery();
+			
+			if(result.next())
+	        {
+				
+				return new Location(Bukkit.getWorld(result.getString(1)), result.getDouble(3),
+						result.getDouble(4), result.getDouble(5), result.getFloat(6), result.getFloat(7));
+				
+	        }
+		} catch(SQLException e){ e.printStackTrace(); return null;}
+		 return null;
+	}
+	
+	public static void CreateLocation(String name, Location location) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("INSERT INTO Lokacje(Swiat, Nazwa, X, Y, Z, yaw, pitch) VALUES(?, ?, ?, ?, ?, ?, ?)");
+			sql.setString(1, location.getWorld().getName());
+			sql.setString(2, name);
+			sql.setDouble(3, location.getX());
+			sql.setDouble(4, location.getY());
+			sql.setDouble(5, location.getZ());
+			sql.setFloat(6, location.getYaw());
+			sql.setFloat(7, location.getPitch());
+			sql.execute();
+		} catch(SQLException e){ e.printStackTrace();}
+	}
+	
+	public static void DeleteLocation(String name) 
+	{
+		try {
+			PreparedStatement sql = con.prepareStatement("DELETE FROM Lokacje WHERE Nazwa = ?");
+			sql.setString(1, name);
+			sql.execute();
+		} catch(SQLException e){ e.printStackTrace();}
+	}
+	
+	public static ArrayList<CustomLocation> SyncLocations() 
+	{
+		try 
+		{
+			ArrayList<CustomLocation> locs = new ArrayList<CustomLocation>();
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Lokacje");
+			ResultSet result = sql.executeQuery();
+			if(result.next())
+			{
+				locs.add(new CustomLocation(result.getString(3), new Location(Bukkit.getWorld(result.getString(2)), result.getDouble(4), result.getDouble(5), result.getDouble(6), result.getFloat(7), result.getFloat(8))));
+			}
+			return locs;
+		} 
+		catch(SQLException e)
+		{ 
+			e.printStackTrace(); return null;
+		}
 	}
 }

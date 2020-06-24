@@ -21,6 +21,7 @@ public class Announcing implements Listener{
 		CustomPlayer pi = new CustomPlayer();
 		pi.player = event.getPlayer();
 		String uuid = pi.player.getUniqueId().toString();
+		pi.UUID = uuid;
 		if (DatabaseManager.GetPlayerInfo(uuid) == null) {
 			pi.UUID = uuid;
 			pi.Klasa = 0;
@@ -68,6 +69,7 @@ public class Announcing implements Listener{
 	@EventHandler
 	public void OnLeft(PlayerQuitEvent event) 
 	{
+		PlayersManager.SendPlayerUpdate(PlayersManager.GetOnlinePlayer(event.getPlayer().getUniqueId().toString()));
 		if (!CoreConfig.announceLeft)
 			event.setQuitMessage(null);
 		else

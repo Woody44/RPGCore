@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 
+import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
 
 public class Misc {
@@ -55,5 +56,19 @@ public class Misc {
 		if(value <= chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues)
 			 return true;
 		else return false;
+	}
+	
+	public static int ExpToLvl(int exp) 
+	{
+		for(int i=0; i < CoreConfig.levels.length; i++)
+    		if(i < CoreConfig.levels.length-1) {
+        		if(exp >= CoreConfig.levels[i] && exp < CoreConfig.levels[i+1])
+        			return i;
+        		else continue;
+    		}
+    		else
+    			return CoreConfig.levels.length -1;
+		
+		return 0;
 	}
 }

@@ -7,6 +7,7 @@ public class PlayersManager {
 	public static void RegisterPlayer(CustomPlayer cp) 
 	{
 		Players.add(cp);
+		Logger.Log("REGISTERING " + cp.UUID);
 	}
 	
 	public static void UnregisterPlayer(String UUID) 
@@ -20,12 +21,11 @@ public class PlayersManager {
 	{
 		for(CustomPlayer cp : Players) 
 		{
-			if(cp.UUID == UUID)
+			if(cp.UUID.equals(UUID))
 			{
 				return cp;
 			}
 		}
-		
 		return null;
 	}
 	

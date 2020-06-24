@@ -8,8 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.rpg.core.commands.*;
 import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
+import com.rpg.core.framework.CustomLocation;
 import com.rpg.core.framework.CustomPlayer;
 import com.rpg.core.framework.DatabaseManager;
+import com.rpg.core.framework.LocationsManager;
 import com.rpg.core.framework.Logger;
 import com.rpg.core.framework.Misc;
 import com.rpg.core.framework.PlayersManager;
@@ -51,6 +53,11 @@ public class Main extends JavaPlugin implements Listener{
 		    		PlayersManager.SendPlayerUpdate(cp);
 		    }
 		}, 0L, 6000L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
+		
+		for(CustomLocation cl : DatabaseManager.SyncLocations()) 
+		{
+			LocationsManager.RegisterLocation(cl);
+		}
 	}
 	
 	@Override
@@ -66,6 +73,9 @@ public class Main extends JavaPlugin implements Listener{
 		Manager.AddCommand(new CommandPay());
 		Manager.AddCommand(new CommandSystem());
 		Manager.AddCommand(new CommandReloadConfig());
+		Manager.AddCommand(new CommandLocationCreate());
+		Manager.AddCommand(new CommandLocationDelete());
+		Manager.AddCommand(new CommandLocationtp());
 		for(CommandExecutor ce: Manager.commands)
 		{
 			String cname = ce.getClass().getSimpleName();

@@ -28,6 +28,11 @@ public class ChatManager {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 	
+	public static String NoColors(String message) 
+	{
+		return ChatColor.stripColor(message);
+	}
+	
 	public static String FillVars(String format, Player player, String message) 
 	{
 		int lvl = DatabaseManager.GetPlayerLevel(player.getUniqueId().toString());
