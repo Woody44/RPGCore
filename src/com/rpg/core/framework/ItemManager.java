@@ -9,31 +9,36 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemManager {
 
-	public static void AddLore(ItemStack item, String value) 
+	public static ItemStack AddLore(ItemStack item, String[] value) 
 	{
-		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-		String[] newLore = value.split("||");
-		for(String str : newLore)
+		ArrayList<String> lore;
+		if(item.getItemMeta().getLore() != null)
+			lore = (ArrayList<String>) item.getItemMeta().getLore();
+		else
+			lore = new ArrayList<String>();
+		//// .I.
+
+		for(String str : value)
+		{
+			str = str.replaceAll("_", " ");
 			lore.add(ChatManager.GetColorized(str));
-		item.getItemMeta().setLore(lore);
-	}
-	
-	public static ItemStack SetLore(ItemStack item, String value) 
-	{
-		ArrayList<String> lore = new ArrayList<String>();
-		String[] newLore = value.split("||");
-		for(String str : newLore)
-			lore.add(ChatManager.GetColorized(str));
-		item.getItemMeta().setLore(lore);
+		}
+		
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 		return item;
 	}
 	
-	public static void ResetLore(ItemStack item) 
+	public static ItemStack ResetLore(ItemStack item) 
 	{
-		item.getItemMeta().setLore(new ArrayList<String>());
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(new ArrayList<String>());
+		item.setItemMeta(meta);
+		return item;
 	}
 	
-	public static void DeleteLoreLine(ItemStack item, String value) 
+	public static ItemStack DeleteLoreLine(ItemStack item, String value) 
 	{
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		for(String line : lore) 
@@ -43,7 +48,10 @@ public class ItemManager {
 				lore.remove(line);
 			}
 		}
-		item.getItemMeta().setLore(lore);
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
 	}
 	
 	public static String GetLore(ItemStack item, String value) 
@@ -84,7 +92,7 @@ public class ItemManager {
 		}
 		return 0;
 	}
-	public static ItemStack createItemStack(final Material material, final String name, final String lore)
+	public static ItemStack createItemStack(final Material material, final String name, final String[] lore)
     {
         final ItemStack item = new ItemStack(material, 1);
         final ItemMeta meta = item.getItemMeta();
@@ -93,7 +101,8 @@ public class ItemManager {
 
         item.setItemMeta(meta);
         
-        SetLore(item, lore);
+        if(lore != null)
+        	AddLore(item, lore);
         return item;
     }
 	

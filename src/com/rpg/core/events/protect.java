@@ -17,6 +17,7 @@ import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.Logger;
+import com.rpg.core.framework.Misc;
 
 public class protect implements Listener{
 	
@@ -44,9 +45,7 @@ public class protect implements Listener{
 					{
 						if(CoreConfig.dropExplosions)
 						{
-							float chance = (float)Math.random();
-							Logger.LogInfo(chance + "/" + CoreConfig.explosionsDropRate);
-							if(chance <= CoreConfig.explosionsDropRate)
+							if(Misc.Chance(CoreConfig.explosionsDropRate));
 								b.breakNaturally();
 						}
 						b.setType(Material.BEDROCK);
