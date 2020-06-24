@@ -431,7 +431,8 @@ public class DatabaseManager
 			ArrayList<CustomLocation> locs = new ArrayList<CustomLocation>();
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Lokacje");
 			ResultSet result = sql.executeQuery();
-			if(result.next())
+			
+			while(result.next())
 			{
 				locs.add(new CustomLocation(result.getString(3), new Location(Bukkit.getWorld(result.getString(2)), result.getDouble(4), result.getDouble(5), result.getDouble(6), result.getFloat(7), result.getFloat(8))));
 			}
