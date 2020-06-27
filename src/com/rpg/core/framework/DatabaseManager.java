@@ -56,7 +56,7 @@ public class DatabaseManager
 		source.setDatabaseName(db);
 		source.setUser(usr);
 		source.setPassword(pass);
-		
+		source.setUseSSL(false);
 		try {
 			con = source.getConnection();
 		} catch (SQLException e) {
@@ -104,8 +104,9 @@ public class DatabaseManager
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next()){
+	        	int value = result.getInt(1);
 	        	disconnect();
-	        	return result.getInt(1);
+	        	return value;
 	        }
 		} 
 		catch (SQLException e) {
@@ -217,8 +218,9 @@ public class DatabaseManager
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
 	        {
+	        	int value = result.getInt(1);
 	        	disconnect();
-	        	return result.getInt(1);
+	        	return value;
 	        }
 		}
 		catch(SQLException e) {
@@ -456,9 +458,10 @@ public class DatabaseManager
 			
 			if(result.next())
 	        {
-				disconnect();
-				return new Location(Bukkit.getWorld(result.getString(1)), result.getDouble(3),
+				Location loc = new Location(Bukkit.getWorld(result.getString(1)), result.getDouble(3),
 						result.getDouble(4), result.getDouble(5), result.getFloat(6), result.getFloat(7));
+				disconnect();
+				return loc;
 				
 	        }
 		} catch(SQLException e){ e.printStackTrace(); disconnect(); return null;}

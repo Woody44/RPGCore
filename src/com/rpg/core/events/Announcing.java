@@ -59,6 +59,7 @@ public class Announcing implements Listener{
 		}
         
 		event.getPlayer().setWalkSpeed((float)CoreConfig.defPlayerSpeed);
+		event.getPlayer().setLevel(DatabaseManager.GetPlayerLevel(pi.UUID));
     }
 	
 	@EventHandler

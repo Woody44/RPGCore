@@ -41,7 +41,6 @@ public class Misc {
 	
 	public static boolean Chance(float chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues) 
 	{
-		Logger.LogWarn(chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues + "");
 		if(chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues < 0)
 			chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues = 0;
 		else if (chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues > 100)
@@ -49,7 +48,7 @@ public class Misc {
 	
 		float chance = chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues / 100;
 		float value = (float)Math.random();
-		//Logger.LogInfo("(" + chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues + "/100) --- " + value + "/" + chance + " --- " + (value <= chance) );
+		
 		if(value <= chance)
 			 return true;
 		else return false;
