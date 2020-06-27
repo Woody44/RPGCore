@@ -35,7 +35,8 @@ public class ChatManager {
 	
 	public static String FillVars(String format, Player player, String message) 
 	{
-		int lvl = DatabaseManager.GetPlayerLevel(player.getUniqueId().toString());
+		int lvl = DatabaseManager.GetPlayerExp(player.getUniqueId().toString());
+		lvl = Misc.ExpToLvl(lvl);
 		format = format.replace("{PLAYER}", player.getDisplayName());
 		format = format.replace("{LEVEL}", lvl + "");
 		format = format.replace("{LEVEL_MIN}", CoreConfig.chatLvlMin+"");
@@ -45,7 +46,8 @@ public class ChatManager {
 	
 	public static String FillVars(String format, Player player) 
 	{
-		int lvl = DatabaseManager.GetPlayerLevel(player.getUniqueId().toString());
+		int lvl = DatabaseManager.GetPlayerExp(player.getUniqueId().toString());
+		lvl = Misc.ExpToLvl(lvl);
 		format = format.replace("{PLAYER}", player.getDisplayName());
 		format = format.replace("{LEVEL}", lvl + "");
 		format = format.replace("{LEVEL_MIN}", CoreConfig.chatLvlMin+"");

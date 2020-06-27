@@ -3,6 +3,7 @@ package com.rpg.core.framework;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
@@ -19,7 +20,7 @@ public class Misc {
 		else
 		{
 			cooldowns.add(playerNick + "-" + thing);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> { Misc.resetCooldown(playerNick, thing); }, (int)timeInSeconds * 20);
+			Bukkit.getScheduler().scheduleSyncDelayedTask(main, () -> { Misc.resetCooldown(playerNick, thing); }, (int)(timeInSeconds * 20));
 			return true;
 		}
 	}
@@ -66,5 +67,28 @@ public class Misc {
     			return CoreConfig.levels.length -1;
 		
 		return 0;
+	}
+	
+	public static void UpdatePlayerExp(String UUID, int exp, boolean additive) 
+	{
+		if(additive)
+			exp += DatabaseManager.GetPlayerExp(UUID);
+
+		DatabaseManager.UpdatePlayerExp(UUID, exp);
+		UpdatePlayerExpBar(Bukkit.getPlayer(UUID), exp);
+	}
+	
+	public static void UpdatePlayerExp(String UUID, int exp) 
+	{
+		UpdatePlayerExp(UUID, exp, true);
+	}
+	
+	public static void UpdatePlayerExpBar(Player player, int exp) 
+	{
+		int level = Misc.ExpToLvl(exp);
+        float exptonext = CoreConfig.levels[level+1] - CoreConfig.levels[level];
+        float exptonextactual = exp - CoreConfig.levels[level];
+		player.setLevel(level);
+		player.setExp(exptonextactual / exptonext);
 	}
 }

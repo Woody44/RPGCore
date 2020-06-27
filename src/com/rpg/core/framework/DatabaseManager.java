@@ -206,6 +206,22 @@ public class DatabaseManager
 		}
 	}
 	
+	public static void UpdatePlayerWallet(String UUID, int money) 
+	{
+		connect();
+		try {
+			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = Money + ? WHERE UUID = ?");
+	        sql.setInt(1, money);
+	        sql.setString(2, UUID);
+	        sql.executeUpdate();
+	        disconnect();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			disconnect();
+		}
+	}
+	
 	public static int GetClassUpgradePrice(int actuallvl) 
 	{
 		connect();
@@ -238,7 +254,7 @@ public class DatabaseManager
 		return Integer.parseInt(("" + GetPlayerClass(UUID)).substring(3));
 	}
 	
-	public static int GetPlayerLevel(String UUID) 
+	public static int GetPlayerExp(String UUID) 
 	{
 		connect();
 		try {
@@ -248,19 +264,8 @@ public class DatabaseManager
 	        if(result.next())
 	        {
 	        	int exp = result.getInt(1);
-	        	for(int i=0; i < CoreConfig.levels.length; i++)
-	        		if(i < CoreConfig.levels.length-1) {
-		        		if(exp >= CoreConfig.levels[i] && exp < CoreConfig.levels[i+1])
-		        		{
-		        			disconnect();
-		        			return i;
-		        		}
-		        		else continue;
-	        		}
-	        		else {
-	        			disconnect();
-	        			return CoreConfig.levels.length -1;
-	        		}
+	        	disconnect();
+	        	return exp;
 	        }
 		}
 		catch(SQLException e) {

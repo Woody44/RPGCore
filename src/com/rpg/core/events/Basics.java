@@ -32,7 +32,7 @@ public class Basics implements Listener
 	public void OnChat(AsyncPlayerChatEvent e) 
 	{
 		String originalMessage = e.getMessage();
-		int lvl = DatabaseManager.GetPlayerLevel(e.getPlayer().getUniqueId().toString());
+		int lvl = DatabaseManager.GetPlayerExp(e.getPlayer().getUniqueId().toString());
 		if(lvl < 10) {
 			e.setCancelled(true);
 			e.getPlayer().sendMessage(ChatManager.GetColorized(ChatManager.FillVars(CoreConfig.chatLowLvlMessage, e.getPlayer(), originalMessage)));

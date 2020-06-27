@@ -1,5 +1,6 @@
 package com.rpg.core.events;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -9,6 +10,7 @@ import com.rpg.core.CoreConfig;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.InventoryInfo;
+import com.rpg.core.framework.Misc;
 import com.rpg.core.framework.PlayerInfo;
 import com.rpg.core.framework.Wallet;
 
@@ -17,6 +19,7 @@ public class Announcing implements Listener{
 	@EventHandler
     public void OnJoin(PlayerJoinEvent event)
     {
+		Player player = event.getPlayer();
 		PlayerInfo pi = new PlayerInfo();
 		String uuid = event.getPlayer().getUniqueId().toString();
 		pi.UUID = uuid;
@@ -57,9 +60,8 @@ public class Announcing implements Listener{
 				return;
 			}
 		}
-        
-		event.getPlayer().setWalkSpeed((float)CoreConfig.defPlayerSpeed);
-		event.getPlayer().setLevel(DatabaseManager.GetPlayerLevel(pi.UUID));
+		player.setWalkSpeed((float)CoreConfig.defPlayerSpeed);
+		Misc.UpdatePlayerExpBar(player, pi.Experience);
     }
 	
 	@EventHandler
