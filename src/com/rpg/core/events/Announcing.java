@@ -9,8 +9,7 @@ import com.rpg.core.CoreConfig;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.InventoryInfo;
-import com.rpg.core.framework.PlayersManager;
-import com.rpg.core.framework.CustomPlayer;
+import com.rpg.core.framework.PlayerInfo;
 import com.rpg.core.framework.Wallet;
 
 public class Announcing implements Listener{
@@ -18,9 +17,8 @@ public class Announcing implements Listener{
 	@EventHandler
     public void OnJoin(PlayerJoinEvent event)
     {
-		CustomPlayer pi = new CustomPlayer();
-		pi.player = event.getPlayer();
-		String uuid = pi.player.getUniqueId().toString();
+		PlayerInfo pi = new PlayerInfo();
+		String uuid = event.getPlayer().getUniqueId().toString();
 		pi.UUID = uuid;
 		if (DatabaseManager.GetPlayerInfo(uuid) == null) {
 			pi.UUID = uuid;
@@ -43,8 +41,7 @@ public class Announcing implements Listener{
 			}
 		else 
 		{
-			pi = DatabaseManager.GetPlayerInfo(pi.player.getUniqueId().toString());
-			pi.player = event.getPlayer();
+			pi = DatabaseManager.GetPlayerInfo(event.getPlayer().getUniqueId().toString());
 		}
 		
 		if (!CoreConfig.announceJoin)
@@ -61,15 +58,12 @@ public class Announcing implements Listener{
 			}
 		}
         
-		pi.player.setWalkSpeed((float)CoreConfig.defPlayerSpeed);
-		//Logger.LogInfo(pi.UUID);
-		PlayersManager.RegisterPlayer(pi);
+		event.getPlayer().setWalkSpeed((float)CoreConfig.defPlayerSpeed);
     }
 	
 	@EventHandler
 	public void OnLeft(PlayerQuitEvent event) 
 	{
-		PlayersManager.SendPlayerUpdate(PlayersManager.GetOnlinePlayer(event.getPlayer().getUniqueId().toString()));
 		if (!CoreConfig.announceLeft)
 			event.setQuitMessage(null);
 		else
@@ -83,6 +77,5 @@ public class Announcing implements Listener{
 				return;
 			}
 		}
-		PlayersManager.UnregisterPlayer(event.getPlayer().getUniqueId().toString());
 	}
 }

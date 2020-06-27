@@ -25,6 +25,11 @@ public class LocationsManager
 		Locations.add(cl);
 	}
 	
+	public static void RegisterLocations(ArrayList<CustomLocation> cls) 
+	{
+		Locations.addAll(cls);
+	}
+	
 	public static void DeleteLocation(String name) 
 	{
 		if(name ==null)

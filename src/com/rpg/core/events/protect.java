@@ -10,6 +10,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -22,6 +24,16 @@ import com.rpg.core.framework.Misc;
 public class protect implements Listener{
 	
 	@EventHandler
+	public void OnEntityDamage(EntityDamageByEntityEvent event) 
+	{
+		if(event.getCause() == DamageCause.ENTITY_EXPLOSION || event.getCause() == DamageCause.BLOCK_EXPLOSION) {
+		    if (event.getEntity().getType() == EntityType.DROPPED_ITEM) {
+		        event.setCancelled(true);
+		    }
+		}
+	}
+	
+	@EventHandler
 	public void OnExplosion(EntityExplodeEvent event) 
 	{
 		if(!CoreConfig.preventExplosions)
@@ -29,7 +41,7 @@ public class protect implements Listener{
 		if(!CoreConfig.preventExplosionsWorlds.contains(event.getEntity().getWorld().getName()))
 			return;
 		
-		if(event.getEntityType() == EntityType.PRIMED_TNT) {
+		//if(event.getEntityType() == EntityType.PRIMED_TNT) {
 			event.setCancelled(true);
 			List<Block> Blocks = event.blockList();
 			for(Block b : Blocks) 
@@ -45,7 +57,7 @@ public class protect implements Listener{
 					{
 						if(CoreConfig.dropExplosions)
 						{
-							if(Misc.Chance(CoreConfig.explosionsDropRate));
+							if(Misc.Chance(CoreConfig.explosionsDropRate))
 								b.breakNaturally();
 						}
 						b.setType(Material.BEDROCK);
@@ -55,7 +67,7 @@ public class protect implements Listener{
 					}
 				}
 			}
-		}
+		//}
 	}
 	
 	@EventHandler

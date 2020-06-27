@@ -15,18 +15,22 @@ import com.rpg.core.CoreConfig;
 public class DatabaseManager
 {
 	public static Connection con;
+	public static MysqlDataSource source = new MysqlDataSource();
 	static private String adr, db, usr, pass;
 	static private int port;
 	
 	public static void Setup() 
 	{
-		try {
-		if (con != null && con.isClosed() == false)
-				con.close();
-		
-		}catch(SQLException e) {
+		try 
+		{
+			if (con != null && con.isClosed() == false)
+				disconnect();
+		}
+		catch(SQLException e) 
+		{
 			e.printStackTrace();
 		}
+		
 		Logger.LogInfo("Db Manager", "Loading...");
 		adr = CoreConfig.dbhost;
 		port = CoreConfig.dbport;
@@ -34,37 +38,47 @@ public class DatabaseManager
         usr = CoreConfig.dbusr;
         pass = CoreConfig.dbpass;
         
-        try 
-        {
-        	Logger.LogInfo("Db Manager", "Connecting to Database located at " + adr + "@" + db + "...");
-        	connect();
-        } catch (ClassNotFoundException e) 
-        {
-        	e.printStackTrace();
-        	Logger.LogError("Db Manager", "Error occured while attempting to connect.");
-        	Logger.LogError("Core", "PLUGIN MAY BE BROKEN BECAUSE CAN'T CONNECT TO SPECIFIED DATABASE");
-        }catch(SQLException e) 
-        {
-        	e.printStackTrace();
-        }
+        Logger.LogInfo("Db Manager", "Connecting to Database located at " + adr + "@" + db + "...");
 	}
 	
-	public static void connect() throws ClassNotFoundException, SQLException
+	public static void connect()
 	{
-		Class.forName("com.mysql.jdbc.Driver");
-		MysqlDataSource source = new MysqlDataSource();
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		}
+		catch (ClassNotFoundException ex) 
+		{
+			ex.printStackTrace();
+		}
 		source.setServerName(adr);
 		source.setPort(port);
 		source.setDatabaseName(db);
 		source.setUser(usr);
 		source.setPassword(pass);
 		
-		con = source.getConnection();
-		Logger.LogInfo("Db Manager", "Connected!");
+		try {
+			con = source.getConnection();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//Logger.LogInfo("Db Manager", "Connected!");
+	}
+	
+	public static void disconnect() 
+	{
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static int SetPlayerClass(String UUID, int klasa, int poziom)
 	{
+		connect();
 		try 
 		{
 			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET klasa = ?, KlasaLevel = ? WHERE UUID = ?;");
@@ -72,27 +86,32 @@ public class DatabaseManager
 	        sql.setInt(1, klasa);
 	        sql.setInt(2, poziom);
 	        sql.execute();
+	        disconnect();
 	        return 0;
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
+			disconnect();
 			return -1;
 		}
 	}
 	
 	public static int GetPlayerClass(String UUID)
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Klasa FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next()){
+	        	disconnect();
 	        	return result.getInt(1);
 	        }
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
+		disconnect();
         return -1;
 	}
 	
@@ -103,6 +122,7 @@ public class DatabaseManager
 	
 	public static void UpdatePlayerClass(String UUID, int klasa, boolean additive) 
 	{
+		connect();
 		try {
 			PreparedStatement sql;
 				if(additive == true) 
@@ -122,14 +142,17 @@ public class DatabaseManager
 				}
 			
 			sql.executeUpdate();
+			disconnect();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			disconnect();
 		}
 		
 	}
 	
 	public static Wallet GetPlayerWallet(String UUID)
 	{
+		connect();
 		try {
 			Wallet w = new Wallet();
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Wallet WHERE UUID = ?");
@@ -140,42 +163,51 @@ public class DatabaseManager
 	        	w.uuid = result.getString(1);
 	        	w.Money = result.getInt(2);
 	        }
+	        disconnect();
 	        return w;
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			disconnect();
 			return null;		
 		}
 	}
 	
 	public static void AddPlayerWallet(Wallet w)
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("INSERT INTO Wallet VALUES (?,?)");
 	        sql.setString(1, w.uuid);
 	        sql.setInt(2, w.Money);
 	        sql.execute();
+	        disconnect();
 		}
 		catch(SQLException e) {
-			e.printStackTrace();	
+			e.printStackTrace();
+			disconnect();
 		}
 	}
 	
 	public static void UpdatePlayerWallet(Wallet w)
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Wallet SET Money = ? WHERE UUID = ?");
 	        sql.setInt(1, w.Money);
 	        sql.setString(2, w.uuid);
 	        sql.executeUpdate();
+	        disconnect();
 		}
 		catch(SQLException e) {
-			e.printStackTrace();	
+			e.printStackTrace();
+			disconnect();
 		}
 	}
 	
 	public static int GetClassUpgradePrice(int actuallvl) 
 	{
+		connect();
 		if(actuallvl >= 7)
 			return 0;
 		
@@ -185,13 +217,17 @@ public class DatabaseManager
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
 	        {
+	        	disconnect();
 	        	return result.getInt(1);
 	        }
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			disconnect();
 			return 0;		
 		}
+		
+		disconnect();
 		return 0;
 	}
 	
@@ -202,6 +238,7 @@ public class DatabaseManager
 	
 	public static int GetPlayerLevel(String UUID) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT Experience FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
@@ -212,45 +249,56 @@ public class DatabaseManager
 	        	for(int i=0; i < CoreConfig.levels.length; i++)
 	        		if(i < CoreConfig.levels.length-1) {
 		        		if(exp >= CoreConfig.levels[i] && exp < CoreConfig.levels[i+1])
+		        		{
+		        			disconnect();
 		        			return i;
+		        		}
 		        		else continue;
 	        		}
-	        		else
+	        		else {
+	        			disconnect();
 	        			return CoreConfig.levels.length -1;
+	        		}
 	        }
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			disconnect();
 			return 0;		
 		}
+		disconnect();
 		return 0;
 	}
 	
-	public static void CreatePlayerInfo(CustomPlayer pi) 
+	public static void CreatePlayerInfo(PlayerInfo pi) 
 	{
+		connect();
 		String sqlq = "INSERT INTO Gracze VALUES (?, ?, ?, ?);";
 		try {
 			PreparedStatement sql = con.prepareStatement(sqlq);
-	        sql.setString(1, pi.player.getUniqueId().toString());
+	        sql.setString(1, pi.UUID);
 	        sql.setInt(2, pi.Klasa);
 	        sql.setInt(3, pi.KlasaLevel);
 	        sql.setInt(4, pi.Experience);
 	        sql.execute();
+	        disconnect();
 		}
 		catch(SQLException e) {
-			e.printStackTrace();	
+			e.printStackTrace();
+			disconnect();
 		}
 	}
 	
-	public static CustomPlayer GetPlayerInfo(String UUID) 
+	public static PlayerInfo GetPlayerInfo(String UUID) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Gracze WHERE UUID = ?");
 	        sql.setString(1, UUID);
 	        ResultSet result = sql.executeQuery();
 	        if(result.next())
 	        {
-	        	CustomPlayer pi = new CustomPlayer();
+	        	PlayerInfo pi = new PlayerInfo();
 	        	pi.UUID = result.getString(1);
 	        	pi.Klasa = result.getInt(2);
 	        	pi.KlasaLevel = result.getInt(3);
@@ -277,18 +325,22 @@ public class DatabaseManager
 	        		pi.wallet.SetOwner(UUID);
 	        		pi.wallet.Money = 0;
 	        	}
+	        	disconnect();
 	        	return pi;
 	        }
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			disconnect();
 			return null;
 		}
+		disconnect();
 		return null;
 	}
 	
 	public static void CreatePlayerInventory(InventoryInfo ii) 
 	{
+		connect();
 		String sqlq = "INSERT INTO Inventory VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 		try {
 			PreparedStatement sql = con.prepareStatement(sqlq);
@@ -301,14 +353,17 @@ public class DatabaseManager
 	        sql.setInt(7, ii.bracelet_0);
 	        sql.setInt(8, ii.bracelet_1);
 	        sql.execute();
+	        disconnect();
 		}
 		catch(SQLException e) {
-			e.printStackTrace();	
+			e.printStackTrace();
+			disconnect();
 		}
 	}
 	
 	public static void UpdateInventoryInfo(InventoryInfo ii) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Inventory SET earring_0 = ?, earring_1 = ?, necklake_0 = ?, ring_0 = ?, ring_1 = ?, bracelet_0 = ?, bracelet_1 = ? WHERE UUID = ?");
 			sql.setInt(1, ii.earring_0);
@@ -320,14 +375,17 @@ public class DatabaseManager
 			sql.setInt(7, ii.bracelet_1);
 			sql.setString(8, ii.UUID);
 			sql.executeUpdate();
+			disconnect();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			disconnect();
 		}
 	}
 	
 	public static InventoryInfo GetInventoryInfo(String UUID) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Inventory WHERE UUID = ?");
 	        sql.setString(1, UUID);
@@ -344,17 +402,20 @@ public class DatabaseManager
 	        	ii.ring_1 = result.getInt(6);
 	        	ii.bracelet_0 = result.getInt(7);
 	        	ii.bracelet_1 = result.getInt(8);
+	        	disconnect();
 	        	return ii;
 	        }
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			disconnect();
 			return null;
 		}
+		disconnect();
 		return null;
 	}
 	
-	public static void RegisterNewPlayer(CustomPlayer pi, InventoryInfo ii, Wallet w) 
+	public static void RegisterNewPlayer(PlayerInfo pi, InventoryInfo ii, Wallet w) 
 	{
 		CreatePlayerInfo(pi);
 		CreatePlayerInventory(ii);
@@ -363,18 +424,21 @@ public class DatabaseManager
 	
 	public static void UpdatePlayerExp(String UUID, int exp) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("UPDATE Gracze SET Experience = ? WHERE UUID = ?");
 			sql.setInt(1, exp);
 			sql.setString(2, UUID);
 			sql.executeUpdate();
+			disconnect();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			disconnect();
 		}
 	}
 	
-	public static void UpdatePlayer(CustomPlayer cp) 
+	public static void UpdatePlayer(PlayerInfo cp) 
 	{
 		DatabaseManager.UpdateInventoryInfo(cp.inventoryInfo);
 		DatabaseManager.UpdatePlayerClass(cp.UUID, cp.Klasa);
@@ -384,6 +448,7 @@ public class DatabaseManager
 	
 	public static Location GetLocation(String name) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("SELECT * FROM Lokacje WHERE Name = ?");
 			sql.setString(1, name);
@@ -391,17 +456,19 @@ public class DatabaseManager
 			
 			if(result.next())
 	        {
-				
+				disconnect();
 				return new Location(Bukkit.getWorld(result.getString(1)), result.getDouble(3),
 						result.getDouble(4), result.getDouble(5), result.getFloat(6), result.getFloat(7));
 				
 	        }
-		} catch(SQLException e){ e.printStackTrace(); return null;}
+		} catch(SQLException e){ e.printStackTrace(); disconnect(); return null;}
+		disconnect();
 		 return null;
 	}
 	
 	public static void CreateLocation(String name, Location location) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("INSERT INTO Lokacje(Swiat, Nazwa, X, Y, Z, yaw, pitch) VALUES(?, ?, ?, ?, ?, ?, ?)");
 			sql.setString(1, location.getWorld().getName());
@@ -412,20 +479,24 @@ public class DatabaseManager
 			sql.setFloat(6, location.getYaw());
 			sql.setFloat(7, location.getPitch());
 			sql.execute();
-		} catch(SQLException e){ e.printStackTrace();}
+			disconnect();
+		} catch(SQLException e){ e.printStackTrace(); disconnect();}
 	}
 	
 	public static void DeleteLocation(String name) 
 	{
+		connect();
 		try {
 			PreparedStatement sql = con.prepareStatement("DELETE FROM Lokacje WHERE Nazwa = ?");
 			sql.setString(1, name);
 			sql.execute();
-		} catch(SQLException e){ e.printStackTrace();}
+			disconnect();
+		} catch(SQLException e){ e.printStackTrace(); disconnect();}
 	}
 	
 	public static ArrayList<CustomLocation> SyncLocations() 
 	{
+		connect();
 		try 
 		{
 			ArrayList<CustomLocation> locs = new ArrayList<CustomLocation>();
@@ -436,11 +507,12 @@ public class DatabaseManager
 			{
 				locs.add(new CustomLocation(result.getString(3), new Location(Bukkit.getWorld(result.getString(2)), result.getDouble(4), result.getDouble(5), result.getDouble(6), result.getFloat(7), result.getFloat(8))));
 			}
+			disconnect();
 			return locs;
 		} 
 		catch(SQLException e)
 		{ 
-			e.printStackTrace(); return null;
+			e.printStackTrace(); disconnect(); return null;
 		}
 	}
 }

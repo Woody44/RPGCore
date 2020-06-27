@@ -8,11 +8,7 @@ import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
 
 public class Misc {
-	public static Main main;
-	public Misc(Main main)
-	{
-		Misc.main = main;
-	}
+	public static Main main = Main.GetMe();
 	
 	public static ArrayList<String> cooldowns = new ArrayList<>();
 	
@@ -45,15 +41,16 @@ public class Misc {
 	
 	public static boolean Chance(float chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues) 
 	{
+		Logger.LogWarn(chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues + "");
 		if(chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues < 0)
 			chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues = 0;
 		else if (chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues > 100)
 			chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues = 100;
-		
-		float rv = (float)Math.random();
-		float value = rv * chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues;
-		
-		if(value <= chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues)
+	
+		float chance = chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues / 100;
+		float value = (float)Math.random();
+		//Logger.LogInfo("(" + chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues + "/100) --- " + value + "/" + chance + " --- " + (value <= chance) );
+		if(value <= chance)
 			 return true;
 		else return false;
 	}

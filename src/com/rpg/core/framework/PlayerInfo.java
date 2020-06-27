@@ -1,9 +1,6 @@
 package com.rpg.core.framework;
 
-import org.bukkit.entity.Player;
-
-public class CustomPlayer {
-	public Player player;
+public class PlayerInfo {
 	public String UUID;
 	public int Klasa;
 	public int KlasaLevel;
