@@ -26,10 +26,7 @@ public class Misc {
 	}
 	public static boolean getCooldown(String playerNick, String thing)
 	{
-		if(cooldowns.contains(playerNick + "-" + thing))
-			return true;
-		else
-			return false;
+		return cooldowns.contains(playerNick + "-" + thing);
 	}
 	
 	public static void resetCooldown(String playerNick, String thing)
@@ -50,9 +47,7 @@ public class Misc {
 		float chance = chanceInPercentFromZeroToHundred_DoNotEvenTryOtherValues / 100;
 		float value = (float)Math.random();
 		
-		if(value <= chance)
-			 return true;
-		else return false;
+		return value <= chance;
 	}
 	
 	public static int ExpToLvl(int exp) 

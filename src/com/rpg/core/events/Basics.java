@@ -6,6 +6,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.framework.ChatManager;
@@ -39,5 +40,11 @@ public class Basics implements Listener
 		}
 		else
 			e.setFormat(ChatManager.GetColorized(ChatManager.FillVars(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
+	}
+	
+	public void OnMobDeath(EntityDeathEvent e)
+	{
+		e.getDrops().clear();
+		e.setDroppedExp(0);
 	}
 }
