@@ -1,5 +1,6 @@
 package com.rpg.core.events;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import com.rpg.core.CoreConfig;
 import com.rpg.core.framework.ChatManager;
 import com.rpg.core.framework.DatabaseManager;
 import com.rpg.core.framework.InventoryInfo;
+import com.rpg.core.framework.ItemManager;
 import com.rpg.core.framework.Misc;
 import com.rpg.core.framework.PlayerInfo;
 import com.rpg.core.framework.Wallet;
@@ -40,6 +42,8 @@ public class Announcing implements Listener{
 			pi.inventoryInfo.necklake_0 = 0;
 			pi.inventoryInfo.ring_0 = 0;
 			pi.inventoryInfo.ring_1 = 0;
+			if(player.getServer().getPluginManager().isPluginEnabled("RPGLoot"))
+				player.getInventory().addItem(ItemManager.createItemStack(Material.CHEST, "§6Skrzynia nowego gracza", new String[] {""}));
 			DatabaseManager.RegisterNewPlayer(pi, pi.inventoryInfo, pi.wallet);
 			}
 		else 
