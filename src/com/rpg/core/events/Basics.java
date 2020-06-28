@@ -42,6 +42,7 @@ public class Basics implements Listener
 			e.setFormat(ChatManager.GetColorized(ChatManager.FillVars(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
 	}
 	
+	@EventHandler
 	public void OnMobDeath(EntityDeathEvent e)
 	{
 		e.getDrops().clear();
