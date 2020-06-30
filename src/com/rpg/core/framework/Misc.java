@@ -81,9 +81,15 @@ public class Misc {
 	public static void UpdatePlayerExpBar(Player player, int exp) 
 	{
 		int level = Misc.ExpToLvl(exp);
-        float exptonext = CoreConfig.levels[level+1] - CoreConfig.levels[level];
+		float exptonext = 0;
+		if(level + 1 < CoreConfig.levels.length)
+			exptonext = CoreConfig.levels[level+1] - CoreConfig.levels[level];
         float exptonextactual = exp - CoreConfig.levels[level];
+
 		player.setLevel(level);
-		player.setExp(exptonextactual / exptonext);
+		if(exptonext != 0)
+			player.setExp(exptonextactual / exptonext);
+		else
+			player.setExp(0);
 	}
 }
