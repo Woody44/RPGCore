@@ -99,6 +99,7 @@ public class ItemManager {
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(name);
+        meta.setUnbreakable(true);
 
         item.setItemMeta(meta);
         
