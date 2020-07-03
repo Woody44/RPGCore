@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -522,5 +523,97 @@ public class DatabaseManager
 		{ 
 			e.printStackTrace(); disconnect(); return null;
 		}
+	}
+	
+	
+	//
+	//API DLA KLAS
+	//
+	public double GetClassMaxHealth(int klasa) 
+    {
+        try {
+            PreparedStatement sql = con.prepareStatement("SELECT hp FROM Klasy WHERE ID= ?");
+            sql.setInt(1, klasa);
+            ResultSet result = sql.executeQuery();
+            if(result.next())
+                return result.getDouble(1);
+            else
+                return 0;
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    
+    public void SetClassMaxHealth(int klasa, double value) 
+    {
+        try {
+            PreparedStatement sql = con.prepareStatement("UPDATE Klasy set hp= ? WHERE ID= ?");
+            sql.setDouble(1, value);
+            sql.setInt(2, klasa);
+            sql.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+	    
+	    //
+	    //API dla Itemów
+        //
+    
+    public ItemInfo GetItem(int id) 
+	{
+		ItemInfo II = new ItemInfo();
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Itemy WHERE ID = ?");
+	        sql.setInt(1, id);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	II = new ItemInfo();
+	        	II.ID = result.getInt(1);
+	        	II.material = result.getString(2);
+	        	II.Name = result.getString(3);
+	        	II.Lore = (ArrayList<String>) Arrays.asList(result.getString(4).split("||"));
+	        	II.cooldown = result.getInt(4);
+	        	II.enchantments = result.getString(5);
+	        	II.unbreakable = result.getBoolean(6);
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return II;
+	}
+	
+	public ItemInfo GetItem(String name) 
+	{
+		ItemInfo II = new ItemInfo();
+		try {
+			PreparedStatement sql = con.prepareStatement("SELECT * FROM Itemy WHERE Name = ?");
+	        sql.setString(1, name);
+	        ResultSet result = sql.executeQuery();
+	        if(result.next())
+	        {
+	        	II = new ItemInfo();
+	        	II.ID = result.getInt(1);
+	        	II.material = result.getString(2);
+	        	II.Name = result.getString(3);
+	        	II.Lore = (ArrayList<String>) Arrays.asList(result.getString(4).split("||"));
+	        	II.cooldown = result.getInt(4);
+	        	II.enchantments = result.getString(5);
+	        	II.unbreakable = result.getBoolean(6);
+	        }
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return II;
 	}
 }

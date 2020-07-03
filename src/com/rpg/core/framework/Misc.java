@@ -64,23 +64,26 @@ public class Misc {
 		return 0;
 	}
 	
-	public static void UpdatePlayerExp(String UUID, int exp, boolean additive) 
+	public static void UpdatePlayerExp(Player player, int exp, boolean additive) 
 	{
 		if(additive)
-			exp += DatabaseManager.GetPlayerExp(UUID);
+			exp += DatabaseManager.GetPlayerExp(player.getUniqueId().toString());
 
-		DatabaseManager.UpdatePlayerExp(UUID, exp);
-		UpdatePlayerExpBar(Bukkit.getPlayer(UUID), exp);
+		DatabaseManager.UpdatePlayerExp(player.getUniqueId().toString(), exp);
+		UpdatePlayerExpBar(player, exp);
 	}
 	
-	public static void UpdatePlayerExp(String UUID, int exp) 
+	public static void UpdatePlayerExp(Player player, int exp) 
 	{
-		UpdatePlayerExp(UUID, exp, true);
+		UpdatePlayerExp(player, exp, true);
 	}
 	
 	public static void UpdatePlayerExpBar(Player player, int exp) 
 	{
+		Logger.LogInfo(player.getDisplayName().toString()+"");
+		Logger.LogInfo(exp+" exp");
 		int level = Misc.ExpToLvl(exp);
+		Logger.LogInfo(level+" level");
 		float exptonext = 0;
 		if(level + 1 < CoreConfig.levels.length)
 			exptonext = CoreConfig.levels[level+1] - CoreConfig.levels[level];
