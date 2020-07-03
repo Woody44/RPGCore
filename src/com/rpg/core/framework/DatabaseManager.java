@@ -529,7 +529,7 @@ public class DatabaseManager
 	//
 	//API DLA KLAS
 	//
-	public double GetClassMaxHealth(int klasa) 
+	public static double GetClassMaxHealth(int klasa) 
     {
         try {
             PreparedStatement sql = con.prepareStatement("SELECT hp FROM Klasy WHERE ID= ?");
@@ -547,7 +547,7 @@ public class DatabaseManager
         }
     }
     
-    public void SetClassMaxHealth(int klasa, double value) 
+    public static void SetClassMaxHealth(int klasa, double value) 
     {
         try {
             PreparedStatement sql = con.prepareStatement("UPDATE Klasy set hp= ? WHERE ID= ?");
