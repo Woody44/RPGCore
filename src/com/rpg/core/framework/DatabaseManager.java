@@ -531,14 +531,24 @@ public class DatabaseManager
 	//
 	public static double GetClassMaxHealth(int klasa) 
     {
+		connect();
         try {
             PreparedStatement sql = con.prepareStatement("SELECT hp FROM Klasy WHERE ID= ?");
             sql.setInt(1, klasa);
             ResultSet result = sql.executeQuery();
             if(result.next())
-                return result.getDouble(1);
+            {
+                double wynik = result.getDouble(1);
+                disconnect();
+                System.out.println("dbRes" + wynik);
+                return wynik;
+            }
             else
-                return 0;
+            {
+            	disconnect();
+            	return 0;
+            }
+                
         }
         catch(SQLException e)
         {
@@ -549,11 +559,13 @@ public class DatabaseManager
     
     public static void SetClassMaxHealth(int klasa, double value) 
     {
+    	connect();
         try {
             PreparedStatement sql = con.prepareStatement("UPDATE Klasy set hp= ? WHERE ID= ?");
             sql.setDouble(1, value);
             sql.setInt(2, klasa);
             sql.executeUpdate();
+            disconnect();
         }
         catch(SQLException e)
         {
