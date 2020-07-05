@@ -41,11 +41,12 @@ public class ItemManager {
 	public static ItemStack DeleteLoreLine(ItemStack item, String value) 
 	{
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-		for(String line : lore) 
+		for(String line : lore)
 		{
 			if(line.contains(value)) 
 			{
 				lore.remove(line);
+				break;
 			}
 		}
 		ItemMeta meta = item.getItemMeta();
