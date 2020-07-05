@@ -252,7 +252,15 @@ public class DatabaseManager
 	
 	public static int GetPlayerClassLevel(String UUID) 
 	{
-		return Integer.parseInt(("" + GetPlayerClass(UUID)).substring(3));
+		Integer returnedvalue = GetPlayerClass(UUID);
+		if(returnedvalue > 999)
+		{
+			return Integer.parseInt((""+returnedvalue).substring(3)); 
+		}
+		else 
+		{
+			return -1;
+		}
 	}
 	
 	public static int GetPlayerExp(String UUID) 
@@ -559,8 +567,8 @@ public class DatabaseManager
     
     public static void SetClassMaxHealth(int klasa, double value) 
     {
-    	connect();
         try {
+        	connect();
             PreparedStatement sql = con.prepareStatement("UPDATE Klasy set hp= ? WHERE ID= ?");
             sql.setDouble(1, value);
             sql.setInt(2, klasa);

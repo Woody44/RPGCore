@@ -43,11 +43,22 @@ public class ItemManager {
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 		for(String line : lore) 
 		{
-			if(line == value) 
+			if(line.contains(value)) 
 			{
 				lore.remove(line);
 			}
 		}
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public static ItemStack DeleteLoreLine(ItemStack item, int index) 
+	{
+		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		if(lore.get(index) != null)
+			lore.remove(index);
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
