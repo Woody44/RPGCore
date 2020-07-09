@@ -7,18 +7,20 @@ import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
-import com.rpg.core.framework.ChatManager;
+import com.rpg.core.framework.StringManager;
 
 public class CommandSystem implements CommandExecutor{
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
     	Player player = (Player) sender;
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "####################"));
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "######RPGcore#######"));
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "###&dAuthors:_woody44_" + CoreConfig.infoColor + "," + "&ddamian5466" + CoreConfig.infoColor + "##"));
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "#####&aVersion:" + Main.GetMe().getDescription().getVersion() + CoreConfig.infoColor + "####"));
-    	player.sendMessage(ChatManager.GetColorized(CoreConfig.infoColor + "####################"));
-        return true;
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "#########################################"));
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "#&e&lRPGcore:"));
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "##&b&lAuthors:"));
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "###&d_woody44_"));
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "###&ddamian5466"));
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "##&aVersion:" + Main.GetMe().getDescription().getVersion()));
+    	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "#########################################"));
+    	return true;
     }
 }

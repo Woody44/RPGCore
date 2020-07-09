@@ -1,7 +1,5 @@
 package com.rpg.core;
 
-import java.util.ArrayList;
-
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -9,9 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.rpg.core.commands.*;
 import com.rpg.core.economy.*;
 import com.rpg.core.events.*;
-import com.rpg.core.framework.CustomLocation;
-import com.rpg.core.framework.DatabaseManager;
-import com.rpg.core.framework.LocationsManager;
 import com.rpg.core.framework.Logger;
 
 public class Main extends JavaPlugin implements Listener{
@@ -27,7 +22,7 @@ public class Main extends JavaPlugin implements Listener{
 		@SuppressWarnings("unused")
 		CoreConfig cfg = new CoreConfig();
 		
-		DatabaseManager.Setup();
+		//DatabaseManager.Setup();
 		RegisterCommands();
 		RegisterEvents();
 		RegisterOtherStuff();
@@ -48,9 +43,9 @@ public class Main extends JavaPlugin implements Listener{
 		Manager.AddCommand(new CommandPay());
 		Manager.AddCommand(new CommandSystem());
 		Manager.AddCommand(new CommandReloadConfig());
-		Manager.AddCommand(new CommandLocationCreate());
-		Manager.AddCommand(new CommandLocationDelete());
-		Manager.AddCommand(new CommandLocationtp());
+		Manager.AddCommand(new CommandLocation());
+		Manager.AddCommand(new CommandSetExp());
+		Manager.AddCommand(new CommandSetMoney());
 		for(CommandExecutor ce: Manager.commands)
 		{
 			String cname = ce.getClass().getSimpleName();
@@ -73,8 +68,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public void RegisterOtherStuff()
 	{
-		ArrayList<CustomLocation> cls = DatabaseManager.SyncLocations();
-		LocationsManager.RegisterLocations(cls);
+
 	}
 	
 	public static Main GetMe() 

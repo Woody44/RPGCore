@@ -21,7 +21,7 @@ public class ItemManager {
 		for(String str : value)
 		{
 			str = str.replaceAll("_", " ");
-			lore.add(ChatManager.GetColorized(str));
+			lore.add(StringManager.Colorize(str));
 		}
 		
 		ItemMeta meta = item.getItemMeta();
@@ -92,7 +92,7 @@ public class ItemManager {
 			if(line.contains(value)) 
 			{
 				line = line.replaceAll(value + ":", "");
-				line = ChatManager.NoColors(line);
+				line = StringManager.NoColors(line);
 				if(line.contains("%"))
 				{
 					line = line.replaceAll("%", "");

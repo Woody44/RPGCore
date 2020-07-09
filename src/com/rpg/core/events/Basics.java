@@ -9,8 +9,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import com.rpg.core.CoreConfig;
-import com.rpg.core.framework.ChatManager;
-import com.rpg.core.framework.DatabaseManager;
+import com.rpg.core.framework.StringManager;
+import com.rpg.core.framework.PlayerManager;
 
 public class Basics implements Listener
 {
@@ -33,13 +33,13 @@ public class Basics implements Listener
 	public void OnChat(AsyncPlayerChatEvent e) 
 	{
 		String originalMessage = e.getMessage();
-		int lvl = DatabaseManager.GetPlayerExp(e.getPlayer().getUniqueId().toString());
+		int lvl = PlayerManager.getPlayer(e.getPlayer().getUniqueId().toString()).level;
 		if(lvl < 10) {
 			e.setCancelled(true);
-			e.getPlayer().sendMessage(ChatManager.GetColorized(ChatManager.FillVars(CoreConfig.chatLowLvlMessage, e.getPlayer(), originalMessage)));
+			e.getPlayer().sendMessage(StringManager.Colorize(StringManager.FillExp(CoreConfig.chatLowLvlMessage, e.getPlayer())));
 		}
 		else
-			e.setFormat(ChatManager.GetColorized(ChatManager.FillVars(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
+			e.setFormat(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
 	}
 	
 	@EventHandler

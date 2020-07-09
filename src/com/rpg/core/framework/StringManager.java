@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
 
-public class ChatManager {
+public class StringManager {
 		
-	public static String GetColorized(String message) 
+	public static String Colorize(String message) 
 	{
 		message = message.replace("(white)", "&f");
 		message = message.replace("(black)", "&0");
@@ -33,28 +33,39 @@ public class ChatManager {
 		return ChatColor.stripColor(message);
 	}
 	
-	public static String FillVars(String format, Player player, String message) 
+	public static String FillExp(String string, Player player) 
 	{
-		int lvl = DatabaseManager.GetPlayerExp(player.getUniqueId().toString());
-		lvl = Misc.ExpToLvl(lvl);
-		format = format.replace("{PLAYER}", player.getDisplayName());
-		format = format.replace("{LEVEL}", lvl + "");
-		format = format.replace("{LEVEL_MIN}", CoreConfig.chatLvlMin+"");
-		format = format.replace("{MESSAGE}", message);
+		String uuid = player.getUniqueId().toString();
+		int exp = PlayerManager.getPlayer(uuid).experience;
+		int lvl = Misc.ExpToLvl(exp);
+		string = string.replace("{EXP}", exp+"");
+		string = string.replace("{LEVEL}", lvl+"");
+		string = string.replace("{LEVEL_MIN}", CoreConfig.chatLvlMin+"");
+		return string;
+	}
+	
+	public static String FillPlayer(String string, Player player) 
+	{
+		string = string.replace("{PLAYER}", player.getDisplayName());
+		return string;
+	}
+	
+	public static String FillMessage(String string, Player player, String message)
+	{
+		string = string.replace("{MESSAGE}", message);
+		return string;
+	}
+	
+	public static String FillChat(String format, Player player, String message) 
+	{
+		format = FillWorld(format, player.getLocation());
+		format = FillExp(format, player);
+		format = FillPlayer(format, player);
+		format = FillMessage(format, player, message);
 		return format;
 	}
 	
-	public static String FillVars(String format, Player player) 
-	{
-		int lvl = DatabaseManager.GetPlayerExp(player.getUniqueId().toString());
-		lvl = Misc.ExpToLvl(lvl);
-		format = format.replace("{PLAYER}", player.getDisplayName());
-		format = format.replace("{LEVEL}", lvl + "");
-		format = format.replace("{LEVEL_MIN}", CoreConfig.chatLvlMin+"");
-		return format;
-	}
-	
-	public static String FillVars(String format, Location loc) 
+	public static String FillWorld(String format, Location loc) 
 	{
 		format = format.replace("{WORLD}", loc.getWorld().getName());
 		format = format.replace("{X}", loc.getX() + "");

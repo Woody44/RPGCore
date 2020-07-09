@@ -1,6 +1,6 @@
 name: RPGcore
 main: com.rpg.core.Main
-version: 1.3.2.5
+version: 2.0
 api-version: 1.16
 authors: [_woody44_, damian5466]
 database: true
@@ -12,37 +12,39 @@ depend:
 commands:
   money:
     description: Sprawdz stan swego konta.
-    permission: RPG.core.eco.money
+    permission: rpg.core.eco.money
     usage: /money
   pay:
     description: Przelej pieniadze znajomemu
-    permission: RPG.core.eco.pay
+    permission: rpg.core.eco.pay
     usage: /pay <player> <count>
   system:
     description: Informacje na temat pluginu.
-    permission: RPG.core.system
+    permission: rpg.core.system
     usage: /system
   reloadconfig:
     description: Pozwala przeladowac ponownie konfiguracje pluginu bez wymogu restartu serwera.
-    permission: RPG.core.reload
+    permission: rpg.core.reload
     usage: /reloadconfig
-  locationcreate:
-    description: Tworzy Nowa lokacje w miejscu w ktorym stoisz w kieunku w ktorym sie patrzysz.
-    permission: RPG.core.locationcreate
-    usage: /locationcreate <name>
-  locationdelete:
-    description: Usuwa lokacje zapisana w bazie danych pod podana nazwa.
-    permission: RPG.core.locationdelete
-    usage: /locationdelete <name>
-  locationtp:
-    description: Teleportuje do wczesniej zapisanej lokacji.
-    permission: RPG.core.locationtp
-    usage: /locationtp <name>
-    
+  location:
+    description: Komenda sluzaca do zarzadzania lokacjami i teleportacji do nich.
+    permission: rpg.core.location
+    usage: /location <create/delete/teleport> <name>
+  setexp:
+    description: ustawia kokretna ilosc doswiadczenia graczowi.
+    permission: rpg.core.setexp
+    usage: /setexp <player> <amount>
+  setmoney:
+    description: ustawia stan konta gracza.
+    permission: rpg.core.setmoney
+    usage: /setmoney <player> <amount>
 load: POSTWORLD
 loadbefore:
   - RPGitems
   - RPGKlasy
   - RPGSideMode
+  - RPGTrade
+  - RPGfriends
+  - RPGMobs
 
 description: Podstawa dla pluginow zwiazanych z systemem RPG.

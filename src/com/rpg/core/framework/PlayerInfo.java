@@ -1,10 +1,9 @@
 package com.rpg.core.framework;
 
 public class PlayerInfo {
+	public String name;
 	public String UUID;
-	public int Klasa;
-	public int KlasaLevel;
-	public int Experience;
-	public Wallet wallet;
-	public InventoryInfo inventoryInfo;
+	public int experience;
+	public int level;
+	public int money;
 }

@@ -1,33 +1,31 @@
 package com.rpg.core.framework;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class LocationsManager 
 {
-	public static ArrayList<CustomLocation> Locations = new ArrayList<CustomLocation>();
-	
-	public static void RegisterLocation(String name, Location location) 
+	public static void Create(String name, Location location) 
 	{
 		if(name == null)
 			return;
 		
-		Locations.add(new CustomLocation(name, location));
-	}
-	
-	public static void RegisterLocation(CustomLocation cl) 
-	{
-		if(cl == null)
-			return;
-		
-		Locations.add(cl);
-	}
-	
-	public static void RegisterLocations(ArrayList<CustomLocation> cls) 
-	{
-		Locations.addAll(cls);
+		FileConfiguration fc;
+		File file = FileManager.CreateFile("location", name);
+		fc = YamlConfiguration.loadConfiguration(file);
+		fc.set("location", location);
+		try
+		{
+			fc.save(file);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	public static void DeleteLocation(String name) 
@@ -35,24 +33,19 @@ public class LocationsManager
 		if(name ==null)
 			return;
 		
-		DatabaseManager.DeleteLocation(name);
-		Locations.remove(GetLocation(name));
+		try {
+			FileManager.DeleteFile("location", name);
+		}catch(IOException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
-	public static void CreateLocation(Player player, String name) 
+	public static Location GetLocation(String name) 
 	{
-		if(name == null)
-			return;
-		
-		DatabaseManager.CreateLocation(name, player.getLocation());
-		RegisterLocation(name, player.getLocation());
-	}
-	
-	public static CustomLocation GetLocation(String name) 
-	{
-		for(CustomLocation cl : Locations)
-			if(cl.Name.equals(name))
-				return cl;
+		FileConfiguration fc = FileManager.getFileConfig("location", name);
+		if(fc != null)
+			return fc.getLocation("location");
 		return null;
 	}
 }

@@ -3,7 +3,6 @@ package com.rpg.core.framework;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
@@ -62,37 +61,5 @@ public class Misc {
     			return CoreConfig.levels.length -1;
 		
 		return 0;
-	}
-	
-	public static void UpdatePlayerExp(Player player, int exp, boolean additive) 
-	{
-		if(additive)
-			exp += DatabaseManager.GetPlayerExp(player.getUniqueId().toString());
-
-		DatabaseManager.UpdatePlayerExp(player.getUniqueId().toString(), exp);
-		UpdatePlayerExpBar(player, exp);
-	}
-	
-	public static void UpdatePlayerExp(Player player, int exp) 
-	{
-		UpdatePlayerExp(player, exp, true);
-	}
-	
-	public static void UpdatePlayerExpBar(Player player, int exp) 
-	{
-		Logger.LogInfo(player.getDisplayName().toString()+"");
-		Logger.LogInfo(exp+" exp");
-		int level = Misc.ExpToLvl(exp);
-		Logger.LogInfo(level+" level");
-		float exptonext = 0;
-		if(level + 1 < CoreConfig.levels.length)
-			exptonext = CoreConfig.levels[level+1] - CoreConfig.levels[level];
-        float exptonextactual = exp - CoreConfig.levels[level];
-
-		player.setLevel(level);
-		if(exptonext != 0)
-			player.setExp(exptonextactual / exptonext);
-		else
-			player.setExp(0);
 	}
 }
