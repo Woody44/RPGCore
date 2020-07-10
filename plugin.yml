@@ -38,6 +38,10 @@ commands:
     description: ustawia stan konta gracza.
     permission: rpg.core.setmoney
     usage: /setmoney <player> <amount>
+  force:
+    description: zmusza gracza do uzycia komendy.
+    permission: rpg.core.force
+    usage: /force <player> <command> <args>
 load: POSTWORLD
 loadbefore:
   - RPGitems
