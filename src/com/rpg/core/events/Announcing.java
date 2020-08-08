@@ -28,7 +28,7 @@ public class Announcing implements Listener{
 			welcomeMessage = StringManager.Colorize(StringManager.FillPlayer(CoreConfig.firstJoinMessage, event.getPlayer()));
 			FileManager.CreatePlayerFile(uuid, player.getDisplayName());
 			if(player.getServer().getPluginManager().isPluginEnabled("RPGLoot"))
-				player.getInventory().addItem(ItemManager.createItemStack(Material.CHEST, "§6Skrzynia nowego gracza", new String[] {""}));
+				player.getInventory().addItem(ItemManager.createItemStack(Material.CHEST, "§6Skrzynia nowego gracza", new String[] {""}, 1));
 		}
 		else
 		{

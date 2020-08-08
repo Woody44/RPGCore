@@ -105,7 +105,7 @@ public class ItemManager {
 		}
 		return 0;
 	}
-	public static ItemStack createItemStack(final Material material, final String name, final String[] lore)
+	public static ItemStack createItemStack(final Material material, final String name, final String[] lore, final int amount)
     {
         final ItemStack item = new ItemStack(material, 1);
         final ItemMeta meta = item.getItemMeta();
@@ -114,6 +114,7 @@ public class ItemManager {
         meta.setUnbreakable(true);
 
         item.setItemMeta(meta);
+        item.setAmount(amount);
         
         if(lore != null)
         	AddLore(item, lore);
