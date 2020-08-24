@@ -1,6 +1,6 @@
 name: RPGcore
 main: com.rpg.core.Main
-version: 2.0.2
+version: 2.0.6
 api-version: 1.16
 authors: [_woody44_, damian5466]
 database: true

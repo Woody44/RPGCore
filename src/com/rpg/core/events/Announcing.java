@@ -48,6 +48,7 @@ public class Announcing implements Listener{
 				return;
 			}
 		}
+		
 		player.setWalkSpeed((float)CoreConfig.defPlayerSpeed);
 		PlayerManager.UpdateExpBar(player, PlayerManager.getPlayer(uuid).experience);
     }

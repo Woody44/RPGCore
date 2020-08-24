@@ -79,9 +79,21 @@ public class ItemManager {
 		return null;
 	}
 	
+	public static ItemStack Rename(ItemStack item, String[] value) 
+	{
+		ItemMeta meta = item.getItemMeta();
+		String itemName = "";
+		for(int i = 0; i < value.length; i++)
+			itemName += value[i];
+
+		meta.setDisplayName(StringManager.Colorize(itemName));
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	public static float CheckLore(ItemStack item, String value) 
 	{
-		if(item == null)
+		if(item == null || item.getType() == Material.AIR)
 			return 0;
 		
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
@@ -89,13 +101,13 @@ public class ItemManager {
 			return 0;
 		for(String line : lore) 
 		{
-			if(line.contains(value)) 
+			if(line.contains(value+":")) 
 			{
-				line = line.replaceAll(value + ":", "");
+				line = line.replace(value + ":", "");
 				line = StringManager.NoColors(line);
 				if(line.contains("%"))
 				{
-					line = line.replaceAll("%", "");
+					line = line.replace("%", "");
 					return Float.parseFloat(line) / 100;
 				}
 				else

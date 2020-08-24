@@ -21,6 +21,7 @@ public class CommandSetExp implements CommandExecutor{
     	((Player)sender).sendMessage(StringManager.Colorize(messageOne));
     	player.sendMessage(StringManager.Colorize(messageTwo));
     	PlayerManager.setExp(player.getUniqueId().toString(), Integer.parseInt(args[1]));
+    	PlayerManager.UpdateExpBar(player, Integer.parseInt(args[1]));
     	return true;
     }
 }

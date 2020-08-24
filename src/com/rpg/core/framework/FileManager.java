@@ -22,11 +22,7 @@ public class FileManager {
 	
 	public static File CreateFile(String type, String name)
 	{
-		File defaultFile = new File(Main.GetMe().getDataFolder(), type + ".yml");
 		File file = new File(Main.GetMe().getDataFolder()+"/" + type + "s/", name + ".yml");
-		defaultFile.renameTo(file);
-		if(!defaultFile.exists())
-			Main.GetMe().saveResource(type + ".yml", false);
 		
 		return file;
 	}

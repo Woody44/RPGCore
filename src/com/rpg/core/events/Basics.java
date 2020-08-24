@@ -2,6 +2,7 @@ package com.rpg.core.events;
 
 import java.util.ArrayList;
 
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,6 +30,9 @@ public class Basics implements Listener
 	@EventHandler
 	public void OnFallDamage(EntityDamageEvent e ) 
 	{
+		if(e.getEntity().getType() != EntityType.PLAYER)
+			return;
+		
 		if(e.getCause() == DamageCause.FALL)
 		{
 			e.setDamage(e.getDamage() * CoreConfig.fallDamageMultiplier);
