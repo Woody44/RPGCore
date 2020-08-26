@@ -2,6 +2,8 @@ package com.rpg.core.events;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,8 +50,24 @@ public class Basics implements Listener
 			e.setCancelled(true);
 			e.getPlayer().sendMessage(StringManager.Colorize(StringManager.FillExp(CoreConfig.chatLowLvlMessage, e.getPlayer())));
 		}
-		else
+		else 
+		{
+			for(Player player : Bukkit.getOnlinePlayers()) 
+			{
+				if(originalMessage.contains(player.getName()))
+				{
+					player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, 1.9f);
+				}
+				else if(originalMessage.contains("@everyone"))
+				{
+					player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 2, 1.75f);
+				}
+				else if(originalMessage.contains("@"+StringManager.FillGroup("{GROUP}", player))) {
+					player.playSound(player.getLocation(), Sound.BLOCK_BELL_RESONATE, 2, 2f);
+				}
+			}
 			e.setFormat(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
+		}
 	}
 	
 	@EventHandler

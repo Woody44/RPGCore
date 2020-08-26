@@ -1,6 +1,7 @@
 package com.rpg.core;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -17,7 +18,7 @@ public final class CoreConfig {
 	public static boolean restrictChat, logChests;
 	public static int chatLvlMin, 
 	dbport;
-	public static int[] levels;
+	public static List<Long> levels;
 	
 	public static boolean preventExplosions, dropExplosions;
 	public static float explosionsDropRate;
@@ -43,7 +44,7 @@ public final class CoreConfig {
 		currencySymbol = config.getString("economy.currency-symbol");
 		
 		fallDamageMultiplier = config.getDouble("fall-damage-multiplier");
-		levels = new int[config.getInt("levels.count") + 1];
+		//levels = new long[config.getInt("levels.count") + 1];
 		defPlayerSpeed = config.getDouble("default-player-speed");
 		
 		restrictChat = config.getBoolean("chat.restrict-chat");
@@ -68,12 +69,7 @@ public final class CoreConfig {
 		preventExplosionsWorlds = (ArrayList<String>) config.getStringList("protect.explosions.worlds");
 		dropExplosions = config.getBoolean("protect.explosions.drop");
 		explosionsDropRate = (float)config.getDouble("protect.explosions.drop-rate");
-		for(int i = 0; i < levels.length; i++)
-			if(i==0)
-				continue;
-			else
-				levels[i] = config.getInt("levels." + i);
-		
+		levels = config.getLongList("levels");
 		floorCheck = (boolean)config.getBoolean("protect.floor-check.enabled");
 		floorCheckBlocks = (ArrayList<String>) config.getStringList("protect.floor-check.blocks");
 	}

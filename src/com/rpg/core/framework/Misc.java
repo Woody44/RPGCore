@@ -49,17 +49,24 @@ public class Misc {
 		return value <= chance;
 	}
 	
-	public static int ExpToLvl(int exp) 
+	public static int ExpToLvl(long exp) 
 	{
-		for(int i=0; i < CoreConfig.levels.length; i++)
-    		if(i < CoreConfig.levels.length-1) {
-        		if(exp >= CoreConfig.levels[i] && exp < CoreConfig.levels[i+1])
-        			return i;
-        		else continue;
-    		}
-    		else
-    			return CoreConfig.levels.length -1;
-		
+		for(int i = 0; i < CoreConfig.levels.size(); i++)
+		{
+			if(i + 1 < CoreConfig.levels.size())
+			{
+				if(exp >= CoreConfig.levels.get(i) && exp < CoreConfig.levels.get(i+1)) 
+				{
+					return i;
+				}
+				else if(exp < CoreConfig.levels.get(0))
+					return 0;
+			}
+			else 
+			{
+				return CoreConfig.levels.size() - 1;
+			}
+		}
 		return 0;
 	}
 }

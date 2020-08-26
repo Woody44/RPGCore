@@ -63,7 +63,7 @@ public class StringManager {
 	public static String FillExp(String string, Player player) 
 	{
 		String uuid = player.getUniqueId().toString();
-		int exp = PlayerManager.getPlayer(uuid).experience;
+		long exp = PlayerManager.getPlayer(uuid).experience;
 		int lvl = Misc.ExpToLvl(exp);
 		string = string.replace("{EXP}", exp+"");
 		string = string.replace("{LEVEL}", lvl+"");
@@ -73,7 +73,7 @@ public class StringManager {
 	
 	public static String FillPlayer(String string, Player player) 
 	{
-		string = string.replace("{PLAYER}", player.getDisplayName());
+		string = string.replace("{PLAYER}", player.getName());
 		return string;
 	}
 	
