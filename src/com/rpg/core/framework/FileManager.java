@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import com.rpg.core.Main;
 
@@ -124,6 +125,20 @@ public class FileManager {
 	}
 	
 	public static void updateFile(String path, String name, String key, Location value) 
+	{
+		FileConfiguration fc;
+		File file = getFile(path, name);
+		fc = YamlConfiguration.loadConfiguration(file);
+		fc.set(key, value);
+		try {
+			fc.save(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void updateFile(String path, String name, String key, ItemStack value) 
 	{
 		FileConfiguration fc;
 		File file = getFile(path, name);

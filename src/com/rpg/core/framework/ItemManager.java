@@ -69,6 +69,8 @@ public class ItemManager {
 	public static String GetLore(ItemStack item, String value) 
 	{
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		if(lore == null)
+			return null;
 		for(String line : lore) 
 		{
 			if(line.contains(value)) 
@@ -151,4 +153,41 @@ public class ItemManager {
             similar = true;
         return similar;
     }
+	
+	static public String GetType(String string) 
+	{
+		if(string.contains("Naszyjnik"))
+			return "necklake";
+		else if(string.toLowerCase().contains("pierscien"))
+			return "ring";
+		else if(string.toLowerCase().contains("kolczyk"))
+			return "earring";
+		else if(string.toLowerCase().contains("bransoleta"))
+			return "bracelet";
+		else
+			return null;
+	}
+	
+	static public String GetSlotType(int i) 
+	{
+		switch(i) 
+		{
+			case 0:
+				return "earring0";
+			case 1:
+				return "earring1";
+			case 2:
+				return "necklake0";
+			case 3:
+				return "ring0";
+			case 4:
+				return "ring1";
+			case 5:
+				return "bracelet0";
+			case 6:
+				return "bracelet1";
+			default:
+				return null;
+		}
+	}
 }

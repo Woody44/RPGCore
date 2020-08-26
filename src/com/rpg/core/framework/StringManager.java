@@ -1,9 +1,14 @@
 package com.rpg.core.framework;
+import java.util.List;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
+
+import ru.tehkode.permissions.PermissionUser;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class StringManager {
 		
@@ -84,6 +89,7 @@ public class StringManager {
 		format = FillExp(format, player);
 		format = FillPlayer(format, player);
 		format = FillMessage(format, player, message);
+		format = FillGroup(format, player);
 		return format;
 	}
 	
@@ -94,5 +100,13 @@ public class StringManager {
 		format = format.replace("{Y}", loc.getY() + "");
 		format = format.replace("{Z}", loc.getZ() + "");
 		return format;
+	}
+	
+	public static String FillGroup(String string, Player player) 
+	{
+		PermissionUser user = PermissionsEx.getUser(player);
+		List<String> groups = user.getParentIdentifiers();
+		string = string.replace("{GROUP}", groups.get(0));
+		return string;
 	}
 }

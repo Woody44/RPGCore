@@ -58,7 +58,6 @@ public class Basics implements Listener
 		e.getDrops().clear();
 		e.setDroppedExp(0);
 	}
-	
 	/*@EventHandler
 	public void OnPlayerSneak(PlayerToggleSneakEvent e)
 	{

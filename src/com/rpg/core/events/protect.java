@@ -38,6 +38,8 @@ public class protect implements Listener{
 		
 		event.setCancelled(true);
 		List<Block> Blocks = event.blockList();
+		
+		int n = 1;
 		for(Block b : Blocks) 
 		{
 			Material mat = b.getType();
@@ -54,12 +56,17 @@ public class protect implements Listener{
 						if(Misc.Chance(CoreConfig.explosionsDropRate))
 							b.breakNaturally();
 					}
-					b.setType(Material.BEDROCK);
-					Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> { 
+					if(b.getType() != Material.CRACKED_STONE_BRICKS && b.getType() != Material.INFESTED_CRACKED_STONE_BRICKS && b.getType() != Material.CRACKED_POLISHED_BLACKSTONE_BRICKS && b.getType() != Material.CRACKED_NETHER_BRICKS && b.getType() != Material.GLASS && b.getType() != Material.GLASS_PANE && b.getType() != Material.COBBLESTONE && b.getType() != Material.TALL_GRASS && b.getType() != Material.GRASS)
+						b.setType(Material.BEDROCK);
+					else
+						b.setType(Material.AIR);
+					Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> {
+						//Bukkit.broadcastMessage("["+b.getLocation().getBlockX() + "|" + b.getLocation().getBlockY() + "|" + b.getLocation().getBlockZ() + "] : " + b.getType().toString());
 						b.setType(mat);
-					}, 10 * 20);
+					}, n * 15);
 				}
 			}
+			n ++;
 		}
 	}
 }

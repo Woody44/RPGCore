@@ -1,6 +1,12 @@
 package com.rpg.core;
 
+import java.util.ArrayList;
+
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -69,7 +75,33 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public void RegisterOtherStuff()
 	{
+		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
 
+			@Override
+			public void run() {
+				if(!CoreConfig.floorCheck)
+					return;
+				
+				ArrayList<String> mats = CoreConfig.floorCheckBlocks;
+				for(Player player : Main.GetMe().getServer().getOnlinePlayers())
+				{
+					if(player.getGameMode() == GameMode.CREATIVE)
+						return;
+					
+					Block b= player.getLocation().add(0, -0.2, 0).getBlock();
+					
+					for(String mat : mats) {
+						player.sendMessage(mat);
+						if(Material.getMaterial(mat) != null) {
+							player.sendMessage(Material.getMaterial(mat).toString());
+							if(b.getType() == Material.getMaterial(mat)) {
+								player.setFireTicks(20 * 3);
+								return;
+							}
+						}
+					}
+				}
+			}}, 0, 20*3);
 	}
 	
 	public static Main GetMe() 

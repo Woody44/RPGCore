@@ -23,7 +23,8 @@ public final class CoreConfig {
 	public static float explosionsDropRate;
 	public static ArrayList<String> preventExplosionsWorlds;
 	
-	
+	public static boolean floorCheck;
+	public static ArrayList<String> floorCheckBlocks;
 	CoreConfig()
 	{
 		config = Main.GetMe().getConfig();
@@ -72,6 +73,9 @@ public final class CoreConfig {
 				continue;
 			else
 				levels[i] = config.getInt("levels." + i);
+		
+		floorCheck = (boolean)config.getBoolean("protect.floor-check.enabled");
+		floorCheckBlocks = (ArrayList<String>) config.getStringList("protect.floor-check.blocks");
 	}
 	
 	public static void Reload() 
