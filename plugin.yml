@@ -42,7 +42,6 @@ commands:
     description: zmusza gracza do uzycia komendy.
     permission: rpg.core.force
     usage: /force <player> <command> <args>
-  model:
 load: POSTWORLD
 loadbefore:
   - RPGitems

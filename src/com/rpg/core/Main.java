@@ -53,7 +53,6 @@ public class Main extends JavaPlugin implements Listener{
 		Manager.AddCommand(new CommandSetExp());
 		Manager.AddCommand(new CommandSetMoney());
 		Manager.AddCommand(new CommandForce());
-		Manager.AddCommand(new CommandModel());
 		for(CommandExecutor ce: Manager.commands)
 		{
 			String cname = ce.getClass().getSimpleName();
