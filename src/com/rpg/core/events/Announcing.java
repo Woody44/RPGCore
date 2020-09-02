@@ -15,7 +15,6 @@ import com.rpg.core.framework.ItemManager;
 import com.rpg.core.framework.PlayerManager;
 
 public class Announcing implements Listener{
-	
 	@EventHandler
     public void OnJoin(PlayerJoinEvent event)
     {

@@ -21,15 +21,17 @@ announce:
 chat:
   restrict-chat: true
   chat-lvl-min: 10
-  chat-low-lvl-message: "(red)Musisz mieæ conajmniej {LEVEL_MIN} poziom by uzywac chatu!"
-  chat-message-format: "(orange)[&7 {LEVEL} &6]&6 {PLAYER}:&f {MESSAGE}"
+  chat-low-lvl-message: "(red)Musisz miec conajmniej {LEVEL_MIN} poziom by uzywac chatu!"
+  chat-message-format: "(gray)&l[&6{LEVEL}&7&l]-&a&l{GROUP}&7&l-&6{PLAYER}&7&l:&f {MESSAGE}"
     
   info-color: "&6"
   warn-color: "&e"
   error-color: "&4"
   other-color: "&a&l"
+  ping-color: "&d"
   
 levels:
+      - 0
       - 100
       - 250
       - 500
@@ -179,7 +181,7 @@ levels:
       - 1457301527400
       - 2059231971850
       - 2807022416300
-      - 4000000000000
+      - 3999999999999
 #150: 3 700 672 860 750
 #+145 860 000 000 per 5 lvls
 economy:
@@ -197,8 +199,10 @@ protect:
     drop-rate: 1
     worlds:
         - system_spawn
+        - dung1
+        - fantasy
   floor-check:
-    enabled: true;
+    enabled: true
     blocks:
         - torch
         - barrier

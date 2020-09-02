@@ -53,6 +53,7 @@ public class Main extends JavaPlugin implements Listener{
 		Manager.AddCommand(new CommandSetExp());
 		Manager.AddCommand(new CommandSetMoney());
 		Manager.AddCommand(new CommandForce());
+		Manager.AddCommand(new CommandModel());
 		for(CommandExecutor ce: Manager.commands)
 		{
 			String cname = ce.getClass().getSimpleName();
@@ -91,10 +92,8 @@ public class Main extends JavaPlugin implements Listener{
 					Block b= player.getLocation().add(0, -0.2, 0).getBlock();
 					
 					for(String mat : mats) {
-						player.sendMessage(mat);
-						if(Material.getMaterial(mat) != null) {
-							player.sendMessage(Material.getMaterial(mat).toString());
-							if(b.getType() == Material.getMaterial(mat)) {
+						if(Material.getMaterial(mat.toUpperCase()) != null) {
+							if(b.getType() == Material.getMaterial(mat.toUpperCase())) {
 								player.setFireTicks(20 * 3);
 								return;
 							}

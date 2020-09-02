@@ -10,7 +10,7 @@ public final class CoreConfig {
 	public static boolean announceFirstJoin, announceJoin, announceLeft;
 	public static String 
 	firstJoinMessage, joinMessage, leftMessage, 
-	infoColor, warnColor, errorColor, otherColor,
+	infoColor, warnColor, errorColor, otherColor, pingColor,
 	currencySymbol,
 	chatLowLvlMessage, chatMessageFormat, chestLoggerFormat,
 	dbhost,dbname,dbusr,dbpass;
@@ -44,7 +44,6 @@ public final class CoreConfig {
 		currencySymbol = config.getString("economy.currency-symbol");
 		
 		fallDamageMultiplier = config.getDouble("fall-damage-multiplier");
-		//levels = new long[config.getInt("levels.count") + 1];
 		defPlayerSpeed = config.getDouble("default-player-speed");
 		
 		restrictChat = config.getBoolean("chat.restrict-chat");
@@ -72,6 +71,7 @@ public final class CoreConfig {
 		levels = config.getLongList("levels");
 		floorCheck = (boolean)config.getBoolean("protect.floor-check.enabled");
 		floorCheckBlocks = (ArrayList<String>) config.getStringList("protect.floor-check.blocks");
+		pingColor = config.getString("chat.ping-color");
 	}
 	
 	public static void Reload() 

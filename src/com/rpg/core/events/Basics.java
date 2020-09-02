@@ -44,29 +44,34 @@ public class Basics implements Listener
 	@EventHandler
 	public void OnChat(AsyncPlayerChatEvent e) 
 	{
+		e.setCancelled(true);
 		String originalMessage = e.getMessage();
+		if(originalMessage.startsWith("/"))
+			return;
 		int lvl = PlayerManager.getPlayer(e.getPlayer().getUniqueId().toString()).level;
-		if(lvl < 10) {
-			e.setCancelled(true);
+		if(lvl < 10)
 			e.getPlayer().sendMessage(StringManager.Colorize(StringManager.FillExp(CoreConfig.chatLowLvlMessage, e.getPlayer())));
-		}
 		else 
 		{
 			for(Player player : Bukkit.getOnlinePlayers()) 
 			{
 				if(originalMessage.contains(player.getName()))
 				{
-					player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, 1.9f);
+					player.playSound(player.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 2, 1.6f);
+					player.sendMessage(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), CoreConfig.pingColor + originalMessage)));
+				}
+				else if(originalMessage.contains("@"+StringManager.FillGroup("{GROUP}", player))) {
+					player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 2, 1.7f);
+					player.sendMessage(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), CoreConfig.pingColor + originalMessage)));
 				}
 				else if(originalMessage.contains("@everyone"))
 				{
-					player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, 2, 1.75f);
+					player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2, 1.8f);
+					player.sendMessage(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), CoreConfig.pingColor + originalMessage)));
 				}
-				else if(originalMessage.contains("@"+StringManager.FillGroup("{GROUP}", player))) {
-					player.playSound(player.getLocation(), Sound.BLOCK_BELL_RESONATE, 2, 2f);
-				}
+				else
+					player.sendMessage(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
 			}
-			e.setFormat(StringManager.Colorize(StringManager.FillChat(CoreConfig.chatMessageFormat, e.getPlayer(), originalMessage)));
 		}
 	}
 	

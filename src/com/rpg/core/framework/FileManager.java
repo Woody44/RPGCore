@@ -3,10 +3,8 @@ package com.rpg.core.framework;
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 
 import com.rpg.core.Main;
 
@@ -26,6 +24,20 @@ public class FileManager {
 		File file = new File(Main.GetMe().getDataFolder()+"/" + type + "s/", name + ".yml");
 		
 		return file;
+	}
+	
+	public static FileConfiguration CreateConfigFile(String type, String name, String key, Object value) 
+	{
+		File f = CreateFile(type, name);
+		FileConfiguration fc = YamlConfiguration.loadConfiguration(f);
+		fc.set(key, value);
+		try {
+			fc.save(f);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return fc;
 	}
 	
 	public static void CreatePlayerFile(String uuid, String name) 
@@ -68,86 +80,16 @@ public class FileManager {
 		else return null;
 	}
 	
-	public static void updateFile(String path, String name, String key, String value) 
+	public static void updateFile(String path, String name, String key, Object value) 
 	{
 		FileConfiguration fc;
 		File file = getFile(path, name);
 		fc = YamlConfiguration.loadConfiguration(file);
+		
 		fc.set(key, value);
 		try {
 			fc.save(file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void updateFile(String path, String name, String key, int value) 
-	{
-		FileConfiguration fc;
-		File file = getFile(path, name);
-		fc = YamlConfiguration.loadConfiguration(file);
-		fc.set(key, value);
-		try {
-			fc.save(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void updateFile(String path, String name, String key, float value) 
-	{
-		FileConfiguration fc;
-		File file = getFile(path, name);
-		fc = YamlConfiguration.loadConfiguration(file);
-		fc.set(key, value);
-		try {
-			fc.save(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void updateFile(String path, String name, String key, double value) 
-	{
-		FileConfiguration fc;
-		File file = getFile(path, name);
-		fc = YamlConfiguration.loadConfiguration(file);
-		fc.set(key, value);
-		try {
-			fc.save(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void updateFile(String path, String name, String key, Location value) 
-	{
-		FileConfiguration fc;
-		File file = getFile(path, name);
-		fc = YamlConfiguration.loadConfiguration(file);
-		fc.set(key, value);
-		try {
-			fc.save(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void updateFile(String path, String name, String key, ItemStack value) 
-	{
-		FileConfiguration fc;
-		File file = getFile(path, name);
-		fc = YamlConfiguration.loadConfiguration(file);
-		fc.set(key, value);
-		try {
-			fc.save(file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

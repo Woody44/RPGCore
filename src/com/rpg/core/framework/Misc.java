@@ -3,6 +3,11 @@ package com.rpg.core.framework;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
@@ -68,5 +73,47 @@ public class Misc {
 			}
 		}
 		return 0;
+	}
+	
+	
+	public static float toDegree(double angle) {
+	    return (float) Math.toDegrees(angle);
+	}
+	
+	public static Vector getVector(Entity entity) {
+	    if (entity instanceof Player)
+	        return ((Player) entity).getEyeLocation().toVector();
+	    else
+	        return entity.getLocation().toVector();
+	}
+	
+	public static Location LookAt(Entity a, Entity b) 
+	{
+		Vector direction = getVector(a).subtract(getVector(b)).normalize();
+		double x = direction.getX();
+	    double y = direction.getY();
+	    double z = direction.getZ();
+	    
+	    Location toReturn = a.getLocation().clone();
+	    toReturn.setYaw(180 - toDegree(Math.atan2(x, z)));
+	    toReturn.setPitch(90 - toDegree(Math.acos(y)));
+	    
+	    return toReturn;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static String getUUIDdByNick(String nick) 
+	{
+		String fuuid = null;
+		OfflinePlayer op = null;
+		Player f = Bukkit.getPlayer(nick);
+		if(f== null) 
+		{
+			op = Bukkit.getOfflinePlayer(nick);
+			fuuid = op.getUniqueId().toString();
+		}
+		else 
+			fuuid = f.getUniqueId().toString();
+	return fuuid;
 	}
 }

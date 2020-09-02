@@ -100,51 +100,54 @@ public class PlayerManager {
 		if(lvl < 75)
 			player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, 0.75f);
 		if(lvl == 75)
-			player.getWorld().playSound(loc, Sound.UI_TOAST_IN, 1f, 0.5f);
+			player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, 0.1f);
 		if(lvl >= 75) 
 		{
 			player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, 0.8f);
 			Bukkit.broadcastMessage(StringManager.Colorize("&b&lGracz &2&l" + player.getDisplayName() + "&b&l Uzyskal poziom &b&l&o&n " + lvl + " &b&l !!!" ));
 			if(lvl == 150) 
 			{
-				loc.getWorld().spawnEntity(loc.add(0 ,20, 0), EntityType.LIGHTNING);
-		        for(int i = 0; i< 10; i++)
-		        {
-		        	int j = (int)(Math.random() * 4);
-		        	Firework fw = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
-		        	FireworkMeta fwm = fw.getFireworkMeta();
-		        	switch(j) 
-		        	{
-		        		case 0:
-		    		        fwm.setPower(3);
-		    		        fwm.addEffect(FireworkEffect.builder().withColor(Color.FUCHSIA).withFlicker().withTrail().with(Type.BALL_LARGE).withFade(Color.PURPLE).build());
-		    		        fw.setFireworkMeta(fwm);
-		    		        break;
-		        		case 1:
-		    		        fwm.setPower(3);
-		    		        fwm.addEffect(FireworkEffect.builder().withColor(Color.GREEN).withFlicker().withTrail().with(Type.CREEPER).build());
-		    		        fw.setFireworkMeta(fwm);
-		    		        break;
-		        		case 2:
-		        			fwm.setPower(3);
-			    		    fwm.addEffect(FireworkEffect.builder().withColor(Color.NAVY).withFlicker().withTrail().with(Type.STAR).withFade(Color.BLUE, Color.SILVER).build());
-			    		    fw.setFireworkMeta(fwm);
-			    		    break;
-		        		case 3:
-		        			fwm.setPower(3);
-			    		    fwm.addEffect(FireworkEffect.builder().withColor(Color.ORANGE).withFlicker().withTrail().with(Type.BALL).build());
-			    		    fw.setFireworkMeta(fwm);
-			    		    break;
-		        		case 4:
-		        			fwm.setPower(3);
-			    		    fwm.addEffect(FireworkEffect.builder().withColor(Color.WHITE).withFlicker().withTrail().with(Type.BURST).build());
-			    		    fw.setFireworkMeta(fwm);
-			    		    break;
-		        		default:
-		        			continue;
-		        	}
-		        }
-		        player.playSound(loc, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 0.5f);
+				player.getWorld().strikeLightning(player.getLocation());
+				for(Player p : Bukkit.getOnlinePlayers()) 
+				{
+			        for(int i = 0; i< 10; i++)
+			        {
+			        	int j = (int)(Math.random() * 4);
+			        	Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
+			        	FireworkMeta fwm = fw.getFireworkMeta();
+			        	switch(j) 
+			        	{
+			        		case 0:
+			    		        fwm.setPower(3);
+			    		        fwm.addEffect(FireworkEffect.builder().withColor(Color.FUCHSIA).withFlicker().withTrail().with(Type.BALL_LARGE).withFade(Color.PURPLE).build());
+			    		        fw.setFireworkMeta(fwm);
+			    		        break;
+			        		case 1:
+			    		        fwm.setPower(3);
+			    		        fwm.addEffect(FireworkEffect.builder().withColor(Color.GREEN).withFlicker().withTrail().with(Type.CREEPER).build());
+			    		        fw.setFireworkMeta(fwm);
+			    		        break;
+			        		case 2:
+			        			fwm.setPower(3);
+				    		    fwm.addEffect(FireworkEffect.builder().withColor(Color.NAVY).withFlicker().withTrail().with(Type.STAR).withFade(Color.BLUE, Color.SILVER).build());
+				    		    fw.setFireworkMeta(fwm);
+				    		    break;
+			        		case 3:
+			        			fwm.setPower(3);
+				    		    fwm.addEffect(FireworkEffect.builder().withColor(Color.ORANGE).withFlicker().withTrail().with(Type.BALL).build());
+				    		    fw.setFireworkMeta(fwm);
+				    		    break;
+			        		case 4:
+			        			fwm.setPower(3);
+				    		    fwm.addEffect(FireworkEffect.builder().withColor(Color.WHITE).withFlicker().withTrail().with(Type.BURST).build());
+				    		    fw.setFireworkMeta(fwm);
+				    		    break;
+			        		default:
+			        			continue;
+			        	}
+			        }
+			        p.playSound(loc, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2f, 1.4f);
+				}
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -93,6 +94,15 @@ public class ItemManager {
 		return item;
 	}
 	
+	public static ItemStack Rename(ItemStack item, String value) 
+	{
+		ItemMeta meta = item.getItemMeta();
+
+		meta.setDisplayName(StringManager.Colorize(value));
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	public static float CheckLore(ItemStack item, String value) 
 	{
 		if(item == null || item.getType() == Material.AIR)
@@ -107,6 +117,7 @@ public class ItemManager {
 			{
 				line = line.replace(value + ":", "");
 				line = StringManager.NoColors(line);
+				line = line.replace("*", "");
 				if(line.contains("%"))
 				{
 					line = line.replace("%", "");
@@ -124,8 +135,9 @@ public class ItemManager {
         final ItemStack item = new ItemStack(material, 1);
         final ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(name);
+        meta.setDisplayName(StringManager.Colorize(name));
         meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_POTION_EFFECTS);
 
         item.setItemMeta(meta);
         item.setAmount(amount);
@@ -189,5 +201,12 @@ public class ItemManager {
 			default:
 				return null;
 		}
+	}
+	
+	static public ItemStack xd()
+	{
+		ItemStack item = createItemStack(Material.DIAMOND_SWORD, "dagger", new String[]{}, 1);
+		item.getItemMeta().setCustomModelData(3);
+		return item;
 	}
 }
