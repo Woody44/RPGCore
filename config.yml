@@ -1,5 +1,9 @@
-fall-damage-multiplier: 2.5
+fall-damage-multiplier: 0.5
 default-player-speed: 0.18
+respawn-time: 10
+
+allow-headshots: true
+headshot-multiplier: 0.25
 
 database:
   host: ""

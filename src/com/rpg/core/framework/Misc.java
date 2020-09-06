@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -87,7 +88,25 @@ public class Misc {
 	        return entity.getLocation().toVector();
 	}
 	
+	public static Vector getVector(Location loc) {
+	        return loc.toVector();
+	}
+	
 	public static Location LookAt(Entity a, Entity b) 
+	{
+		Vector direction = getVector(a).subtract(getVector(b)).normalize();
+		double x = direction.getX();
+	    double y = direction.getY();
+	    double z = direction.getZ();
+	    
+	    Location toReturn = a.getLocation().clone();
+	    toReturn.setYaw(180 - toDegree(Math.atan2(x, z)));
+	    toReturn.setPitch(90 - toDegree(Math.acos(y)));
+	    
+	    return toReturn;
+	}
+	
+	public static Location LookAt(Entity a, Location b) 
 	{
 		Vector direction = getVector(a).subtract(getVector(b)).normalize();
 		double x = direction.getX();
@@ -116,4 +135,19 @@ public class Misc {
 			fuuid = f.getUniqueId().toString();
 	return fuuid;
 	}
+	
+	public static ArrayList<Location> getCircle(Location center, double radius, int amount)
+    {
+        World world = center.getWorld();
+        double increment = (2 * Math.PI) / amount;
+        ArrayList<Location> locations = new ArrayList<Location>();
+        for(int i = 0;i < amount; i++)
+        {
+            double angle = i * increment;
+            double x = center.getX() + (radius * Math.cos(angle));
+            double z = center.getZ() + (radius * Math.sin(angle));
+            locations.add(new Location(world, x, center.getY(), z));
+        }
+        return locations;
+    }
 }

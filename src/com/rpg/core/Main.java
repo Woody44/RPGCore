@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.entity.Player;
@@ -76,30 +78,41 @@ public class Main extends JavaPlugin implements Listener{
 	public void RegisterOtherStuff()
 	{
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
-
 			@Override
 			public void run() {
 				if(!CoreConfig.floorCheck)
 					return;
 				
 				ArrayList<String> mats = CoreConfig.floorCheckBlocks;
-				for(Player player : Main.GetMe().getServer().getOnlinePlayers())
+				for(Player player : getServer().getOnlinePlayers())
 				{
-					if(player.getGameMode() == GameMode.CREATIVE)
-						return;
+					if(player.getGameMode() == GameMode.CREATIVE || player.getGameMode() == GameMode.SPECTATOR)
+						continue;
 					
-					Block b= player.getLocation().add(0, -0.2, 0).getBlock();
-					
+					Block B1, B2;
+					B1 = player.getLocation().add(0, -0.7, 0).getBlock();
+					B2 = player.getLocation().add(0, -1.5, 0).getBlock();
 					for(String mat : mats) {
-						if(Material.getMaterial(mat.toUpperCase()) != null) {
-							if(b.getType() == Material.getMaterial(mat.toUpperCase())) {
-								player.setFireTicks(20 * 3);
-								return;
+						Material matt = Material.getMaterial(mat.toUpperCase());
+						if( matt!= null) {
+							if(B1.getType() == matt || B2.getType() == matt) {
+								player.setFireTicks(20 * 2);
 							}
 						}
 					}
 				}
-			}}, 0, 20*3);
+			}}, 0, 20*1);
+		
+		
+		getServer().getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+			@Override
+			public void run() {
+				for(Player player : getServer().getOnlinePlayers())
+				{
+					if(player.getHealth() <= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() * 0.1)
+						player.playSound(player.getLocation(), Sound.BLOCK_CONDUIT_AMBIENT, 0.7f, 1.7f);
+				}
+			}}, 0, 20*2);
 	}
 	
 	public static Main GetMe() 

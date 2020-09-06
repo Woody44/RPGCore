@@ -166,6 +166,22 @@ public class ItemManager {
         return similar;
     }
 	
+	public static boolean isSimilar(ItemStack first,ItemStack second, boolean exact)
+    {
+		if(exact)
+			return isSimilar(first,second);
+        boolean similar = false;
+        if(first == null || second == null)
+            return similar;
+        
+        boolean sameTypeId = (first.getType() == second.getType());
+        boolean sameName = (first.getItemMeta().getDisplayName().contentEquals(second.getItemMeta().getDisplayName()));
+        
+        if(sameTypeId && sameName)
+        	similar = true;
+        return similar;
+    }
+	
 	static public String GetType(String string) 
 	{
 		if(string.contains("Naszyjnik"))

@@ -26,6 +26,9 @@ public final class CoreConfig {
 	
 	public static boolean floorCheck;
 	public static ArrayList<String> floorCheckBlocks;
+	public static boolean allowHeadshots;
+	public static double headshotMultiplier;
+	public static long respawnTime;
 	CoreConfig()
 	{
 		config = Main.GetMe().getConfig();
@@ -72,6 +75,11 @@ public final class CoreConfig {
 		floorCheck = (boolean)config.getBoolean("protect.floor-check.enabled");
 		floorCheckBlocks = (ArrayList<String>) config.getStringList("protect.floor-check.blocks");
 		pingColor = config.getString("chat.ping-color");
+		
+		
+		allowHeadshots = config.getBoolean("allow-headshots");
+		headshotMultiplier = config.getDouble("headshot-multiplier");
+		respawnTime = config.getLong("respawn-time");
 	}
 	
 	public static void Reload() 

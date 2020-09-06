@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
+import com.rpg.core.events.Basics;
 import com.rpg.core.framework.StringManager;
 
 public class CommandSystem implements CommandExecutor{
@@ -21,6 +22,8 @@ public class CommandSystem implements CommandExecutor{
     	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "###&ddamian5466"));
     	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "##&aVersion:" + Main.GetMe().getDescription().getVersion()));
     	player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "#########################################"));
+    	
+    	Basics.ResurrectPlayer(player);
     	return true;
     }
 }
