@@ -12,6 +12,7 @@ import com.rpg.core.CoreConfig;
 import com.rpg.core.framework.StringManager;
 import com.rpg.core.framework.FileManager;
 import com.rpg.core.framework.ItemManager;
+import com.rpg.core.framework.PlayerInfo;
 import com.rpg.core.framework.PlayerManager;
 
 public class Announcing implements Listener{
@@ -21,11 +22,11 @@ public class Announcing implements Listener{
 		Player player = event.getPlayer();
 		String uuid = event.getPlayer().getUniqueId().toString();
 		String welcomeMessage;
-		
-		if(PlayerManager.getPlayer(uuid) == null) 
+		PlayerInfo pi = PlayerManager.GetPlayerProfile(uuid, 1);
+		if(pi == null)
 		{
 			welcomeMessage = StringManager.Colorize(StringManager.FillPlayer(CoreConfig.firstJoinMessage, event.getPlayer()));
-			FileManager.CreatePlayerFile(uuid, player.getDisplayName());
+			FileManager.CreatePlayerProfile(uuid, player.getDisplayName(), "1");
 			if(player.getServer().getPluginManager().isPluginEnabled("RPGLoot"))
 				player.getInventory().addItem(ItemManager.createItemStack(Material.CHEST, "§6Skrzynia nowego gracza", new String[] {""}, 1));
 		}
@@ -49,12 +50,14 @@ public class Announcing implements Listener{
 		}
 		
 		player.setWalkSpeed((float)CoreConfig.defPlayerSpeed);
-		PlayerManager.UpdateExpBar(player, PlayerManager.getPlayer(uuid).experience);
+		PlayerManager.UpdateExpBar(player, pi.experience);
+		PlayerManager.OnlinePlayers.put(player.getUniqueId().toString(), pi);
     }
 	
 	@EventHandler
 	public void OnLeft(PlayerQuitEvent event) 
 	{
+		PlayerManager.OnlinePlayers.remove(event.getPlayer().getUniqueId().toString());
 		event.setQuitMessage(null);
 		if(CoreConfig.leftMessage != null && CoreConfig.announceLeft)
 		{

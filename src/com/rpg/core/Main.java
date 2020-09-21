@@ -67,6 +67,7 @@ public class Main extends JavaPlugin implements Listener{
 	{
 		Manager.AddEvent(new Announcing());
 		Manager.AddEvent(new Basics());
+		Manager.AddEvent(new Eastereggs());
 		
 		Manager.AddEvent(new protect());
 		for(Listener event: Manager.events)

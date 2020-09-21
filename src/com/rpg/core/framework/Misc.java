@@ -150,4 +150,23 @@ public class Misc {
         }
         return locations;
     }
+	
+	@Deprecated
+	public static ArrayList<Location> getSphere(Location center, int amount)
+	{
+		ArrayList<Location> locations = new ArrayList<Location>();
+		for (double i = 0; i <= Math.PI; i += Math.PI / amount) {
+			   double radius = Math.sin(i);
+			   double y = Math.cos(i);
+			   for (double a = 0; a < Math.PI * 2; a+= Math.PI / amount) {
+			      double x = Math.cos(a) * radius;
+			      double z = Math.sin(a) * radius;
+			      locations.add(center.add(x, y, z));
+			      // display particle at 'location'.
+			      locations.add(center.subtract(x, y, z));
+			   }
+			}
+		
+		return locations;
+	}
 }

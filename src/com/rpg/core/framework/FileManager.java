@@ -10,25 +10,29 @@ import com.rpg.core.Main;
 
 public class FileManager {
 	
-	public static void DeleteFile(String type, String name) throws IOException
+	public static String GetPath(String type, String Name, String extend) 
 	{
-		if(checkFileExistence(type, name)) 
+		return Main.GetMe().getDataFolder() + "/" + type + "s/" + extend + "/" + Name + ".yml";
+	}
+	
+	public static File CreateFile(String path)
+	{
+		File file = new File(path);
+		return file;
+	}
+	
+	public static void DeleteFile(String path)
+	{
+		if(checkFileExistence(path)) 
 		{
-			File file = getFile(type, name);
+			File file = getFile(path);
 			file.delete();
 		}
 	}
 	
-	public static File CreateFile(String type, String name)
+	public static FileConfiguration CreateConfigFile(String path, String name, String key, Object value) 
 	{
-		File file = new File(Main.GetMe().getDataFolder()+"/" + type + "s/", name + ".yml");
-		
-		return file;
-	}
-	
-	public static FileConfiguration CreateConfigFile(String type, String name, String key, Object value) 
-	{
-		File f = CreateFile(type, name);
+		File f = CreateFile(path);
 		FileConfiguration fc = YamlConfiguration.loadConfiguration(f);
 		fc.set(key, value);
 		try {
@@ -40,13 +44,11 @@ public class FileManager {
 		return fc;
 	}
 	
-	public static void CreatePlayerFile(String uuid, String name) 
+	public static void CreatePlayerProfile(String uuid, String name, String profile) 
 	{
 		FileConfiguration fc;
-		File file = CreateFile("player", uuid);
+		File file = CreateFile(GetPath("player", "data", uuid+"/profiles/"+profile));
 		fc = YamlConfiguration.loadConfiguration(file);
-		fc.set("uuid", uuid);
-		fc.set("name", name);
 		fc.set("money", 0);
 		fc.set("experience", 0);
 		try
@@ -57,33 +59,47 @@ public class FileManager {
 		{
 			e.printStackTrace();
 		}
+		
+		file = CreateFile(GetPath("player", "player", uuid));
+		fc = YamlConfiguration.loadConfiguration(file);
+		fc.set("uuid", uuid);
+		fc.set("name", name);
+		fc.set("profile", 1);
+		try
+		{
+			fc.save(file);
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
-	public static File getFile(String path, String name)
+	public static File getFile(String path)
 	{
-		if(checkFileExistence(path, name))
+		if(checkFileExistence(path))
 		{
-			File returnFile = new File(Main.GetMe().getDataFolder() + "/" + path + "s/", name + ".yml");
+			File returnFile = new File(path);
 			return returnFile;
 		}
 		else return null;
 	}
 	
-	public static FileConfiguration getFileConfig(String path, String name)
+	public static FileConfiguration getFileConfig(String path)
 	{
-		if(checkFileExistence(path, name))
+		if(checkFileExistence(path))
 		{
-			File returnFile = getFile(path , name);
+			File returnFile = getFile(path);
 			FileConfiguration returnConfig = YamlConfiguration.loadConfiguration(returnFile);
 			return returnConfig;
 		}
 		else return null;
 	}
 	
-	public static void updateFile(String path, String name, String key, Object value) 
+	public static void updateFile(String path, String key, Object value) 
 	{
 		FileConfiguration fc;
-		File file = getFile(path, name);
+		File file = getFile(path);
 		fc = YamlConfiguration.loadConfiguration(file);
 		
 		fc.set(key, value);
@@ -94,9 +110,9 @@ public class FileManager {
 		}
 	}
 	
-	public static boolean checkFileExistence(String path, String name)
+	public static boolean checkFileExistence(String path)
 	{
-		File fileCheck = new File(Main.GetMe().getDataFolder() + "/" + path + "s/", name + ".yml");
+		File fileCheck = new File(path);
 		return fileCheck.exists();
 	}
 }

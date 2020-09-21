@@ -14,7 +14,7 @@ public class CommandMoney implements CommandExecutor
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player player = (Player) sender;
 		String uuid = player.getUniqueId().toString();
-		player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "Stan Konta: &a" + PlayerManager.getPlayer(uuid).money + "&2&l" + CoreConfig.currencySymbol));
+		player.sendMessage(StringManager.Colorize(CoreConfig.infoColor + "Stan Konta: &a" + PlayerManager.GetPlayerProfile(uuid, 1).money + "&2&l" + CoreConfig.currencySymbol));
 		return true;
 	}
 }

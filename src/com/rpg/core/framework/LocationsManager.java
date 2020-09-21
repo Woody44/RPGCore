@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class LocationsManager 
+public class LocationsManager extends FileManager
 {
 	public static void Create(String name, Location location) 
 	{
@@ -15,7 +15,7 @@ public class LocationsManager
 			return;
 		
 		FileConfiguration fc;
-		File file = FileManager.CreateFile("location", name);
+		File file = FileManager.CreateFile(GetPath("location", name, ""));
 		fc = YamlConfiguration.loadConfiguration(file);
 		fc.set("location", location);
 		try
@@ -33,17 +33,12 @@ public class LocationsManager
 		if(name ==null)
 			return;
 		
-		try {
-			FileManager.DeleteFile("location", name);
-		}catch(IOException e) 
-		{
-			e.printStackTrace();
-		}
+		DeleteFile(GetPath("location", name, ""));
 	}
 	
 	public static Location GetLocation(String name) 
 	{
-		FileConfiguration fc = FileManager.getFileConfig("location", name);
+		FileConfiguration fc = getFileConfig(GetPath("location", name, ""));
 		if(fc != null)
 			return fc.getLocation("location");
 		return null;

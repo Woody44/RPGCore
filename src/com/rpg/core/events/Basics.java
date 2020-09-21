@@ -14,18 +14,17 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -33,9 +32,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import com.rpg.core.CoreConfig;
 import com.rpg.core.Main;
 import com.rpg.core.framework.StringManager;
-import com.rpg.mobs.MobData;
-import com.rpg.mobs.MobFile;
-import com.rpg.core.framework.ItemManager;
+import com.rpg.core.gui.MainMenuGui;
 import com.rpg.core.framework.LocationsManager;
 import com.rpg.core.framework.PlayerManager;
 
@@ -95,7 +92,7 @@ public class Basics implements Listener
 		String originalMessage = e.getMessage();
 		if(originalMessage.startsWith("/"))
 			return;
-		int lvl = PlayerManager.getPlayer(e.getPlayer().getUniqueId().toString()).level;
+		int lvl = PlayerManager.GetPlayerProfile(e.getPlayer().getUniqueId().toString(), 1).level;
 		if(lvl < 10)
 			e.getPlayer().sendMessage(StringManager.Colorize(StringManager.FillExp(CoreConfig.chatLowLvlMessage, e.getPlayer())));
 		else 
@@ -131,13 +128,14 @@ public class Basics implements Listener
 	
 	@EventHandler
 	 public void onDeath(PlayerDeathEvent e) {
-			Player p = (Player)e.getEntity();
-			p.setBedSpawnLocation(p.getLocation(), true);
-			deadPlayers.put(p.getUniqueId().toString(), new HashMap<String, Object>());
-			deadPlayers.get(p.getUniqueId().toString()).put("location", p.getLocation());
-			HideFromOthers(p);
 			
-			if(Main.GetMe().getServer().getPluginManager().getPlugin("RPGMobs") != null) {
+			
+			/*if(Main.GetMe().getServer().getPluginManager().getPlugin("RPGMobs") != null) {
+				Player p = (Player)e.getEntity();
+				p.setBedSpawnLocation(p.getLocation(), true);
+				deadPlayers.put(p.getUniqueId().toString(), new HashMap<String, Object>());
+				deadPlayers.get(p.getUniqueId().toString()).put("location", p.getLocation());
+				HideFromOthers(p);
 				ArrayList<ArmorStand> stands = new ArrayList<>();
 				for(MobData md : MobFile.getMobsData("model----dummy")) 
 				{
@@ -185,7 +183,7 @@ public class Basics implements Listener
 							RespawnPlayer(p);
 					}}, 20 * CoreConfig.respawnTime);
 				deadPlayers.get(p.getUniqueId().toString()).put("task", task.getTaskId());
-			}
+			}*/
 		}
 	 
 	 @EventHandler
@@ -265,6 +263,31 @@ public class Basics implements Listener
 				 op.showPlayer(Main.GetMe(), p);
 		 }
 	 }
+	 
+	 @EventHandler
+	 public void OnMainInvOpen(PlayerInteractEvent e) 
+	 {
+		if(e.getAction() == Action.RIGHT_CLICK_AIR && e.getItem().getType() == Material.NETHER_STAR) 
+		{
+			new MainMenuGui(e.getPlayer());
+		}
+	 }
+	 
+	 @EventHandler
+	 public void OnInventoryClick(InventoryClickEvent e) 
+	 {
+		 if(e.getView().getTitle().contentEquals("Menu Glowne"))
+		 {
+			 for(ItemStack i : MainMenuGui.menus.keySet()) 
+			 {
+				 if(e.getCurrentItem() == i) 
+				 {
+					 e.getWhoClicked().openInventory(MainMenuGui.menus.get(i));
+				 } 
+			 }
+		 }
+	 }
+	 
 	/*@EventHandler
 	public void OnPlayerSneak(PlayerToggleSneakEvent e)
 	{

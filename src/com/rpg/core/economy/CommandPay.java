@@ -24,7 +24,7 @@ public class CommandPay implements CommandExecutor{
 			p[0].sendMessage(StringManager.Colorize(CoreConfig.errorColor + "Nice Try."));
 			return false;
 		}
-		if(PlayerManager.getPlayer(p[0].getUniqueId().toString()).money < count)
+		if(PlayerManager.GetPlayerProfile(p[0].getUniqueId().toString(), 1).money < count)
 		{
 			p[0].sendMessage(StringManager.Colorize(CoreConfig.warnColor + "Nie posiadasz tyle pieniedzy!"));
 			p[1].sendMessage(StringManager.Colorize(CoreConfig.warnColor + "Gracz " + p[0].getDisplayName() + "probowal przeslac na twoje konto " + count + ", ale cos nie pyklo..."));

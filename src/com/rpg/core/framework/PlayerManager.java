@@ -1,5 +1,7 @@
 package com.rpg.core.framework;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -14,17 +16,42 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import com.rpg.core.CoreConfig;
 
-public class PlayerManager {
+public class PlayerManager extends FileManager{
+	public static HashMap<String, PlayerInfo> OnlinePlayers = new HashMap<>();
+	
+	public static PlayerInfo GetPlayerProfile(String uuid, int profile) 
+	{
+		PlayerInfo pi = new PlayerInfo();
+		String path = GetPath("player","data", uuid+"/profiles/"+profile);
+		FileConfiguration fc = getFileConfig(path);
+		
+		if(fc == null) 
+			return null;
+		pi.experience = fc.getLong("experience");
+		pi.level = Misc.ExpToLvl(fc.getInt("experience"));
+		pi.money = fc.getInt("money");
+		
+		
+		path = GetPath("player","player", uuid);
+		fc = getFileConfig(path);
+		if(fc == null) 
+			return null;
+		pi.UUID = fc.getString("uuid");
+		pi.name = fc.getString("name");
+		pi.profile = fc.getInt("profile");
+		return pi;
+	}
 	
 	public static void setExp(String uuid, long exp) 
 	{
-		FileManager.updateFile("player", uuid, "experience", exp);
+		updateFile(GetPath("player", "data", uuid+"/profiles/"+OnlinePlayers.get(uuid).profile), "experience", exp);
+		OnlinePlayers.get(uuid).experience = exp;
 	}
 	
 	public static void addExp(String uuid, long exp) 
 	{
-		int lvl = Misc.ExpToLvl(getPlayer(uuid).experience);
-		int newlvl = Misc.ExpToLvl(getPlayer(uuid).experience + exp);
+		int lvl = Misc.ExpToLvl(OnlinePlayers.get(uuid).experience);
+		int newlvl = Misc.ExpToLvl(OnlinePlayers.get(uuid).experience + exp);
 		
 		if(lvl < newlvl)
 		{
@@ -37,39 +64,31 @@ public class PlayerManager {
 				}
 			}
 		}
-		if(newlvl < CoreConfig.levels.size() +1)
-			FileManager.updateFile("player", uuid, "experience", getPlayer(uuid).experience + exp);
-		else
-			FileManager.updateFile("player", uuid, "experience", CoreConfig.levels.get(CoreConfig.levels.size()-1));
+		if(newlvl < CoreConfig.levels.size() +1) {
+			updateFile(GetPath("player", "data", uuid+"/profiles/"+OnlinePlayers.get(uuid).profile), "experience", OnlinePlayers.get(uuid).experience + exp);
+			OnlinePlayers.get(uuid).experience += exp;
+		}
+		else {
+			updateFile(GetPath("player", "data", uuid+"/profiles/"+OnlinePlayers.get(uuid).profile), "experience", CoreConfig.levels.get(CoreConfig.levels.size()-1));
+			OnlinePlayers.get(uuid).experience += CoreConfig.levels.get(CoreConfig.levels.size()-1);
+		}
 	}
 	
 	public static void setNickname(String uuid, String nick) 
 	{
-		FileManager.updateFile("player", uuid, "nick", nick);
+		updateFile(GetPath("player", "data", uuid+"/profiles/"+OnlinePlayers.get(uuid).profile), "nick", nick);
 	}
 	
 	public static void setMoney(String uuid, int money) 
 	{
-		FileManager.updateFile("player", uuid, "money", money);
+		updateFile(GetPath("player", "data", uuid+"/profiles/"+OnlinePlayers.get(uuid).profile), "money", money);
+		OnlinePlayers.get(uuid).money = money;
 	}
 	
 	public static void addMoney(String uuid, int money) 
 	{
-		FileManager.updateFile("player", uuid, "money", getPlayer(uuid).money + money);
-	}
-	
-	public static PlayerInfo getPlayer(String uuid)
-	{
-		PlayerInfo pi = new PlayerInfo();
-		FileConfiguration fc = FileManager.getFileConfig("player", uuid);
-		if(fc == null) 
-			return null;
-		pi.UUID = fc.getString("uuid");
-		pi.name = fc.getString("name");
-		pi.experience = fc.getLong("experience");
-		pi.level = Misc.ExpToLvl(fc.getInt("experience"));
-		pi.money = fc.getInt("money");
-		return pi;
+		updateFile(GetPath("player", "data", uuid+"/profiles/"+OnlinePlayers.get(uuid).profile), "money", GetPlayerProfile(uuid, 1).money + money);
+		OnlinePlayers.get(uuid).money += money;
 	}
 	
 	public static void UpdateExpBar(Player player, long exp) 

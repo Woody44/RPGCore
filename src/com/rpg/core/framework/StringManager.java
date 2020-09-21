@@ -63,7 +63,7 @@ public class StringManager {
 	public static String FillExp(String string, Player player) 
 	{
 		String uuid = player.getUniqueId().toString();
-		long exp = PlayerManager.getPlayer(uuid).experience;
+		long exp = PlayerManager.GetPlayerProfile(uuid, 1).experience;
 		int lvl = Misc.ExpToLvl(exp);
 		string = string.replace("{EXP}", exp+"");
 		string = string.replace("{LEVEL}", lvl+"");
