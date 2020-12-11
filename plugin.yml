@@ -1,54 +1,35 @@
-name: RPGcore
-main: com.rpg.core.Main
-version: 2.5.3
+name: RPGCore
+main: com.woody.core.Main
+version: 3.1
 api-version: 1.16
-authors: [_woody44_, damian5466]
-database: true
 
-softdepend:
-    - PermissionsEx
-depend:
-    - AuthMe
-commands:
-  money:
-    description: Sprawdz stan swego konta.
-    permission: rpg.core.eco.money
-    usage: /money
-  pay:
-    description: Przelej pieniadze znajomemu
-    permission: rpg.core.eco.pay
-    usage: /pay <player> <count>
-  system:
-    description: Informacje na temat pluginu.
-    permission: rpg.core.system
-    usage: /system
-  reloadconfig:
-    description: Pozwala przeladowac ponownie konfiguracje pluginu bez wymogu restartu serwera.
-    permission: rpg.core.reload
-    usage: /reloadconfig
-  location:
-    description: Komenda sluzaca do zarzadzania lokacjami i teleportacji do nich.
-    permission: rpg.core.location
-    usage: /location <create/delete/teleport> <name>
-  setexp:
-    description: ustawia kokretna ilosc doswiadczenia graczowi.
-    permission: rpg.core.setexp
-    usage: /setexp <player> <amount>
-  setmoney:
-    description: ustawia stan konta gracza.
-    permission: rpg.core.setmoney
-    usage: /setmoney <player> <amount>
-  force:
-    description: zmusza gracza do uzycia komendy.
-    permission: rpg.core.force
-    usage: /force <player> <command> <args>
+database: false
 load: POSTWORLD
 loadbefore:
-  - RPGitems
-  - RPGKlasy
-  - RPGSideMode
-  - RPGTrade
-  - RPGfriends
-  - RPGMobs
-
-description: Podstawa dla pluginow zwiazanych z systemem RPG.
+softdepend:
+    - AuthMe
+    - Citizens
+    - PermissionsEx
+    - TreasureChest
+    - WorldEdit
+    
+authors: [_woody44_]
+website: NONE
+prefix: woody
+commands:
+  profile:
+    permission: core.profile
+  money:
+    permission: core.money
+  cooldown:
+    permission: core.cooldown
+    aliases: cdr
+  level:
+    permission: core.levels
+  location:
+    permission: core.location
+  pay:
+    permission: core.cooldown.pay
+  gui:
+  weather:
+permissions:

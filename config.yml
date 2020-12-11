@@ -1,212 +1,110 @@
-fall-damage-multiplier: 0.5
-default-player-speed: 0.18
-respawn-time: 10
+############################
+#          World           #
+############################
+world:
+  # How much fall damage will players get? only 0 or positive values
+  fall-damage-multiplier: 0.5
 
-allow-headshots: true
-headshot-multiplier: 0.25
+  # Changes default walking speed [Minecraft default is 0.2]
+  default-player-speed: 0.18
 
-database:
-  host: ""
-  name: ""
-  username: ""
-  password: ""
-  port: 3306
+  # Should players get hungry? [Default: true]
+  hunger: false
   
+  # How much % of experience player loses on death [Default: 0.1 | 0.0 - 1.0]
+  exp-lose: 0.1
+
+############################
+#          Combat          #
+############################
+combat:
+  # if true players can hit headshot to any mob or player
+  allow-headshots: true
+
+  # works only when 'allow-headshots' is true
+  # changes the amount of damage entity gets when headshotted
+  headshot-multiplier: 0.25
+
+
+############################
+#       Announcements      #
+############################
 announce:
+  # Should we announce that new player joined?
   first-join: true
   first-join-message: "&dGracz {PLAYER} wszedl na serwer po raz pierwszy!"
   
+  # player joined of left the game, yay! lets configure this shitty spam message :d
   join: true
-  join-message: "(green) {PLAYER} (bold)+"
+  join-message: "(green){PLAYER} (bold)+"
   
   left: true
-  left-message: "(red) {PLAYER} (bold)-"
+  left-message: "(red){PLAYER} (bold)-"
 
+
+############################
+#           Chat           #
+############################
 chat:
-  restrict-chat: true
-  chat-lvl-min: 10
-  chat-low-lvl-message: "(red)Musisz miec conajmniej {LEVEL_MIN} poziom by uzywac chatu!"
-  chat-message-format: "(gray)&l[&6{LEVEL}&7&l]-&a&l{GROUP}&7&l-&6{PLAYER}&7&l:&f {MESSAGE}"
-    
+  # should chat be blocked for new players?
+  restrict: true
+  
+  # Minimal lvl needed to send messages in chat
+  lvl-min: 10
+  
+  # message when player has too low level
+  low-lvl-message: "(red)Musisz miec conajmniej {LEVEL_MIN} poziom by uzywac chatu!"
+  
+  # chat messages format, how message looks like
+  message-format: "(gray)&l[&6{LEVEL}&7&l]-&a&l{GROUP}&7&l-&6{PLAYER}&7&l:&f {MESSAGE}"
+  
+  # These colors are being used in messages sent to players in various occasions like missing permissions or too low money etc.
   info-color: "&6"
   warn-color: "&e"
   error-color: "&4"
   other-color: "&a&l"
   ping-color: "&d"
-  
-levels:
-      - 0
-      - 100
-      - 250
-      - 500
-      - 850
-      - 1250
-      - 1700
-      - 2200
-      - 2750
-      - 3350
-      - 4000
-      - 4750
-      - 5600
-      - 6550
-      - 7600
-      - 8750
-      - 10000
-      - 11350
-      - 12800
-      - 14350
-      - 16000
-      - 17850
-      - 19900
-      - 22150
-      - 24600
-      - 27250
-      - 30100
-      - 33150
-      - 36400
-      - 39850
-      - 43500
-      - 47550
-      - 52000
-      - 56850
-      - 62100
-      - 67750
-      - 73800
-      - 80250
-      - 87100
-      - 94350
-      - 102000
-      - 110450
-      - 119700
-      - 129750
-      - 140600
-      - 152250
-      - 164700
-      - 177950
-      - 192000
-      - 206850
-      - 222500
-      - 239750
-      - 258600
-      - 279050
-      - 301100
-      - 324750
-      - 350000
-      - 376850
-      - 405300
-      - 435350
-      - 467000
-      - 501850
-      - 539900
-      - 581150
-      - 625600
-      - 673250
-      - 724100
-      - 778150
-      - 835400
-      - 895850
-      - 959500
-      - 1029550
-      - 1106000
-      - 1188850
-      - 1278100
-      - 1373750
-      - 1475800
-      - 1584250
-      - 1699100
-      - 1820350
-      - 1948000
-      - 2088450
-      - 2241700
-      - 2407750
-      - 2586600
-      - 2778250
-      - 2982700
-      - 3199950
-      - 3430000
-      - 3672850
-      - 3941300
-      - 4235350
-      - 4555000
-      - 4900250
-      - 5271100
-      - 5667550
-      - 6089600
-      - 6537250
-      - 7010500
-      - 7509350
-      - 8033800
-      - 8622250
-      - 9274700
-      - 9991150
-      - 10771600
-      - 11616050
-      - 12780500
-      - 14264950
-      - 16069400
-      - 18193850
-      - 20638300
-      - 24682750
-      - 30327200
-      - 37571650
-      - 46416100
-      - 56860550
-      - 75305000
-      - 101749450
-      - 136193900
-      - 178638350
-      - 229082800
-      - 319527250
-      - 580416150
-      - 750860600
-      - 961305050
-      - 1211749500
-      - 1662193950
-      - 2312638400
-      - 3163082850
-      - 4213527300
-      - 5463971750
-      - 7714416200
-      - 10964860650
-      - 15215305100
-      - 20465749550
-      - 26716194000
-      - 38066638450
-      - 54517082900
-      - 76067527350
-      - 102717971800
-      - 134468416250
-      - 192738860700
-      - 277529305150
-      - 388839749600
-      - 526670194050
-      - 691020638500
-      - 1001231082950
-      - 1457301527400
-      - 2059231971850
-      - 2807022416300
-      - 3999999999999
-#150: 3 700 672 860 750
-#+145 860 000 000 per 5 lvls
+
+
+############################
+#         Economy          #
+############################
 economy:
   currency-symbol: "$"
-  
-other:
-  chest-log:
-    enabled: false
-    format: "Gracz {PLAYER} Otworzyl skrzynie na koordynatach {WORLD} {X} {Y} {Z}"
 
+
+############################
+#       Protection         #
+############################
+# this allows you to protect world from griefing or prevent players from going into prohibited places
 protect:
   explosions:
     enabled: true
     drop: true
+    # chance to get block after explosion [0 - 1]
     drop-rate: 1
     worlds:
-        - system_spawn
-        - dung1
-        - fantasy
+        - world
+    # how fast block renews after explosion
+    time: 1
   floor-check:
     enabled: true
     blocks:
         - torch
         - barrier
+        
+
+############################
+#  Other bu ... features   #
+############################
+other:
+  real-time:
+    enabled: true
+    # in seconds
+    interval: 300
+    weather:
+      enabled: true
+      city: Warsaw
+      api-key:
+    time:
+      enabled: true
