@@ -1,9 +1,9 @@
 package com.woody.core.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.woody.core.util.CooldownManager;
 
@@ -13,25 +13,19 @@ public class CommandCooldown implements CommandExecutor{
 		if(args.length < 2)
 			return true;
 		
-		String thing = args[1];
-		
-		if(sender.hasPermission("core.cooldown.admin"))
+		String thing = args[2];
 		switch(args[0])
 		{
 			case "do":
-				int seconds = Integer.parseInt(args[2]);
-				CooldownManager.cooldown((Player)sender, thing, seconds);
+				int seconds = Integer.parseInt(args[3]);
+				CooldownManager.cooldown(Bukkit.getPlayer(args[1]), thing, seconds);
 				break;
 			case "check":
-				sender.sendMessage("cooldown: " + CooldownManager.getCooldown((Player)sender, thing, true));
-				break;
-				
-			case "checku":
-				sender.sendMessage("cooldown: " + CooldownManager.getCooldown((Player)sender, thing, false));
+				sender.sendMessage("cooldown: " + CooldownManager.getCooldown( Bukkit.getPlayer(args[1]), thing, true));
 				break;
 				
 			case "reset":
-				CooldownManager.resetCooldown((Player)sender, thing);
+				CooldownManager.resetCooldown(Bukkit.getPlayer(args[1]), thing);
 				break;
 		}
 		

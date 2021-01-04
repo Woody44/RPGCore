@@ -1,7 +1,9 @@
 package com.woody.core.util;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -71,15 +73,27 @@ public class StringManager {
 	
 	public static String FillExp(String string, Player player) 
 	{
-		string = string.replace("{EXP}", PlayerManager.onlinePlayers.get(player).getExp()+"");
+		DecimalFormat decimalFormat = new DecimalFormat("#.00");
+		string = string.replace("{EXP}", decimalFormat.format((float)(PlayerManager.onlinePlayers.get(player).getExp() / Config.levels.get(PlayerManager.onlinePlayers.get(player).getLevel()+1))) + "");
 		string = string.replace("{LEVEL}", PlayerManager.onlinePlayers.get(player).getLevel() + "");
 		string = string.replace("{LEVEL_MIN}", Config.chatLvlMin+"");
 		return string;
 	}
 	
+	public static String FillPlayer(String string, Player[] player) 
+	{
+		for(int i = 0; i < player.length; i++)
+		{
+			string = string.replace("{PLAYER_" + i + "}", player[i].getDisplayName());
+			string = string.replace("{RPLAYER_" + i + "}", player[i].getName());
+		}
+		return string;
+	}
+	
 	public static String FillPlayer(String string, Player player) 
 	{
-		string = string.replace("{PLAYER}", player.getName());
+			string = string.replace("{PLAYER}", player.getDisplayName());
+			string = string.replace("{RPLAYER}", player.getName());
 		return string;
 	}
 	
@@ -89,30 +103,70 @@ public class StringManager {
 		return string;
 	}
 	
-	public static String FillChat(String format, Player player, String message) 
+	public static String FillChat(String format, Player player, String message, Player receiver) 
 	{
 		format = FillWorld(format, player.getLocation());
 		format = FillExp(format, player);
-		format = FillPlayer(format, player);
 		format = FillMessage(format, player, message);
 		format = FillGroup(format, player);
+		format = FillPings(format, receiver, true);
+		format = FillPlayer(format, player);
 		return format;
 	}
 	
 	public static String FillWorld(String format, Location loc) 
 	{
+		format = format.replace("{WORLD_TYPE}", loc.getWorld().getEnvironment().toString());
 		format = format.replace("{WORLD}", loc.getWorld().getName());
-		format = format.replace("{X}", loc.getX() + "");
-		format = format.replace("{Y}", loc.getY() + "");
-		format = format.replace("{Z}", loc.getZ() + "");
+		format = format.replace("{X}", loc.getBlockX() + "");
+		format = format.replace("{Y}", loc.getBlockY() + "");
+		format = format.replace("{Z}", loc.getBlockZ() + "");
+		format = format.replace("{BIOME}", loc.getWorld().getBiome(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()).name());
+		return format;
+	}
+	
+	public static String FillPings(String format, Player target, boolean centerColor) 
+	{
+		if(target ==null)
+			return format;
+		
+		boolean hasPing = format.contains(NoColors(target.getDisplayName())) || format.contains(target.getName()) ||
+				format.contains("@"+StringManager.FillGroup("{GROUP}", target)) || format.contains("@everyone");
+		if(centerColor)
+		{
+			if(hasPing)
+			{
+				format = format.replace(NoColors(target.getDisplayName()), Colorize(Config.pingColor + NoColors(target.getDisplayName()) + "&r"));
+				format = format.replace(target.getName(), Colorize(Config.pingColor + target.getName()) + "&r");
+				format = format.replace("@"+StringManager.FillGroup("{GROUP}", target), Colorize(Config.pingColor + "@"+StringManager.FillGroup("{GROUP}", target)) + "&r");
+				format = format.replace("@everyone", Colorize(Config.pingColor + "@everyone") + "&r");
+			}
+		}
+		else
+		{
+			if(hasPing)
+				format = Colorize(Config.pingColor + NoColors(format));
+		}
 		return format;
 	}
 	
 	public static String FillGroup(String string, Player player) 
 	{
-		PermissionUser user = PermissionsEx.getUser(player);
-		List<String> groups = user.getParentIdentifiers();
-		string = string.replace("{GROUP}", groups.get(0));
-		return string;
+		if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
+		{
+			PermissionUser user = PermissionsEx.getUser(player);
+			List<String> groups = user.getParentIdentifiers();
+			string = string.replace("{GROUP}", groups.get(0));
+			return string;
+		}
+		else 
+		{
+			if(player.isOp())
+				string = string.replace("{GROUP}", "Operator");
+			else
+				string = string.replace("{GROUP}", "Player");
+			return string;
+		}
+		
 	}
 }

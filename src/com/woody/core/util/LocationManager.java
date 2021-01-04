@@ -36,6 +36,11 @@ public class LocationManager {
 			
 	}
 	
+	public static HashMap<String, Location> listLocations() 
+	{
+		return locations;
+	}
+	
 	public static void deleteLocation(String name) 
 	{
 		FileManager.deleteFile("locations/"+name+".yml");

@@ -8,90 +8,67 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Sound;
 import org.bukkit.FireworkEffect.Type;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.util.Vector;
 
 import com.woody.core.Config;
-import com.woody.core.Main;
 import com.woody.core.util.FileManager;
 import com.woody.core.util.PlayerManager;
 import com.woody.core.util.StringManager;
 
 public class CustomPlayer {
-	private int profile;
-	private long experience;
-	private int level;
-	private int money;
-	public String uuid;
-	public HashMap<String, Object> customProperties = new HashMap<>();
+	public Profile profile;
+	public Player player;
 	
-	public CustomPlayer(String uuid, int profile) 
+	public CustomPlayer(Player _player, int profileId) 
 	{
-		this.uuid = uuid;
-		loadProfile(profile);
-	}
-	
-	public int addMoney(int count) 
-	{
-		money += count;
-		return money;
-	}
-	
-	public void setMoney(int count) 
-	{
-		money = count;
-	}
-	
-	public int getMoney() 
-	{
-		return money;
-	}
-	
-	public void setExp(long count) 
-	{
-		experience = count;
+		player = _player;
+		loadProfile(profileId);
 		levelUp();
-		updateExpBar();
 	}
 	
-	public void addExp(long count) 
+	public CustomPlayer(String _player, int profileId) 
 	{
-		experience += count;
+		player = Bukkit.getPlayer(UUID.fromString(_player));
+		loadProfile(profileId);
 		levelUp();
+	}
+	
+	public void loadProfile(int profileId) 
+	{
+		Profile prof = null;
+		if(profileId == -1)
+			prof = PlayerManager.createProfile(player.getUniqueId().toString(), new Profile());
+		else
+			prof = PlayerManager.getProfile(player.getUniqueId().toString(), profileId);
+		
+		profile = prof;
+		player.getInventory().setContents(new ItemStack[41]);
+		player.getInventory().setContents(getInventory());
 		updateExpBar();
 	}
 	
-	public long getExp() 
+	public Profile getActualProfile() 
 	{
-		return experience;
+		return profile;
 	}
-	
-	public int getLevel() 
+	public int getActualProfileId() 
 	{
-		return level;
-	}
-	
-	public void setLevel(int count) 
-	{
-		level = count;
-		updateExpBar();
-	}
-	
-	public int getActualProfile() 
-	{
-		return this.profile;
+		return profile.id;
 	}
 	
 	public boolean checkProfile(int id) 
 	{
-		if(PlayerManager.loadProfile(uuid, id) != null)
-			return true;
-		else
+		FileConfiguration fc = FileManager.getConfig("players/" + player.getUniqueId().toString() + "/profiles/" + id + "/profile.yml");
+		if(fc==null)
 			return false;
+		return true;
 	}
 	
 	public void changeProfile(int profile) 
@@ -100,33 +77,12 @@ public class CustomPlayer {
 		loadProfile(profile);
 	}
 	
-	public void saveProfile() 
-	{
-		PlayerManager.updateProfile(new ProfileInfo(uuid, profile, level, experience, money, Bukkit.getPlayer(UUID.fromString(uuid)).getInventory().getContents()));
-	}
-	
-	public void loadProfile(int profile) 
-	{
-		this.profile = profile;
-		ProfileInfo pi = PlayerManager.loadProfile(uuid, profile);
-		if(pi == null)
-			return;
-		
-		this.experience = pi.experience;
-		this.level = pi.level;
-		this.money = pi.money;
-		this.profile = profile;
-		Bukkit.getPlayer(UUID.fromString(uuid)).getInventory().setContents(new ItemStack[41]);
-		Bukkit.getPlayer(UUID.fromString(uuid)).getInventory().setContents(pi.inventory);
-	}
-	
 	public void updateExpBar() 
 	{
-		Player player = Bukkit.getPlayer(UUID.fromString(uuid));
-		player.setLevel(level);
+		player.setLevel(getLevel());
 		
-		if((float)(experience)/Config.levels.get(level) < 1)
-			player.setExp((float)(experience)/Config.levels.get(level));
+		if((float)(getExp())/Config.levels.get(getLevel()) < 1)
+			player.setExp((float)(getExp())/Config.levels.get(getLevel()));
 		else
 			player.setExp(1);
 	}
@@ -134,29 +90,35 @@ public class CustomPlayer {
 	private void levelUp() 
 	{
 		boolean leveled = false;
-		while(experience > Config.levels.get(level))
+		long experience = getExp();
+		int level = getLevel();
+		while(experience >= Config.levels.get(level))
 		{
 			if(level == Config.levels.size())
-			{break;}
+			{
+				break;
+			}
 			experience -= Config.levels.get(level);
-			level += 1;
+			level ++;
 			leveled = true;
 		}
 		if(!leveled)
 			return;
-		Player player = Bukkit.getPlayer(UUID.fromString(uuid));
-		Location loc = player.getLocation();
-		if(level < 30)
-			player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, 0.75f);
-		if(level == 30)
-			player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, 0.1f);
-		if(level >= 31) 
+		else
 		{
-			player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, 0.8f);
+			setLevel(level);
+			setExp(experience);
+			saveProfile();
+		}
+		
+		Location loc = player.getLocation();
+		player.getWorld().playSound(loc, Sound.ENTITY_PLAYER_LEVELUP, 1f, ((float)((float)level / (float)Config.levels.size()) * 2));
+		if(level >= Config.levels.size() * 0.6) 
+		{
 			Bukkit.broadcastMessage(StringManager.Colorize("&b&lGracz &2&l" + player.getDisplayName() + "&b&l Uzyskal poziom &b&l&o&n " + level + " &b&l !!!" ));
-			if(level == 50) 
+			if(level == Config.levels.size()) 
 			{
-				player.getWorld().strikeLightning(player.getLocation());
+				player.getWorld().strikeLightning(player.getLocation().add(new Vector(0,7,0)));
 				for(Player p : Bukkit.getOnlinePlayers()) 
 				{
 			        for(int i = 0; i< 10; i++)
@@ -195,7 +157,7 @@ public class CustomPlayer {
 			        			continue;
 			        	}
 			        }
-			        p.playSound(loc, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2f, 1.4f);
+			        p.playSound(loc, Sound.UI_TOAST_CHALLENGE_COMPLETE, 2f, 0.8f);
 				}
 			}
 		}
@@ -204,27 +166,134 @@ public class CustomPlayer {
 	public void saveGeneral() 
 	{
 		HashMap<String, Object> map = new HashMap<>();
-		map.put("last-profile", profile);
-		map.put("last-nick", Bukkit.getPlayer(UUID.fromString(uuid)));
-		if(FileManager.getConfig("players/"+uuid+"/player.yml") != null)
-			FileManager.updateConfig("players/"+uuid+"/player.yml", map);
+		map.put("last-profile", profile.id);
+		map.put("last-nick", player.getDisplayName());
+		if(FileManager.getConfig("players/" + player.getUniqueId().toString() + "/player.yml") != null)
+			FileManager.updateConfig("players/" + player.getUniqueId().toString()  + "/player.yml", map);
 		else
-			FileManager.createConfig("players/"+uuid+"/player.yml", map);
+			FileManager.createConfig("players/" + player.getUniqueId().toString()  + "/player.yml", map);
 	}
 	
-	public boolean setProperty(String key, Object value) 
+	public void saveProfile() 
 	{
-		if(!customProperties.containsKey(key))
+		setInventory(player.getInventory().getContents());
+		HashMap<String, Object> toSave = new HashMap<>();
+		toSave.put("level", getLevel());
+		toSave.put("experience", getExp());
+		toSave.put("money", getMoney());
+		toSave.put("inventory", getInventory());
+		toSave.put("CustomProperties", profile.customProperties);
+		FileManager.updateConfig("players/" + player.getUniqueId().toString() + "/profiles/" + profile.id + "/profile.yml", toSave);
+	}
+	
+	public void ClearInventory()
+	{	
+		setInventory(new ItemStack[41]);
+		FileManager.updateConfig("players/" + player.getUniqueId().toString() + "/profiles/" + profile.id + "/profile.yml", "inventory", profile.items);
+	}
+	
+	public void saveAll() 
+	{
+		saveGeneral();
+		saveProfile();
+	}
+	
+	public int addMoney(int count) 
+	{
+		profile.money += count;
+		saveProfile();
+		return profile.money;
+	}
+	
+	public void setMoney(int count) 
+	{
+		profile.money = count;
+		saveProfile();
+	}
+	
+	public int getMoney() 
+	{
+		return profile.money;
+	}
+	
+	public void setExp(long count) 
+	{
+		profile.experience = count;
+		levelUp();
+		updateExpBar();
+	}
+	
+	public void addExp(long count) 
+	{
+		profile.experience += count;
+		levelUp();
+		updateExpBar();
+	}
+	
+	public long getExp() 
+	{
+		return profile.experience;
+	}
+	
+	public int getLevel() 
+	{
+		return profile.level;
+	}
+	
+	public void setLevel(int count) 
+	{
+		profile.level = count;
+		updateExpBar();
+	}
+	
+	public boolean setProperty(String key, Object value, boolean force) 
+	{
+		if(value == null)
 		{
-			customProperties.put(key, value);
+			if(profile.customProperties.containsKey(key))
+				profile.customProperties.remove(key);
+			saveProfile();
 			return true;
 		}
-		else
-			return false;
+		else 
+		{
+			if(!profile.customProperties.containsKey(key))
+			{
+				profile.customProperties.put(key, value);
+				saveProfile();
+				return true;
+			}
+			else
+			{
+				if(force)
+				{
+					profile.customProperties.remove(key);
+					profile.customProperties.put(key, value);
+					saveProfile();
+					return true;
+				}
+				return false;
+			}
+		}
 	}
 	
 	public Object getProperty(String key) 
 	{
-		return customProperties.get(key);
+		return profile.customProperties.get(key);
+	}
+	
+	public ItemStack[] getInventory() 
+	{
+		return profile.items;
+	}
+	
+	public void setInventory(ItemStack[] i) 
+	{
+		profile.items = i;
+	}
+	
+	public FileConfiguration getPlayerGeneral() 
+	{
+		return FileManager.getConfig("players/" + player.getUniqueId().toString() + "/player.yml");
 	}
 }

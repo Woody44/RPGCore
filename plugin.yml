@@ -1,6 +1,6 @@
-name: RPGCore
+name: WoodyCore
 main: com.woody.core.Main
-version: 3.1
+version: 1.3a
 api-version: 1.16
 
 database: false
@@ -19,17 +19,37 @@ prefix: woody
 commands:
   profile:
     permission: core.profile
+    aliases: prof
   money:
     permission: core.money
   cooldown:
     permission: core.cooldown
-    aliases: cdr
+    aliases: cd
   level:
-    permission: core.levels
+    permission: core.level
+    aliases: lvl
   location:
     permission: core.location
   pay:
-    permission: core.cooldown.pay
-  gui:
-  weather:
+    permission: core.pay
+  back:
+    permission: core.back
+  powertool:
+    permission: core.powertool
+    aliases: pt
+  warp:
+    permission: core.warp
+  suicide:
+    permission: core.suicide
+  feed:
+    permission: core.feed
+  heal:
+    permission: core.heal
+    aliases: [babysit, bb, cure]
+  setspawn:
+    permission: core.setspawn
+  spawn:
+    permission: core.spawn
+  reloadconfig:
+    permission: core.reload
 permissions:

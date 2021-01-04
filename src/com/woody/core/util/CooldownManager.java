@@ -35,7 +35,7 @@ public class CooldownManager {
 				@Override
 				public void run() {
 					resetCooldown(player, thing);
-				}}, (int)(seconds * 20));
+				}}, (int)(seconds * 20 - 20));
 			return;
 		}
 		else

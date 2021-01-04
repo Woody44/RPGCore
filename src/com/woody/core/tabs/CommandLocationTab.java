@@ -9,16 +9,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 
+import com.woody.core.util.LocationManager;
+
 public class CommandLocationTab implements TabCompleter{
 	ArrayList<String> actions = new ArrayList<>();
-	ArrayList<String> name = new ArrayList<>();
 	public CommandLocationTab() 
 	{
 		actions.add("create");
 		actions.add("delete");
 		actions.add("tp");
-		
-		name.add("name");
 	}
 	
 	@Override
@@ -28,7 +27,12 @@ public class CommandLocationTab implements TabCompleter{
 		if(args.length == 1)
 			StringUtil.copyPartialMatches(args[0], actions, completion);
 		if(args.length == 2)
-			StringUtil.copyPartialMatches(args[1], name, completion);
+		{
+			ArrayList<String> names = new ArrayList<>();
+			for(String s : LocationManager.listLocations().keySet())
+				names.add(s);
+			StringUtil.copyPartialMatches(args[1], names, completion);
+		}
 		Collections.sort(completion);
 		return completion;
 	}

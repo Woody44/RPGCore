@@ -29,13 +29,16 @@ public class CommandLevel implements CommandExecutor{
 					cp = PlayerManager.onlinePlayers.get(Bukkit.getPlayer(args[1]));
 					if(cp != null)
 						sender.sendMessage(StringManager.Colorize("&6&lAktualny Poziom Gracza &r&6" + args[1] + "&6&l: &2" + cp.getLevel() + "&6&l [ &2" + cp.getExp() + "&7/&a " + Config.levels.get(cp.getLevel()) + " &6&l]"));
-				break;
+					break;
 				case "set":
 					cp = PlayerManager.onlinePlayers.get(Bukkit.getPlayer(args[1]));
 					if(Integer.parseInt(args[2]) <= Config.levels.size())
+					{
 						cp.setLevel(Integer.parseInt(args[2]));
+						cp.setExp(0);
+					}
 					else
-						sender.sendMessage("&cWprowadzono zbyt wysoka wartosc!");
+						sender.sendMessage(StringManager.Colorize("&cWprowadzono zbyt wysoka wartosc!"));
 					sender.sendMessage(StringManager.Colorize("&6&lAktualny Poziom Gracza &r&6" + args[1] + "&6&l: &2" + cp.getLevel() + "&6&l [ &2" + cp.getExp() + "&7/&a " + Config.levels.get(cp.getLevel()) + " &6&l]"));
 					cp.saveProfile();
 					break;
@@ -54,5 +57,4 @@ public class CommandLevel implements CommandExecutor{
 		
 		return true;
     }
-
 }
