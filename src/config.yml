@@ -1,0 +1,243 @@
+version: 1.4.6
+#+============================+
+#|############################|
+#|#       Announcements      #|
+#|############################|
+#+============================+
+announce:
+  # should plugin use this module? [Default: true]
+  enabled: true
+  
+  # Should we announce that new player joined?
+  first-join: true
+  first-join-message: "&dGracz {PLAYER} wszedl na serwer po raz pierwszy!"
+  
+  # player joined or left the game, yay! lets configure this shitty spam message :d
+  join: true
+  join-message: "(green){PLAYER} (bold)+"
+  
+  left: true
+  left-message: "(red){PLAYER} (bold)-"
+
+#+============================+
+#|############################|
+#|#           Chat           #|
+#|############################|
+#+============================+
+chat:
+  # Should plugin use this module? [Default: true]
+  enabled: true
+
+  # Are chat colors allowed at all?
+  colors: true
+
+  # Should chat be blocked for new players?
+  restrict: true
+  
+  # Block messages with swear words? [Default: true]
+  censor: true
+  
+  # Minimal lvl needed to send messages in chat [Default: 10]
+  lvl-min: 10
+  
+  # Message when player has too low level
+  low-lvl-message: "(red)Musisz mieć conajmniej &c{LEVEL_MIN} (red)poziom by używać chatu!"
+  
+  # Chat messages format, how message looks like
+  message-format: "&5{WORLD}&8&l-&e{LEVEL}&8&l-[&a&l{GROUP}&8&l] &6{PLAYER}&7&l:&r {MESSAGE}"
+
+  # Can Players ping other players on chat? || If player has permission "core.chat.ping" and option below is "true" then pings will work.
+  # [Default: true]
+  allow-pings: true
+  
+  # If true players will make chatter noises when sending messages
+  sound: true
+
+#+============================+
+#|############################|
+#|#          Combat          #|
+#|############################|
+#+============================+
+combat:
+  # Should plugin use this module? [Default: true]
+  enabled: true
+  
+  # If true players can hit headshot to any mob or player
+  # [Default: true]
+  allow-headshots: true
+
+  # Changes the amount of damage entity gets when headshotted
+  # [Default: 1.25]
+  headshot-multiplier: 1.25
+  
+  # Prevents players from logging out while in combat
+  # [Default: true, 15.0]
+  combat-log: true
+  combat-log-time: 15.0
+  # Do not drop items on the floor when player disconnects in combat. take them to the void where all players can take them from
+  # [Default: false] || still not working
+  combat-log-items-void: false
+  
+  # Do players drop money on death?
+  money-drop:
+    enabled: true
+    # If true money is not directly sent to killer,it is dropped as item instead
+    item: true
+    # Should we remove money from dying player?
+    remove: true
+    # How much money players lose on death
+    count: 50
+    # How much % of money players drop on death [Default: 0.0 | (ignore)0.0 - 1.0(all money) ]
+    percent: 0.0
+    # How much more money do players drop for suicide? [Default: 1.5]
+    suicide-multiplier: 1.5
+
+#+============================+
+#|############################|
+#|#         Commands         #|
+#|############################|
+#+============================+
+commands:
+  teleportation-cooldown: 10
+  teleportation-invulnerability: 2
+
+#+============================+
+#|############################|
+#|#         Economy          #|
+#|############################|
+#+============================+
+economy:
+  # Should plugin use this module? [Default: true]
+  enabled: true
+  # This players will get at first join [Default:69]
+  start-balance: 69
+  
+  currency-symbol: "$"
+
+#+============================+
+#|############################|
+#|#         Leveling         #|
+#|############################|
+#+============================+
+leveling:
+  # Should plugin use this module? [Default: true]
+  enabled: true
+
+  # How much % of plugin experience player loses on death [Default: 0.1 | 0.0 - 1.0]
+  exp-lose: 0.1
+  
+  # Convert minecraft experience to plugin experience? [Default: true]
+  convert-exp: true
+
+#+============================+
+#|############################|
+#|#         Players          #|
+#|############################|
+#+============================+
+players:
+  # How much profiles do players have? || they can switch between them by /profile [/prof]
+  # [Default: 1]
+  max-profiles:
+    admin: -1
+    default: 1
+  
+  # Does players get hungry? 
+  # [Default: true]
+  hunger: true
+
+  # Players Don't Starve ... or not?  :d
+  hunger-damage: true
+  
+  # How fast does players get hungry? 
+  # [Default: 1.0 | 0.0 - infinity]
+  hunger-multiplier: 1.0
+
+  hunger-as-mana: false
+  
+  # How strong is food? 
+  # [Default: 1.0]
+  feed-multiplier: 1.0
+  
+  # Changes default walking speed 
+  # [Minecraft default is 0.2 | Plugin Default: 0.18]
+  default-player-speed: 0.15
+  
+  # Can players respawn in their bed or should they whole time respawn on main spawn?
+  # [Default: true]
+  bed-respawn: true
+  
+  keep-inventory: false
+
+  # TODO: USE THIS SHIT
+  start-health: 10.0
+
+#+============================+
+#|############################|
+#|#       Protection         #|
+#|############################|
+#+============================+
+# This allows you to protect world from griefing or prevent players from going into prohibited places or items stealing
+protect:
+  # Should plugin use this module? [Default: true]
+  enabled: true
+  
+  explosions:
+    enabled: true
+    drop: true
+    # Chance to get block after explosion [0 - 1]
+    drop-rate: 1
+    worlds:
+      - world
+    # How fast block renews after explosion
+    time: 1
+  floor-check:
+    enabled: true
+    blocks:
+      - torch
+      - barrier
+  #If enabled do not allow players to drop items from hand while not sneaking 
+  item-drop-prevention:
+    enabled: false
+    #If true and enabled saves who is owner of this item when dropped
+    tag: true
+
+  #If enabled do not allow players to pickup items which have specified owner
+  item-pickup-prevention:
+    enabled: false
+
+#+============================+
+#|############################|
+#|#          World           #|
+#|############################|
+#+============================+
+world:
+  # Should plugin use this module? [Default: true]
+  enabled: true
+  
+  # How much fall damage will players/entities get? [0.0 - infinity] [Default: 1.25]
+  fall-damage-multiplier: 1.25
+  
+  # Should mobs drop items? [Default: true]
+  mob-drop: true
+
+  # Should mobs drop minecraft experience? [Default: true]
+  mob-vanilla-exp: true
+  
+  # Mob minecraft experience drop multiplier [Default: 1.0]
+  mob-vanilla-exp-multiplier: 1.0
+  
+  # Defines if players should respawn in world they died or normally.
+  # Overrides bed-respawn when player dies in world from list below (and his bed is not set in this world)
+  respawn-worlds:
+      - world
+      - world_nether
+
+#+============================+
+#|############################|
+#|#  Other bu ... features   #|
+#|############################|
+#+============================+
+other:
+  easter-eggs: false
+  
+# Still Nothing Here

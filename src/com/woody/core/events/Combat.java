@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.Main;
 import com.woody.core.types.CustomPlayer;
 import com.woody.core.util.ItemManager;
@@ -66,15 +67,13 @@ class InCombat
 	}
 
 	public void Penalize()
-	{
-		p.setHealth(0);
-		
+	{	
 		Expire();
-		CustomPlayer cp = PlayerManager.getPlayer(p);
+		CustomPlayer cp = PlayerManager.getOnlinePlayer(p);
 		if(Config.levelingModule)
-			cp.addExp(- Leveling.CalculateOnDeath(p));
-		Basic.saveOnDeath(p);
-		cp.saveAll();
+			cp.getProfile().addExp(- Leveling.CalculateOnDeath(p));
+		cp.getProfile().saveAll();
+		p.setHealth(0);
 	}
 }
 
@@ -83,7 +82,7 @@ public class Combat implements Listener{
 	public static HashMap<String, InCombat> ic = new HashMap<>();
 	public static ItemStack moneyItem(int count) 
 	{
-		ItemStack item = ItemManager.createItemStack(Material.GOLD_NUGGET, StringManager.Colorize("&e&l" + count + " " + Config.currencySymbol), new String[] {StringManager.Colorize("&5&lDodaje pieniadze do rachunku.")}, 1);
+		ItemStack item = ItemManager.createItemStack(Material.GOLD_NUGGET, StringManager.Colorize("&e&l" + count + " " + Config.currencySymbol), new String[] {StringManager.Colorize("&5&lDodaje pieniądze do rachunku gracza który to podniesie.")}, 1);
 		item.addUnsafeEnchantment(Enchantment.DURABILITY, 10);
 		return item;
 	}
@@ -94,7 +93,7 @@ public class Combat implements Listener{
 		Player p = e.getPlayer();
 		if(ic.containsKey(p.getUniqueId().toString())) 
 		{
-			e.setQuitMessage(StringManager.Colorize(e.getQuitMessage() + Config.errorColor + "(bold) [*]"));
+			e.setQuitMessage(StringManager.Colorize(e.getQuitMessage() + " &4&l [*]"));
 			ic.get(p.getUniqueId().toString()).Penalize();
 		}
 	}
@@ -111,9 +110,9 @@ public class Combat implements Listener{
 				if(item.getItemMeta().getDisplayName().contains(Config.currencySymbol))
 				{
 					e.setCancelled(true);
-					PlayerManager.getPlayer((Player)e.getEntity()).addMoney(Integer.parseInt(StringManager.NoColors(item.getItemMeta().getDisplayName()).replace(" "+Config.currencySymbol, "")));
+					PlayerManager.getOnlinePlayer((Player)e.getEntity()).getProfile().addMoney(Integer.parseInt(StringManager.NoColors(item.getItemMeta().getDisplayName()).replace(" "+Config.currencySymbol, "")));
 					e.getItem().remove();
-					e.getEntity().sendMessage(StringManager.Colorize(Config.otherColor + "Podniesiono " + item.getItemMeta().getDisplayName()));
+					e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Podniesiono " + item.getItemMeta().getDisplayName()));
 					Player p = ((Player)e.getEntity());
 					p.playSound(p.getLocation(), Sound.BLOCK_VINE_STEP, 1, 2);
 				}
@@ -126,15 +125,15 @@ public class Combat implements Listener{
 		{
 			
 			int money = (int)Config.moneyCount;
-			CustomPlayer kcp = null, vcp = PlayerManager.getPlayer(e.getEntity());
+			CustomPlayer kcp = null, vcp = PlayerManager.getOnlinePlayer(e.getEntity());
 			if((Player)e.getEntity().getKiller() != null)
-				kcp = PlayerManager.getPlayer((Player)e.getEntity().getKiller());
+				kcp = PlayerManager.getOnlinePlayer((Player)e.getEntity().getKiller());
 			
 			if(kcp == null)
 				return;
 			
 			if(Config.moneyPercent > 0.0)
-				money += vcp.getMoney() * Config.moneyPercent;
+				money += vcp.getProfile().getMoney() * Config.moneyPercent;
 			
 			if(money <= 0)
 				return;
@@ -143,14 +142,14 @@ public class Combat implements Listener{
 				money *= Config.suicideMultiplier;
 			
 			if(Config.removeMoney)
-				vcp.addMoney(-1 * money);
+				vcp.getProfile().addMoney(-1 * money);
 			
 			if(!Config.moneyItem)
-				kcp.addMoney(money);
+				kcp.getProfile().addMoney(money);
 			else
 				vcp.player.getWorld().dropItem(vcp.player.getLocation(), moneyItem(money));
 			
-			e.getEntity().sendMessage(StringManager.Colorize(Config.errorColor + "Utracono &l" + money + " " + Config.currencySymbol));
+			e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Utracono &a" + money + " &2&l" + Config.currencySymbol));
 				
 		}
 		
@@ -192,7 +191,6 @@ public class Combat implements Listener{
 	
 	public static void setInCombat(Player attacker, Player victim) 
 	{
-		Bukkit.getLogger().info(attacker.getDisplayName() + " walczy z " + victim.getDisplayName());
 		String attackerId = attacker.getUniqueId().toString(), victimId = victim.getUniqueId().toString();
 		if(!ic.containsKey(attackerId))
 			ic.put(attackerId, new InCombat(attacker));

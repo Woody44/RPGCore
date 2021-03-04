@@ -5,11 +5,13 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
+import com.woody.core.types.Profile;
+import com.woody.core.util.PlayerManager;
 import com.woody.core.util.StringManager;
 
 public class CommandHeal implements CommandExecutor{
@@ -18,37 +20,45 @@ public class CommandHeal implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
 		Player p;
-		if(!(sender instanceof LivingEntity))
+		if(!(sender instanceof Player) && args.length < 0)
+		{
+			Bukkit.getLogger().warning("You must specify player!");
 			return true;
+		}
 		
 		if(args.length > 0)
 			p = Bukkit.getPlayer(args[0]);
 		else
 			p = (Player)sender;
 		
-		switch(label)
+		Bukkit.broadcastMessage(label);
+
+		if(label.contains("heal"))
 		{
-			case "heal":
-				p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-				p.sendMessage(StringManager.Colorize(Config.infoColor + "Twoje rany zostaly zagojone."));
-				break;
-			case "babysit":
-				p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-				FullFeed(p);
-				RemoveAllPotions(p);
-				p.sendMessage(StringManager.Colorize(Config.infoColor + "Ktos sie toba zaopiekowal."));
-				break;
-			case "bb":
-				p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-				FullFeed(p);
-				RemoveAllPotions(p);
-				p.sendMessage(StringManager.Colorize(Config.infoColor + "Ktos sie toba zaopiekowal."));
-				break;
-			case "cure":
-				FullFeed(p);
+			p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+			p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Twoje rany zostały zagojone."));
+		}
+		else if(label.contains("treat")){
+				p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5, 20, true));
+				p.setSaturation(20);
+				p.setExhaustion(20);
+				p.setFoodLevel(20);
 				RemoveBadPotions(p);
-				p.sendMessage(StringManager.Colorize(Config.infoColor + "Uzdrowiono cie."));
-				break;
+				p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX+ "Pomoc od Doktorka przybywa."));
+		}
+		else if(label.contains("cure")){
+				p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+				p.setSaturation(20);
+				p.setExhaustion(20);
+				p.setFoodLevel(20);
+				p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Uzdrowiono Cię."));
+				for(PotionEffectType pet : PotionEffectType.values())
+					p.removePotionEffect(pet);
+		}
+		else if(label.contains("mana")){
+				Profile prof = PlayerManager.getOnlinePlayer(p).getProfile();
+				prof.setMana(prof.getMaxBaseMana());
+				p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "&9Twoja mana została magicznie zregenerowana."));
 		}
 		return true;
     }
@@ -63,18 +73,5 @@ public class CommandHeal implements CommandExecutor{
 		p.removePotionEffect(PotionEffectType.SLOW);
 		p.removePotionEffect(PotionEffectType.POISON);
 		p.removePotionEffect(PotionEffectType.HUNGER);
-	}
-	
-	public void RemoveAllPotions(Player p) 
-	{
-		for(PotionEffectType pet : PotionEffectType.values())
-			p.removePotionEffect(pet);
-	}
-	
-	public void FullFeed(Player p) 
-	{
-		p.setSaturation(20);
-		p.setExhaustion(20);
-		p.setFoodLevel(20);
 	}
 }

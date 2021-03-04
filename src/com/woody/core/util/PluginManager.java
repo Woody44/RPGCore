@@ -31,8 +31,9 @@ public class PluginManager {
 		commands.add(new CommandSetSpawn());
 		commands.add(new CommandSpawn());
 		commands.add(new CommandReloadConfig());
-		//events.add(new CommandGUI());
-		Main main = Main.getInstance();
+		commands.add(new CommandHelpOp());
+		commands.add(new CommandGm());
+		Main main = Main.instance;
 		for(CommandExecutor ce: commands)
 		{
 			String cname = ce.getClass().getSimpleName();
@@ -54,6 +55,8 @@ public class PluginManager {
 			events.add(new Chat());
 		if(Config.combatModule)
 			events.add(new Combat());
+		if(Config.economyModule)
+			events.add(new Economy());
 		if(Config.levelingModule)
 			events.add(new Leveling());
 		if(Config.protectionModule)
@@ -66,10 +69,10 @@ public class PluginManager {
 		
 		//events.add(new CommandGuiEvents());
 		
-		Main main = Main.getInstance();
+		Main main = Main.instance;
 		for(Listener event: events)
 		{
-			main.getServer().getPluginManager().registerEvents(event, Main.getInstance());
+			main.getServer().getPluginManager().registerEvents(event, Main.instance);
 		}
 		
 		events = null;

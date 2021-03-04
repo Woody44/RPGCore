@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
+import com.woody.core.events.custom.PlayerWarpingEvent;
 import com.woody.core.util.CooldownManager;
 import com.woody.core.util.FileManager;
 import com.woody.core.util.StringManager;
@@ -19,15 +23,23 @@ import com.woody.core.util.StringManager;
 public class CommandWarp implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
+		if(!(sender instanceof LivingEntity))
+		{
+			sender.sendMessage("This command is designed for players use only.");
+			return true;
+		}
+		
 		if(args.length < 1)
 		{
 			sender.sendMessage(StringManager.Colorize(command.getUsage()));
-			sender.sendMessage(StringManager.Colorize(Config.infoColor + "&lLista warpow: " + Config.otherColor + String.join(", ", getWarps(sender))));
 			return true;
 		}
-		if(sender.hasPermission("core.warp.create") || sender.hasPermission("core.warp.delete"))
+		if(sender.hasPermission("woody.warp.admin"))
 			switch(args[0])
 			{
+				case "teleport":
+					teleportToWarp(sender, args[1]);
+					break;
 				case "create":
 					createWarp(sender, args[1]);
 					break;
@@ -38,11 +50,11 @@ public class CommandWarp implements CommandExecutor{
 					switch(args[2])
 					{
 						case "separate-cooldown":
-							if(args[3] == "true" || args[3] == "t")
+							if(args[3].contentEquals("true") || args[3].contentEquals("t"))
 							{
 								if(!FileManager.checkFileExistence("warps/" + args[1] + ".yml"))
 								{
-									sender.sendMessage(StringManager.Colorize(Config.errorColor+"Taki warp nie istnieje."));
+									sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Taki warp nie istnieje."));
 									return true;
 								}
 								
@@ -59,19 +71,19 @@ public class CommandWarp implements CommandExecutor{
 							int amount = Integer.parseInt(args[3]);
 							if(amount > 0)
 							{
-								sender.sendMessage(StringManager.Colorize(Config.infoColor+"Ustawienie Zapisane."));
+								sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Ustawienie Zapisane."));
 								FileManager.updateConfig("warps/"+args[1] + ".yml", "cooldown", amount);
 							}
 							else
 							{
 								if(amount == 0)
 								{
-									sender.sendMessage(StringManager.Colorize(Config.infoColor+"Cooldown zresetowany."));
+									sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Cooldown zresetowany."));
 									FileManager.updateConfig("warps/"+args[1] + ".yml", "cooldown", 0);
 								}
 								else
 								{
-									sender.sendMessage(StringManager.Colorize(Config.infoColor+"Cooldown zresetowany."));
+									sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Cooldown zresetowany."));
 									FileManager.updateConfig("warps/"+args[1] + ".yml", "cooldown", Config.tpCd);
 								}
 							}
@@ -112,23 +124,23 @@ public class CommandWarp implements CommandExecutor{
 	
 	public static void createWarp(CommandSender sender, String warpName) 
 	{
-		if(!sender.hasPermission("core.warp.create"))
+		if(!sender.hasPermission("woody.warp.create"))
 		{
-			sender.sendMessage(StringManager.Colorize(Config.errorColor+"Nie masz do tego uprawnien!"));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Nie posiadasz do tego uprawnień!"));
 			return;
 		}
 		
 		if(warpName == null)
 		{
-			sender.sendMessage(StringManager.Colorize(Config.errorColor+"Musisz podac nazwe warp'a."));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Musisz wprowadzić nazwę warpa."));
 			return;
 		}
 		
 		if(FileManager.checkFileExistence("warps/" + warpName + ".yml"))
-			sender.sendMessage(StringManager.Colorize(Config.infoColor + "Taki warp juz istnieje."));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Taki warp już istnieje."));
 		else
 		{
-			sender.sendMessage(StringManager.Colorize(Config.infoColor + "Warp" + warpName +" utworzony"));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Warp &c" + warpName +"&6 utworzony"));
 			HashMap<String, Object> hm = new HashMap<>();
 			hm.put("location", ((Player)sender).getLocation());
 			hm.put("separate-cooldown", false);
@@ -139,23 +151,23 @@ public class CommandWarp implements CommandExecutor{
 	
 	public static void deleteWarp(CommandSender sender, String warpName) 
 	{
-		if(!sender.hasPermission("core.warp.delete"))
+		if(!sender.hasPermission("woody.warp.delete"))
 		{
-			sender.sendMessage(StringManager.Colorize(Config.errorColor + "Nie masz do tego uprawnien!"));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Nie posiadasz do tego uprawnień!"));
 			return;
 		}
 		
 		if(warpName == null)
 		{
-			sender.sendMessage(StringManager.Colorize(Config.errorColor+"Musisz podac nazwe warp'a."));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Musisz wprowadzić nazwę warpa."));
 			return;
 		}
 		
 		if(!FileManager.checkFileExistence("warps/" + warpName + ".yml"))
-			sender.sendMessage(StringManager.Colorize(Config.infoColor + "Taki warp nie istnieje."));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "Taki warp nie istnieje."));
 		else
 		{
-			sender.sendMessage(StringManager.Colorize(Config.infoColor + "Warp" + warpName +" usuniety."));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Warp &c" + warpName +"&6 usuniety."));
 			FileManager.deleteFile("warps/" + warpName + ".yml");
 		}
 		return;
@@ -165,46 +177,63 @@ public class CommandWarp implements CommandExecutor{
 	{
 		if(!FileManager.checkFileExistence("warps/"+warpName+".yml"))
 		{
-			sender.sendMessage(StringManager.Colorize(Config.infoColor+"Taki warp nie istnieje!"));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Taki warp nie istnieje!"));
 			return;
 		}
 		
 		FileConfiguration fc = FileManager.getConfig("warps/" + warpName + ".yml");
-		boolean isPermitted = sender.hasPermission("core.warps.*");
+		boolean isPermitted = sender.hasPermission("woody.warps.*");
 		if(!isPermitted)
-			isPermitted = sender.hasPermission("core.warps." + warpName);
+			isPermitted = sender.hasPermission("woody.warps." + warpName);
 		
 		if(isPermitted)
 		{
 			Player player = (Player)sender;
 			long cd = 0;
+
 			if(fc.getBoolean("separate-cooldown"))
-			{
-				cd = CooldownManager.getCooldown(player, "TELEPORT-WARP."+warpName, true);
-			}
+				cd = CooldownManager.getCooldown((LivingEntity)player, "TELEPORT-WARP."+warpName, true);
 			else
-			{
-				cd = CooldownManager.getCooldown(player, "TELEPORT", true);
-			}
+				cd = CooldownManager.getCooldown((LivingEntity)player, "TELEPORT", true);
 			
 			if(cd > 0)
 			{
-				player.sendMessage(StringManager.Colorize(Config.infoColor + "Teleportacja do tego warpa bedzie mozliwa za &l" + cd + Config.infoColor + " sekund."));
+				player.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Teleportacja do tego warpa będzie możliwa za &c" + cd + "&6 sekund."));
 				return;
 			}
 			
+			
+			
 			if(fc.getBoolean("separate-cooldown"))
-				CooldownManager.cooldown(player, "TELEPORT-WARP."+warpName, FileManager.getConfig("warps/" + warpName + ".yml").getInt("cooldown"));
+				cd = FileManager.getConfig("warps/" + warpName + ".yml").getInt("cooldown");
 			else
-				CooldownManager.cooldown(player, "TELEPORT", Config.tpCd);
+				cd = Config.tpCd;
+				
+			PlayerWarpingEvent event = new PlayerWarpingEvent(player, player.getLocation(), fc.getLocation("location"), cd);
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+			{
+				player.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Teleportacja przerwana!"));
+				return;	
+			}
+			
+			if(player.hasPermission("woody.teleport.nocooldown"))
+				cd = 0;
+			else
+				cd = event.getCooldown();
+
+			if(fc.getBoolean("separate-cooldown"))
+				CooldownManager.cooldown((LivingEntity)player, "TELEPORT-WARP."+warpName, cd);
+			else
+				CooldownManager.cooldown((LivingEntity)player, "TELEPORT", cd);
 			
 			player.teleport(FileManager.getConfig("warps/"+warpName+".yml").getLocation("location"));
-			player.sendMessage(StringManager.Colorize(Config.infoColor + "Teleportacja do &l" + warpName));
+			player.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Teleportacja do &c" + warpName + "&6."));
 			
 		}
 		else
 		{
-			sender.sendMessage(StringManager.Colorize(Config.errorColor + "Nie posiadasz uprawnien do tego warpa."));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Nie posiadasz uprawnien do tego warpa."));
 		}
 	}
 }

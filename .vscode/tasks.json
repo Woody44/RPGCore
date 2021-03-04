@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "java",
+			"label": "Export Plugin Jar",
+			"targetPath": "Z:/Praca/Minecraft/Testy/PaperMc_1.16.4/plugins/${workspaceFolderBasename}.jar",
+			"elements": [
+				"${compileOutput}"
+			],
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}

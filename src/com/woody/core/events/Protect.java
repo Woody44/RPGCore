@@ -10,11 +10,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerDropItemEvent;
 
 import com.woody.core.Config;
 import com.woody.core.Main;
 import com.woody.core.util.ExternalTools;
+import com.woody.core.util.ItemManager;
 
 public class Protect implements Listener{
 	
@@ -28,6 +31,33 @@ public class Protect implements Listener{
 		}
 	}
 	
+	@EventHandler
+	public void OnItemDrop(PlayerDropItemEvent e)
+	{
+		if(Config.itemDropPrevention && !e.getPlayer().isSneaking()){
+			e.setCancelled(true);
+		}
+
+		if(Config.itemDropTagging && !e.isCancelled()){
+			ItemManager.setOwner(e.getItemDrop(), e.getPlayer().getUniqueId().toString(), true);
+		}
+	}
+
+	@EventHandler
+	public void OnItemPickup(EntityPickupItemEvent e)
+	{
+		if(!Config.itemPickupPrevention)
+			return;
+
+		if(e.getEntity().getType() != EntityType.PLAYER)
+			return;
+		
+		if(!ItemManager.getOwner(e.getItem()).contentEquals(e.getEntity().getUniqueId().toString()))
+		{
+			e.setCancelled(true);
+		}
+	}
+
 	@EventHandler
 	public void OnExplosion(EntityExplodeEvent event) 
 	{

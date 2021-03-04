@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
 
 import ru.tehkode.permissions.PermissionUser;
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -68,14 +69,33 @@ public class StringManager {
 		message = message.replace("&n", "");
 		message = message.replace("&o", "");
 		message = message.replace("&r", "");
+		message = message.replace("(white)", "");
+		message = message.replace("(black)", "");
+		message = message.replace("(blue)", "");
+		message = message.replace("(green)", "");
+		message = message.replace("(pink)", "");
+		message = message.replace("(purple)", "");
+		message = message.replace("(red)", "");
+		message = message.replace("(gold)", "");
+		message = message.replace("(orange)", "");
+		message = message.replace("(gray)", "");
+		message = message.replace("(bold)", "");
+		message = message.replace("(strike)", "");
+		message = message.replace("(italic)", "");
+		message = message.replace("(reset)", "");
+		message = message.replace("(wtf)", "");
+		message = message.replace("(uline)", "");
 		return ChatColor.stripColor(message);
 	}
 	
 	public static String FillExp(String string, Player player) 
 	{
 		DecimalFormat decimalFormat = new DecimalFormat("#.00");
-		string = string.replace("{EXP}", decimalFormat.format((float)(PlayerManager.onlinePlayers.get(player).getExp() / Config.levels.get(PlayerManager.onlinePlayers.get(player).getLevel()+1))) + "");
-		string = string.replace("{LEVEL}", PlayerManager.onlinePlayers.get(player).getLevel() + "");
+		if(Config.levels.get(PlayerManager.getOnlinePlayer(player).getProfile().getLevel()+1) != null)
+			string = string.replace("{EXP}", decimalFormat.format((float)(PlayerManager.getOnlinePlayer(player).getProfile().getExp() / (int)Config.levels.get(PlayerManager.getOnlinePlayer(player).getProfile().getLevel()+1).get("xp"))) + "%");
+		else
+			string = string.replace("{EXP}", "-");
+		string = string.replace("{LEVEL}", PlayerManager.getOnlinePlayer(player).getProfile().getLevel() + "");
 		string = string.replace("{LEVEL_MIN}", Config.chatLvlMin+"");
 		return string;
 	}
@@ -136,16 +156,16 @@ public class StringManager {
 		{
 			if(hasPing)
 			{
-				format = format.replace(NoColors(target.getDisplayName()), Colorize(Config.pingColor + NoColors(target.getDisplayName()) + "&r"));
-				format = format.replace(target.getName(), Colorize(Config.pingColor + target.getName()) + "&r");
-				format = format.replace("@"+StringManager.FillGroup("{GROUP}", target), Colorize(Config.pingColor + "@"+StringManager.FillGroup("{GROUP}", target)) + "&r");
-				format = format.replace("@everyone", Colorize(Config.pingColor + "@everyone") + "&r");
+				format = format.replace(NoColors(target.getDisplayName()), Colorize(GLOBALVARIABLES.COLOR_PING + NoColors(target.getDisplayName()) + "&r"));
+				format = format.replace(target.getName(), Colorize(GLOBALVARIABLES.COLOR_PING + target.getName()) + "&r");
+				format = format.replace("@"+StringManager.FillGroup("{GROUP}", target), Colorize(GLOBALVARIABLES.COLOR_PING + "@"+StringManager.FillGroup("{GROUP}", target)) + "&r");
+				format = format.replace("@everyone", Colorize(GLOBALVARIABLES.COLOR_PING + "@everyone") + "&r");
 			}
 		}
 		else
 		{
 			if(hasPing)
-				format = Colorize(Config.pingColor + NoColors(format));
+				format = Colorize(GLOBALVARIABLES.COLOR_PING + NoColors(format));
 		}
 		return format;
 	}
@@ -164,9 +184,8 @@ public class StringManager {
 			if(player.isOp())
 				string = string.replace("{GROUP}", "Operator");
 			else
-				string = string.replace("{GROUP}", "Player");
+				string = string.replace("{GROUP}", "Gracz");
 			return string;
 		}
-		
 	}
 }

@@ -1,2 +1,6 @@
 eclipse.preferences.version=1
+encoding//src/com/woody/core/commands/CommandLocation.java=UTF-8
+encoding//src/com/woody/core/commands/CommandMoney.java=UTF-8
 encoding//src/com/woody/core/commands/CommandReloadConfig.java=UTF-8
+encoding//src/com/woody/core/events/Chat.java=UTF-8
+encoding//src/com/woody/core/types/CustomPlayer.java=UTF-8

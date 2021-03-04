@@ -7,50 +7,55 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.types.CustomPlayer;
+import com.woody.core.types.Profile;
 import com.woody.core.util.PlayerManager;
 import com.woody.core.util.StringManager;
 
 public class CommandLevel implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) 
     {
-		CustomPlayer cp; 
-		if(args.length < 1)
+		CustomPlayer cp;
+		if(!sender.hasPermission("woody.level.admin") || args.length == 0)
 		{
-			cp = PlayerManager.onlinePlayers.get((Player)sender);
-			sender.sendMessage(StringManager.Colorize("&6&lAktualny poziom: &2" + cp.getLevel() + "&6&l [ &2" + cp.getExp() + "&7/&a " + Config.levels.get(cp.getLevel()) + " &6&l]"));
+			Profile profile = PlayerManager.getOnlinePlayer((Player) sender).getProfile();
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Aktualny poziom: &2" + profile .getLevel() + "&6&l [ &2" + profile .getExp() + "&7/&a " + Config.levels.get(profile .getLevel()).get("xp") + " &6&l]"));
 		}
 		else
 		{
-			if(sender.hasPermission("core.level.set"))
 			switch(args[0])
 			{
 				case "get":
-					cp = PlayerManager.onlinePlayers.get(Bukkit.getPlayer(args[1]));
+					if(args.length == 1)
+						cp = PlayerManager.getOnlinePlayer((Player)sender);
+					else
+						cp = PlayerManager.getOnlinePlayer(Bukkit.getPlayer(args[1]));
+					
 					if(cp != null)
-						sender.sendMessage(StringManager.Colorize("&6&lAktualny Poziom Gracza &r&6" + args[1] + "&6&l: &2" + cp.getLevel() + "&6&l [ &2" + cp.getExp() + "&7/&a " + Config.levels.get(cp.getLevel()) + " &6&l]"));
+						sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Aktualny Poziom Gracza &c" + args[1] + "&6&l: &2" + cp.getProfile().getLevel() + "&6&l [ &2" + cp.getProfile().getExp() + "&7/&a " + Config.levels.get(cp.getProfile().getLevel()).get("xp") + " &6&l]"));
 					break;
 				case "set":
-					cp = PlayerManager.onlinePlayers.get(Bukkit.getPlayer(args[1]));
-					if(Integer.parseInt(args[2]) <= Config.levels.size())
+					cp = PlayerManager.getOnlinePlayer(Bukkit.getPlayer(args[1]));
+					if(Integer.parseInt(args[2]) <= Config.levels.size() && Integer.parseInt(args[2]) > 0 && cp != null)
 					{
-						cp.setLevel(Integer.parseInt(args[2]));
-						cp.setExp(0);
+						cp.getProfile().setLevel(Integer.parseInt(args[2]));
+						cp.getProfile().setExp(0);
 					}
 					else
-						sender.sendMessage(StringManager.Colorize("&cWprowadzono zbyt wysoka wartosc!"));
-					sender.sendMessage(StringManager.Colorize("&6&lAktualny Poziom Gracza &r&6" + args[1] + "&6&l: &2" + cp.getLevel() + "&6&l [ &2" + cp.getExp() + "&7/&a " + Config.levels.get(cp.getLevel()) + " &6&l]"));
-					cp.saveProfile();
+						sender.sendMessage(StringManager.Colorize("&cWprowadzono zla wartosc!"));
+					sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Aktualny Poziom Gracza &c" + args[1] + "&6&l: &2" + cp.getProfile().getLevel() + "&6&l [ &2" + cp.getProfile().getExp() + "&7/&a " + Config.levels.get(cp.getProfile().getLevel()).get("xp") + " &6&l]"));
+					cp.getProfile().save();
 					break;
 				
 				case "setexp":
-					cp = PlayerManager.onlinePlayers.get(Bukkit.getPlayer(args[1]));
-					//if(Long.parseLong(args[2]) >= 0 && Long.parseLong(args[2]) < Config.levels.get(cp.getLevel()))
-						cp.setExp(Long.parseLong(args[2]));
-					//else
-					//	sender.sendMessage("&cWprowadzono zbyt wysoka wartosc!");
-					sender.sendMessage(StringManager.Colorize("&6&lAktualny Poziom Gracza &r&6" + args[1] + "&6&l: &2" + cp.getLevel() + "&6&l [ &2" + cp.getExp() + "&7/&a " + Config.levels.get(cp.getLevel()) + " &6&l]"));
-					cp.saveProfile();
+					cp = PlayerManager.getOnlinePlayer(Bukkit.getPlayer(args[1]));
+					if(Long.parseLong(args[2]) > 0)	
+						cp.getProfile().setExp(Long.parseLong(args[2]));
+					else
+						cp.getProfile().setExp(0);
+					sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Aktualny Poziom Gracza &c" + args[1] + "&6&l: &2" + cp.getProfile().getLevel() + "&6&l [ &2" + cp.getProfile().getExp() + "&7/&a " + Config.levels.get(cp.getProfile().getLevel()).get("xp") + " &6&l]"));
+					cp.getProfile().save();
 					break;
 			}
 		}

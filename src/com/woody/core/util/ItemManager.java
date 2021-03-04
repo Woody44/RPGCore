@@ -2,11 +2,18 @@ package com.woody.core.util;
 
 import java.util.ArrayList;
 
+import com.woody.core.Main;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 
 public class ItemManager {
 
@@ -17,7 +24,6 @@ public class ItemManager {
 			lore = (ArrayList<String>) item.getItemMeta().getLore();
 		else
 			lore = new ArrayList<String>();
-		//// .I.
 
 		for(String str : value)
 		{
@@ -38,8 +44,27 @@ public class ItemManager {
 			lore = (ArrayList<String>) item.getItemMeta().getLore();
 		else
 			lore = new ArrayList<String>();
-		//// .I.
-			lore.add(StringManager.Colorize(value));
+
+		lore.add(StringManager.Colorize(value));
+		
+		ItemMeta meta = item.getItemMeta();
+		meta.setLore(lore);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
+	public static ItemStack SetLore(int index, ItemStack item, String value)
+	{
+		ArrayList<String> lore;
+		if(item.getItemMeta().getLore() != null)
+			lore = (ArrayList<String>) item.getItemMeta().getLore();
+		else
+			lore = new ArrayList<String>();
+		
+		if(lore == null || lore.size() < index)
+			return item;
+		
+		lore.set(index, StringManager.Colorize(value));
 		
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(lore);
@@ -58,6 +83,9 @@ public class ItemManager {
 	public static ItemStack DeleteLoreLine(ItemStack item, String value) 
 	{
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+		if(lore == null || lore.size() == 0)
+			return item;
+		
 		for(String line : lore)
 		{
 			if(line.contains(value)) 
@@ -75,8 +103,10 @@ public class ItemManager {
 	public static ItemStack DeleteLoreLine(ItemStack item, int index) 
 	{
 		ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
-		if(lore.get(index) != null)
-			lore.remove(index);
+		if(lore == null || lore.size() == 0 || lore.size() < index)
+			return item;
+		
+		lore.remove(index);
 		ItemMeta meta = item.getItemMeta();
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -129,9 +159,10 @@ public class ItemManager {
 			return 0;
 		for(String line : lore) 
 		{
-			if(line.contains(value+":")) 
+			if(line.contains(value)) 
 			{
-				line = line.replace(value + ":", "");
+				line = line.replace(value, "");
+				line = line.replace(":", "");
 				line = StringManager.NoColors(line);
 				line = line.replace("*", "");
 				if(line.contains("%"))
@@ -149,7 +180,7 @@ public class ItemManager {
 	
 	public static ItemStack createItemStack(final Material material, final String name, final String[] lore, final int amount)
     {
-        final ItemStack item = new ItemStack(material, amount);
+        ItemStack item = new ItemStack(material, amount);
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(StringManager.Colorize(name));
@@ -159,7 +190,7 @@ public class ItemManager {
         item.setItemMeta(meta);
         
         if(lore != null)
-        	AddLore(item, lore);
+        	item = AddLore(item, lore);
         return item;
     }
 	
@@ -207,40 +238,97 @@ public class ItemManager {
         return similar;
     }
 	
-	/*static public String getType(String string) 
+	public static ItemStack damageItem(ItemStack item, String value) 
 	{
-		if(string.contains("Naszyjnik"))
-			return "necklake";
-		else if(string.toLowerCase().contains("pierscien"))
-			return "ring";
-		else if(string.toLowerCase().contains("kolczyk"))
-			return "earring";
-		else if(string.toLowerCase().contains("bransoleta"))
-			return "bracelet";
+		Damageable meta = (Damageable)item.getItemMeta();
+		if(value.contains("%"))
+		{
+			int dmg = (int) (item.getType().getMaxDurability() * (Integer.parseInt(value.replace("%", "")) * 0.01));
+	        meta.setDamage(dmg);
+	        Bukkit.broadcastMessage("" + dmg);
+		}
+		else
+		{
+			int dmg = Integer.parseInt(value);
+	        meta.setDamage(dmg);
+		}
+		
+		item.setItemMeta((ItemMeta)meta);
+		return item;
+	}
+
+	public static boolean setOwner(ItemStack item, String uuid, boolean force)
+	{
+		ItemMeta meta = item.getItemMeta();
+		if(!force){
+			if(meta.getPersistentDataContainer().has(new NamespacedKey(Main.instance, "woodycore_owner"), PersistentDataType.STRING))
+				return false;
+			else
+			{
+				if(uuid == null)
+					return false;
+
+				meta.getPersistentDataContainer().set(new NamespacedKey(Main.instance, "woodycore_owner"), PersistentDataType.STRING, uuid);
+				return true;
+			}
+		}
+		else
+		{
+			if(uuid != null){
+				meta.getPersistentDataContainer().remove(new NamespacedKey(Main.instance, "woodycore_owner"));
+				meta.getPersistentDataContainer().set(new NamespacedKey(Main.instance, "woodycore_owner"), PersistentDataType.STRING, uuid);
+				return true;
+			}
+			else{
+				meta.getPersistentDataContainer().remove(new NamespacedKey(Main.instance, "woodycore_owner"));
+				return true;
+			}
+		}
+	}
+
+	public static boolean setOwner(Item item, String uuid, boolean force)
+	{
+		if(!force){
+			if(item.hasMetadata("woodycore_owner"))
+				return false;
+			else
+			{
+				if(uuid == null)
+					return false;
+				
+					item.setMetadata("woodycore_owner", new FixedMetadataValue(Main.instance, uuid));
+				return true;
+			}
+		}
+		else
+		{
+			if(uuid != null){
+				item.removeMetadata("woodycore_owner", Main.instance);
+				item.setMetadata("woodycore_owner", new FixedMetadataValue(Main.instance, uuid));
+				return true;
+			}
+			else{
+				item.removeMetadata("woodycore_owner", Main.instance);
+				return true;
+			}
+		}
+	}
+
+	public static String getOwner(Item item)
+	{
+		if(item.hasMetadata("woodycore_owner")){
+			return item.getMetadata("woodycore_owner").get(0).asString();
+		}
 		else
 			return null;
 	}
-	
-	static public String getSlotType(int i) 
+
+	public static String getOwner(ItemStack item)
 	{
-		switch(i) 
-		{
-			case 0:
-				return "earring0";
-			case 1:
-				return "earring1";
-			case 2:
-				return "necklake0";
-			case 3:
-				return "ring0";
-			case 4:
-				return "ring1";
-			case 5:
-				return "bracelet0";
-			case 6:
-				return "bracelet1";
-			default:
-				return null;
+		if(item.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(Main.instance,"woodycore_owner"), PersistentDataType.STRING)){
+			return item.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(Main.instance,"woodycore_owner"), PersistentDataType.STRING);
 		}
-	}*/
+		else
+			return null;
+	}
 }

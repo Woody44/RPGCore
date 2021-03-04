@@ -14,14 +14,14 @@ public class FileManager {
 	
 	public static File createFolder(String path) 
 	{
-		File file = new File(Main.getInstance().getDataFolder() + "/" + path);
+		File file = new File(Main.instance.getDataFolder() + "/" + path);
 		file.mkdir();
 		return file;
 	}
 	
 	public static File createFile(String path) 
 	{
-		File file = new File(Main.getInstance().getDataFolder() + "/" + path);
+		File file = new File(Main.instance.getDataFolder() + "/" + path);
 		return file;
 	}
 	
@@ -36,7 +36,7 @@ public class FileManager {
 	
 	public static boolean checkFileExistence(String path)
 	{
-		File fileCheck = new File(Main.getInstance().getDataFolder() + "/" + path);
+		File fileCheck = new File(Main.instance.getDataFolder() + "/" + path);
 		return fileCheck.exists();
 	}
 	
@@ -44,12 +44,13 @@ public class FileManager {
 	{
 		if(checkFileExistence(path))
 		{
-			File returnFile = new File(Main.getInstance().getDataFolder() + "/" + path);
+			File returnFile = new File(Main.instance.getDataFolder() + "/" + path);
 			return returnFile;
 		}
 		else return null;
 	}
 	
+	@Deprecated
 	public static FileConfiguration createConfig(String path, ArrayList<String> keys, ArrayList<Object> values) 
 	{
 		File f = createFile(path);
@@ -60,7 +61,6 @@ public class FileManager {
 		try {
 			fc.save(f);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fc;
@@ -75,7 +75,6 @@ public class FileManager {
 		try {
 			fc.save(f);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fc;
@@ -92,7 +91,6 @@ public class FileManager {
 		try {
 			fc.save(f);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fc;
@@ -109,6 +107,7 @@ public class FileManager {
 		else return null;
 	}
 	
+	@Deprecated
 	public static void updateConfig(String path, ArrayList<String> keys, ArrayList<Object> values) 
 	{
 		FileConfiguration fc;
@@ -176,7 +175,7 @@ public class FileManager {
 	
 	public static File[] listFiles(String path) 
 	{
-		File[] f = new File (Main.getInstance().getDataFolder() + "/" + path).listFiles();
+		File[] f = new File (Main.instance.getDataFolder() + "/" + path).listFiles();
 		if(f != null)
 			return f;
 		else

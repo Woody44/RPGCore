@@ -1,7 +1,7 @@
 package com.woody.core.events;
 
 import org.bukkit.Bukkit;
-import org.bukkit.EntityEffect;
+import org.bukkit.Particle;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
@@ -10,44 +10,59 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.util.Vector;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.Main;
+import com.woody.core.events.custom.LevelUpEvent;
+import com.woody.core.types.CustomPlayer;
 import com.woody.core.util.PlayerManager;
 import com.woody.core.util.StringManager;
 
 public class Leveling implements Listener{
 	
 	@EventHandler
+	public static void OnLevelUP(LevelUpEvent e) 
+	{
+		e.getPlayer().sendMessage(StringManager.Colorize("&6&lZdobyto poziom " + e.getLevel()));
+	}
+	
+	@EventHandler
 	 public static void OnPlayerDeath(PlayerDeathEvent e) 
 	 {
-		//xd
-		if(!PlayerManager.onlinePlayers.containsKey(e.getEntity()))
-			return;
+		CalculateOnDeath(e.getEntity());
 	 }
 	
 	public static long CalculateOnDeath(Player p) 
 	{
-		if(Config.expLose > 0 && Config.expLose <= 1) {
-			 long lost = (long)(PlayerManager.getPlayer(p).getExp() * Config.expLose);
-			 PlayerManager.getPlayer(p).addExp(lost * -1);
-			 p.sendMessage(StringManager.Colorize(Config.errorColor + "Utracono &l" + lost + "&r" + Config.errorColor + " doswiadczenia!"));
-			 
-			 if(Config.convertExp) 
-			 {
-				 for(int i = 10; i > 0; i--)
-				 {
-					 ExperienceOrb eo = (ExperienceOrb)p.getWorld().spawnEntity(p.getLocation(), EntityType.EXPERIENCE_ORB);
-					 eo.setExperience((int)(lost * 0.1f));
-					 eo.setGravity(false);
-					 eo.setGlowing(true);
-					 eo.setInvulnerable(true);
-					 eo.setSilent(true);
-					 eo.playEffect(EntityEffect.HURT_EXPLOSION);
-				 }
-			 }
-			 return lost;
-		 }
+		if(Config.expLose > 0) 
+		{
+			if(Config.expLose > 1)
+				Config.expLose = 1;
+					
+			long lost = (long)(PlayerManager.getOnlinePlayer(p).getProfile().getExp() * Config.expLose);
+			PlayerManager.getOnlinePlayer(p).getProfile().addExp(lost * -1);
+			p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Utracono &c" + lost + "&6 doświadczenia!"));
+			
+			if(Config.convertExp) 
+			{
+				for(int i = 5; i > 0; i--)
+				{
+					ExperienceOrb eo = (ExperienceOrb)p.getWorld().spawnEntity(p.getLocation(), EntityType.EXPERIENCE_ORB);
+					eo.setVelocity(new Vector(0,0,0));
+					eo.setExperience((int)(lost * 0.2f));
+					eo.setGravity(true);
+					eo.setCustomName(StringManager.Colorize(p.getDisplayName() + " &2&lXP"));
+					eo.setGlowing(true);
+					eo.setInvulnerable(true);
+					eo.setSilent(true);
+					eo.getLocation().getWorld().spawnParticle(Particle.CLOUD, eo.getLocation(), 150 , 0.15, 0.15, 0.15);
+					eo.getWorld().spawnParticle(Particle.SPIT, eo.getLocation().getX(), eo.getLocation().getY(), eo.getLocation().getZ(), 0, 0, 0, 0.2, 100, null);
+				}
+			}
+			return lost;
+		}
 		return 0;
 	}
 	
@@ -58,8 +73,9 @@ public class Leveling implements Listener{
 
 			@Override
 			public void run() {
-				if(PlayerManager.onlinePlayers.containsKey(e.getPlayer()))
-					PlayerManager.onlinePlayers.get(e.getPlayer()).updateExpBar();
+				CustomPlayer cp = PlayerManager.getOnlinePlayer(e.getPlayer());
+				if(cp!=null)
+					cp.getProfile().updateExpBar();
 			}
 		}, 1);
 	 }
@@ -69,20 +85,8 @@ public class Leveling implements Listener{
 	{
 		Player p = e.getPlayer();
 		if(Config.convertExp)
-			PlayerManager.onlinePlayers.get(p).addExp(e.getAmount());
+			PlayerManager.getOnlinePlayer(p).getProfile().addExp(e.getAmount());
 		
 		e.setAmount(0);
 	}
-	
-	/*@EventHandler
-	public static void OnPlayerAdvancement(PlayerAdvancementDoneEvent e) 
-	{
-		e.getAdvancement().
-		Player p = e.getPlayer();
-		if(Config.convertExp)
-			PlayerManager.onlinePlayers.get(p).addExp(e.getAmount());
-		else
-			e.setAmount(0);
-	}*/
-	
 }

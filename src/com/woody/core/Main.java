@@ -1,18 +1,20 @@
 package com.woody.core;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.woody.core.util.FileManager;
 import com.woody.core.util.LocationManager;
 import com.woody.core.util.PlayerManager;
 import com.woody.core.util.PluginManager;
+
+import java.io.File;
+import java.time.LocalDate;
+import java.time.Month;
+
+import com.woody.core.events.Basic;
 import com.woody.core.tabs.*;
 
 public class Main extends JavaPlugin implements Listener{
@@ -28,27 +30,23 @@ public class Main extends JavaPlugin implements Listener{
 			saveResource("levels.yml", false);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() 
 	{
-		if(Config.demo)
+		LocalDate ld = LocalDate.now();
+		int year = ld.getYear();
+		Month month = ld.getMonth();
+		int day = ld.getDayOfMonth();
+		String actualDate = day + "." + month.getValue() + "."+year;
+		/*if(Config.demo)
 		{
-			
-			Date date = new Date(new Timestamp(System.currentTimeMillis()).getTime());
-			boolean m = date.getYear() < 121;
-			if(!m)
-				m = (date.getMonth() < 2);
-			if(!m)
-				m = (date.getDay() < 11);
-			
-			if(!m)
+			if(year >= 2021 && month.getValue() >= 4 && day >=30)
 			{
 				BukkitRunnable run = new BukkitRunnable() {
 
 					@Override
 					public void run() {
-						getLogger().warning("Wersja Demonstracyjna wygasla z dniem 10.12.2021r.! Skontaktuj sie z autorem pluginu.");
+						getLogger().warning("Wersja Demonstracyjna wygasla z dniem " + "30.04.2021" + ".! Skontaktuj sie z autorem pluginu.");
 						Bukkit.getPluginManager().disablePlugin(instance);
 					}
 					
@@ -58,22 +56,18 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			else
 			{
-				getLogger().warning("Wersja Demonstracyjna jest aktualna do 10.02.2021r.!");
+				getLogger().warning("Wersja Demonstracyjna jest aktualna do " + "30.04.2021" + ".!");
 			}
-		}
+		}*/
 		
 		if(!instance.getConfig().getString("version").contentEquals(this.getDescription().getVersion()))
 		{
-			BukkitRunnable run = new BukkitRunnable() {
-
-				@Override
-				public void run() {
-					getLogger().warning("Wersja pliku konfiguracyjnego nie zgadza sie z wersja pluginu!");
-					Bukkit.getPluginManager().disablePlugin(instance);
-				}
-				
-			};
-			run.runTaskLater(this, 1L);
+			getLogger().warning("Wersja pliku konfiguracyjnego nie zgadza sie z wersja pluginu!");
+			getLogger().warning("Dumping old Config!");
+			
+			new File(getDataFolder() + "/config.yml").renameTo(new File(getDataFolder() + "/config.yml.old_" + actualDate));
+			saveDefaultConfig();
+			getConfig().set("version", Main.instance.getDescription().getVersion());
 		}
 		
 		Config.Reload();
@@ -89,31 +83,30 @@ public class Main extends JavaPlugin implements Listener{
 		beforeReload();
 	}
 	
-	public static Main getInstance() 
-	{
-		return instance;
-	}
-	
 	private static void registerOther() 
 	{
-		Main.getInstance().getCommand("cooldown").setTabCompleter(new CommandCooldownTab());
-		Main.getInstance().getCommand("level").setTabCompleter(new CommandLevelTab());
-		Main.getInstance().getCommand("location").setTabCompleter(new CommandLocationTab());
-		Main.getInstance().getCommand("profile").setTabCompleter(new CommandProfileTab());
+		Main.instance.getCommand("cooldown").setTabCompleter(new CommandCooldownTab());
+		Main.instance.getCommand("level").setTabCompleter(new CommandLevelTab());
+		Main.instance.getCommand("location").setTabCompleter(new CommandLocationTab());
+		Main.instance.getCommand("profile").setTabCompleter(new CommandProfileTab());
+		Main.instance.getCommand("warp").setTabCompleter(new CommandWarpTab());
 		LocationManager.loadLocations();
 	}
 	
 	private static void afterReload() 
 	{
-		instance.getLogger().info("Loading data of "  + Bukkit.getOnlinePlayers().size() + " player(s)");
 		for(Player p : Bukkit.getOnlinePlayers())
-			PlayerManager.registerOnlinePlayer(p);
+			if(p!=null)
+				PlayerManager.registerOnlinePlayer(p);
+
+		if(Config.hungerAsMana)
+			Bukkit.getScheduler().runTaskTimer(instance, Basic.manaRegenTask, 60, 60);
 	}
 	
 	private static void beforeReload() 
 	{
-		instance.getLogger().info("Saving data of "  + Bukkit.getOnlinePlayers().size() + " player(s)");
 		for(Player p : Bukkit.getOnlinePlayers())
-			PlayerManager.onlinePlayers.get(p).saveAll();
+			if(p!=null)
+				PlayerManager.getOnlinePlayer(p).getProfile().saveAll();
 	}
 }

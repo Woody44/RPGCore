@@ -42,13 +42,10 @@ public class Config {
 	public static boolean
 		restrictChat,
 		allowPings,
-		censor;
+		censor,
+		chatSound,
+		colors;
 	public static String
-		infoColor,
-		warnColor,
-		errorColor,
-		otherColor,
-		pingColor,
 		chatLowLvlMessage,
 		chatMessageFormat;
 	public static ArrayList<String> 
@@ -79,7 +76,7 @@ public class Config {
 	public static int startBalance;
 	
 	//Leveling Module
-	public static HashMap<Integer, Long>
+	public static HashMap<Integer, HashMap<String, Object>>
 		levels;
 	public static float 
 		expLose;
@@ -87,18 +84,24 @@ public class Config {
 		convertExp;
 	
 	//Player Module
-	public static int maxProfiles;
+	public static HashMap<String, Integer> maxProfiles;
 	public static double
 		hungerMultiplier,
 		feedMultiplier,
-		defPlayerSpeed;
+		defPlayerSpeed,
+		startingHealth;
 	public static boolean 
-		hunger, bedRespawn;
+		hunger, bedRespawn,
+		keepInventory, hungerDamage,
+		hungerAsMana;
 	
 	//Protection Module
 	public static boolean 
 		preventExplosions,
-		dropExplosions;
+		dropExplosions,
+		itemDropPrevention,
+		itemPickupPrevention,
+		itemDropTagging;
 	public static float 
 		explosionsDropRate;
 	public static ArrayList<String>
@@ -130,8 +133,8 @@ public class Config {
 	
 	public static void Reload() 
 	{
-		Main.getInstance().reloadConfig();
-		config = Main.getInstance().getConfig();
+		Main.instance.reloadConfig();
+		config = Main.instance.getConfig();
 		
 	//Modules Info
 		worldModule = config.getBoolean("world.enabled");
@@ -168,13 +171,6 @@ public class Config {
 			chatMessageFormat = config.getString("chat.message-format");
 			
 			allowPings = config.getBoolean("chat.allow-pings");
-			if(allowPings) {
-				infoColor = config.getString("chat.info-color");
-				warnColor = config.getString("chat.warn-color");
-				errorColor = config.getString("chat.error-color");
-				otherColor = config.getString("chat.other-color");
-				pingColor = config.getString("chat.ping-color");
-			}
 			
 			censor = config.getBoolean("chat.censor");
 			if(censor) {
@@ -182,6 +178,9 @@ public class Config {
 				BadWords = new ArrayList<String>();
 				BadWords.addAll((List<String>) badWordsCfg.getStringList("bad-words"));
 			}
+			
+			chatSound = config.getBoolean("chat.sound");
+			colors = config.getBoolean("chat.colors");
 		}
 		
 	//Combat Module
@@ -231,8 +230,11 @@ public class Config {
 			FileConfiguration fc = FileManager.getConfig("levels.yml");
 			ConfigurationSection sec = fc.getConfigurationSection("levels");
 			for(String key : sec.getKeys(false)){
-				Long xp = sec.getLong(key + ".xp");
-				levels.put(Integer.parseInt(key), xp);
+				ConfigurationSection actualSection = fc.getConfigurationSection("levels." + key);
+				levels.put(Integer.parseInt(key), new HashMap<>());
+				for(String actualKey : actualSection.getKeys(false)){
+					levels.get(Integer.parseInt(key)).put(actualKey, actualSection.get(actualKey));
+				}
 			}
 			
 			expLose = (float) config.getDouble("leveling.exp-lose");
@@ -240,13 +242,23 @@ public class Config {
 		}
 		
 	//Player Module
-		maxProfiles = config.getInt("players.max-profiles");
+		maxProfiles = new HashMap<>();
+		ConfigurationSection maxprofilescs = config.getConfigurationSection("players.max-profiles");
+		for(String key : maxprofilescs.getKeys(false))
+			maxProfiles.put(key, config.getInt("players.max-profiles." + key));
+		
 		hunger = config.getBoolean("players.hunger");
 		hungerMultiplier = config.getDouble("players.hunger-multiplier");
 		feedMultiplier = config.getDouble("players.feed-multiplier");
 		defPlayerSpeed = config.getDouble("players.default-player-speed");
+		keepInventory = config.getBoolean("players.keep-inventory");
 		
 		bedRespawn = config.getBoolean("players.bed-respawn");
+
+		hungerDamage = config.getBoolean("players.hunger-damage");
+		hungerAsMana = config.getBoolean("players.hunger-as-mana");
+
+		startingHealth = config.getDouble("players.start-health");
 	//Protection Module
 		if(protectionModule)
 		{
@@ -256,8 +268,17 @@ public class Config {
 			explosionsDropRate = (float)config.getDouble("protect.explosions.drop-rate");
 			renewTime = (float)config.getDouble("protect.explosions.time");
 			
-			floorCheck = (boolean)config.getBoolean("protect.floor-check.enabled");
+			floorCheck = config.getBoolean("protect.floor-check.enabled");
 			floorCheckBlocks = (ArrayList<String>) config.getStringList("protect.floor-check.blocks");
+
+
+			itemDropPrevention = config.getBoolean("protect.item-drop-prevention.enabled");
+			if(itemDropPrevention)
+				itemDropTagging = config.getBoolean("protect.item-drop-prevention.tag");
+			else
+				itemDropTagging = false;
+
+			itemPickupPrevention = config.getBoolean("protect.item-pickup-prevention.enabled");
 		}
 		
 	//World Module

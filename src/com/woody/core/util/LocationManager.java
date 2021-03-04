@@ -1,11 +1,8 @@
 package com.woody.core.util;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import org.bukkit.Location;
-
-import com.woody.core.Main;
 
 public class LocationManager {
 	static private HashMap<String, Location> locations = new HashMap<>();
@@ -17,23 +14,19 @@ public class LocationManager {
 	
 	public static void registerLocation(String name, Location loc) 
 	{
+		if(locations.containsKey(name))
+			return;
+
 		locations.put(name, loc);
-		ArrayList<Object> values = new ArrayList<Object>();
-		values.add(loc);
-		ArrayList<String> keys = new ArrayList<String>();
-		keys.add("loc");
-		FileManager.createConfig("locations/"+name+".yml", keys, values);
+		FileManager.createConfig("locations/"+name+".yml", "loc", loc);
 	}
 	
 	public static void loadLocations() 
 	{
 		File[] locs = FileManager.listFiles("locations/");
 		for(File f: locs)
-		{
-			Main.instance.getLogger().info("##################LOADING LOCATION "+ f.getName());
-			locations.put(f.getName().replace(".yml", ""), FileManager.getConfig("locations/"+f.getName()).getLocation("loc"));
-		}
-			
+			if(f.getName().endsWith(".yml"))
+				locations.put(f.getName().replace(".yml", ""), FileManager.getConfig("locations/"+f.getName()).getLocation("loc"));
 	}
 	
 	public static HashMap<String, Location> listLocations() 
@@ -49,10 +42,7 @@ public class LocationManager {
 	
 	public static void updateLocation(String name, Location loc) 
 	{
-		ArrayList<Object> values = new ArrayList<Object>();
-		values.add(loc);
-		ArrayList<String> keys = new ArrayList<String>();
-		keys.add("loc");
-		FileManager.updateConfig("locations/"+name+".yml", keys, values);
+		locations.replace(name, loc);
+		FileManager.updateConfig("locations/"+name+".yml", "loc", loc);
 	}
 }

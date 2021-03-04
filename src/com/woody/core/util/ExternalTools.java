@@ -66,6 +66,26 @@ public class ExternalTools {
 	    return toReturn;
 	}
 	
+	public static ArrayList<Location> getFilledCircle(Location center, double radius)
+    {
+        ArrayList<Location> locations = new ArrayList<Location>();
+        
+        int cx = center.getBlockX();
+        int cy = center.getBlockY();
+        int cz = center.getBlockZ();
+        int r = (int)radius;
+        World w = center.getWorld();
+        int rSquared = r * r;
+        for (int x = cx - r; x <= cx +r; x++) {
+            for (int z = cz - r; z <= cz +r; z++) {
+                if ((cx - x) * (cx - x) + (cz - z) * (cz - z) <= rSquared) {
+                    locations.add(w.getBlockAt(x, cy, z).getLocation());
+                }
+            }
+        }
+        return locations;
+    }
+	
 	public static ArrayList<Location> getCircle(Location center, double radius, int amount)
     {
         World world = center.getWorld();

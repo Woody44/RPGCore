@@ -1,0 +1,62 @@
+name: WoodyCore
+main: com.woody.core.Main
+version: 1.4.6
+api-version: 1.16
+
+database: false
+loadbefore:
+softdepend:
+    - AuthMe
+    - Citizens
+    - PermissionsEx
+    - TreasureChest
+    - WorldEdit
+    
+authors: [_woody44_]
+website: NONE
+prefix: woody
+commands:
+  profile:
+    permission: woody.profile
+    aliases: prof
+  money:
+    permission: woody.money
+  cooldown:
+    permission: woody.cooldown
+    aliases: cd
+  level:
+    permission: woody.level
+    aliases: lvl
+  location:
+    permission: woody.location
+  pay:
+    permission: woody.pay
+  back:
+    permission: woody.back
+  powertool:
+    permission: woody.powertool
+    aliases: pt
+  warp:
+    permission: woody.warp
+  suicide:
+    permission: woody.suicide
+  feed:
+    permission: woody.feed
+  heal:
+    permission: woody.heal
+    aliases:
+      - treat
+      - cure
+      - mana
+  setspawn:
+    permission: woody.setspawn
+  spawn:
+    permission: woody.spawn
+  reloadconfig:
+    permission: woody.reload
+  helpop:
+    permission: woody.helpop
+  gm:
+    permission: woody.gm
+
+permissions:
