@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -100,6 +101,13 @@ public class CustomPlayer {
 				player.teleport(spawnLoc);
 			}
 		}
+
+		player.getInventory().setContents(new ItemStack[41]);
+		player.getInventory().setContents(profile.getSavedInventory());
+		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(profile.getMaxBaseHealth());
+		player.setHealth(profile.getHealth());
+		profile.updateFoodBar();
+		profile.updateExpBar();
 	}
 	
 	public Profile getProfile() 
@@ -110,10 +118,7 @@ public class CustomPlayer {
 	public Profile getProfile(int profileId) 
 	{
 		Profile prof = new Profile(player, profileId);
-		if(prof.player == null)
-			return null; 
-		else
-			return prof;
+		return prof;
 	}
 	
 	public void switchProfile(int _profileId) 

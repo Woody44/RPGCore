@@ -178,13 +178,26 @@ public class ItemManager {
 		return 0;
 	}
 	
+	public static ItemStack hideShit(ItemStack item)
+	{
+        final ItemMeta meta = item.getItemMeta();
+		meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_POTION_EFFECTS);
+		item.setItemMeta(meta);
+		return item;
+	}
+
 	public static ItemStack createItemStack(final Material material, final String name, final String[] lore, final int amount)
+    {
+		return createItemStack(material, name, lore, amount, false);
+	}
+
+	public static ItemStack createItemStack(final Material material, final String name, final String[] lore, final int amount, boolean unbreakable)
     {
         ItemStack item = new ItemStack(material, amount);
         final ItemMeta meta = item.getItemMeta();
 
         meta.setDisplayName(StringManager.Colorize(name));
-        meta.setUnbreakable(true);
+        meta.setUnbreakable(unbreakable);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_DESTROYS, ItemFlag.HIDE_PLACED_ON, ItemFlag.HIDE_POTION_EFFECTS);
 
         item.setItemMeta(meta);
@@ -330,5 +343,13 @@ public class ItemManager {
 		}
 		else
 			return null;
+	}
+
+	public static boolean hasOwner(ItemStack item){
+		return item.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(Main.instance,"woodycore_owner"), PersistentDataType.STRING);
+	}
+
+	public static boolean hasOwner(Item item){
+		return item.hasMetadata("woodycore_owner");
 	}
 }

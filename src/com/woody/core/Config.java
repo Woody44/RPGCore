@@ -83,6 +83,11 @@ public class Config {
 	public static boolean 
 		convertExp;
 	
+	public static int getMaxLevel()
+	{
+		return levels.size();
+	}
+
 	//Player Module
 	public static HashMap<String, Integer> maxProfiles;
 	public static double

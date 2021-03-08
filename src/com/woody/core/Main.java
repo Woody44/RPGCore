@@ -74,6 +74,10 @@ public class Main extends JavaPlugin implements Listener{
 		PluginManager.registerCommands();
 		PluginManager.registerEvents();
 		registerOther();
+		if(Config.hungerAsMana)
+			Bukkit.getScheduler().runTaskTimer(instance, Basic.manaRegenTask, 60, 60);
+		
+		if(Bukkit.getOnlinePlayers().size() > 0)
 		afterReload();
 	}
 	
@@ -95,12 +99,10 @@ public class Main extends JavaPlugin implements Listener{
 	
 	private static void afterReload() 
 	{
+		Bukkit.getLogger().warning("I see you are reloading server ... u r lucky bcs my plugin handles it correctly! but do not do this pls, other plugins may die.");
 		for(Player p : Bukkit.getOnlinePlayers())
 			if(p!=null)
 				PlayerManager.registerOnlinePlayer(p);
-
-		if(Config.hungerAsMana)
-			Bukkit.getScheduler().runTaskTimer(instance, Basic.manaRegenTask, 60, 60);
 	}
 	
 	private static void beforeReload() 

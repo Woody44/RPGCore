@@ -58,5 +58,7 @@ commands:
     permission: woody.helpop
   gm:
     permission: woody.gm
+  nick:
+    permission: woody.nick
 
 permissions:

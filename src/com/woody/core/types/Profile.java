@@ -69,13 +69,6 @@ public class Profile {
 		if(cs !=null)
 			for(String key : cs.getKeys(false))
 				customProperties.put(key, cs.get(key));
-
-		player.getInventory().setContents(new ItemStack[41]);
-		player.getInventory().setContents(getSavedInventory());
-		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseMaxHealth);
-		player.setHealth(health);
-		updateFoodBar();
-		updateExpBar();
 	}
 
 	public void setMaxBaseHealth(double _value)
@@ -100,6 +93,11 @@ public class Profile {
 	public double getMaxBaseHealth()
 	{
 		return baseMaxHealth;
+	}
+
+	public double getHealth()
+	{
+		return health;
 	}
 
 	public void setMaxBaseMana(double _value)

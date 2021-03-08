@@ -6,7 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.woody.core.Config;
 import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.util.LocationManager;
 import com.woody.core.util.StringManager;

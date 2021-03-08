@@ -46,7 +46,7 @@ public class CommandMoney implements CommandExecutor{
 		}
 
 		if(args.length == 0)
-			sender.sendMessage(StringManager.Colorize("Stan Konta: &a" + PlayerManager.getOnlinePlayer(((Player)sender)).getProfile().getMoney() + " &2&l" + Config.currencySymbol));
+			sender.sendMessage(StringManager.Colorize(GLOBALVARIABLES.BANK_PREFIX + "Stan Konta: &a" + PlayerManager.getOnlinePlayer(((Player)sender)).getProfile().getMoney() + " &2&l" + Config.currencySymbol));
 		else
 			switch(args[0]) 
 			{

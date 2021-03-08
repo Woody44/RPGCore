@@ -52,8 +52,7 @@ public class Protect implements Listener{
 		if(e.getEntity().getType() != EntityType.PLAYER)
 			return;
 		
-		if(!ItemManager.getOwner(e.getItem()).contentEquals(e.getEntity().getUniqueId().toString()))
-		{
+		if(ItemManager.hasOwner(e.getItem()) && !ItemManager.getOwner(e.getItem()).contentEquals(e.getEntity().getUniqueId().toString())){
 			e.setCancelled(true);
 		}
 	}

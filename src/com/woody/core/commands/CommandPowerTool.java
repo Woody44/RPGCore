@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.woody.core.Config;
 import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.types.PowerToolInfo;
 import com.woody.core.util.ItemManager;

@@ -33,6 +33,7 @@ public class PluginManager {
 		commands.add(new CommandReloadConfig());
 		commands.add(new CommandHelpOp());
 		commands.add(new CommandGm());
+		commands.add(new CommandNick());
 		Main main = Main.instance;
 		for(CommandExecutor ce: commands)
 		{
