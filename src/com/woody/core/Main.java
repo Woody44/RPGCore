@@ -111,4 +111,5 @@ public class Main extends JavaPlugin implements Listener{
 			if(p!=null)
 				PlayerManager.getOnlinePlayer(p).getProfile().saveAll();
 	}
+	//TODO: Quest z SkyJumpem, Secret
 }
