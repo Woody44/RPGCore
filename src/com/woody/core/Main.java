@@ -62,7 +62,7 @@ public class Main extends JavaPlugin implements Listener{
 		
 		if(!instance.getConfig().getString("version").contentEquals(this.getDescription().getVersion()))
 		{
-			getLogger().warning("Wersja pliku konfiguracyjnego nie zgadza sie z wersja pluginu!");
+			getLogger().warning("Config File Version is incompatible with Plugin version!");
 			getLogger().warning("Dumping old Config!");
 			
 			new File(getDataFolder() + "/config.yml").renameTo(new File(getDataFolder() + "/config.yml.old_" + actualDate));
@@ -112,4 +112,25 @@ public class Main extends JavaPlugin implements Listener{
 				PlayerManager.getOnlinePlayer(p).getProfile().saveAll();
 	}
 	//TODO: Quest z SkyJumpem, Secret
+	//TODO: Przywitanie gracza
+	//TODO: Startowe Questy
+	//TODO: LootboxSystem
+	//TODO: Poprawić Wybuchy
+	//TODO: NPC Randomowi
+	//TODO: NPC Fabularni
+	//TODO: Kolorowe Tabliczki
+	//TODO: Nawigacja po punktach
+	//TODO: Kanałyh na chacie
+	//TODO: Lista znajomych
+	//TODO: Party
+	//TODO: Exp Share
+	//TODO: Loot Share
+	//TODO: Menu graficzne Profili
+	//TODO: Menu Graficzne Party
+	//TODO: Menu Graficzne Listy Znajomych
+	//TODO: Tab Completery
+	//TODO: TPA
+	//TODO: Wylaczanie graczy
+	//TODO: Conversation System
+	//TODO: Dawanie pieniedzy
 }

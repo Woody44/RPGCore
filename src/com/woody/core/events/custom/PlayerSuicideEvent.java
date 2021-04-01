@@ -14,13 +14,11 @@ public class PlayerSuicideEvent extends Event implements Cancellable{
 	private Player p;
 	private Location deadLoc;
 	private long droppedExp;
-	private long droppedMoney;
 	private  boolean cmd;
-	public PlayerSuicideEvent(Player _p, Location _deadLoc, long _droppedExp, long _droppedMoney, boolean _cmd) {
+	public PlayerSuicideEvent(Player _p, Location _deadLoc, long _droppedExp, boolean _cmd) {
 		p = _p;
 		deadLoc = _deadLoc;
 		droppedExp = _droppedExp;
-		droppedMoney = _droppedMoney;
 		cmd = _cmd;
 	}
 
@@ -42,16 +40,6 @@ public class PlayerSuicideEvent extends Event implements Cancellable{
 	public static HandlerList getHandlerList() {
         return HANDLERS_LIST;
     }
-	
-	public long getDroppedMoney()
-	{
-		return droppedMoney;
-	}
-	
-	public void setDroppedMoney(long value) 
-	{
-		droppedMoney = value;
-	}
 	
 	public long getDroppedExp() 
 	{

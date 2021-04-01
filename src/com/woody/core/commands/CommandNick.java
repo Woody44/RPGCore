@@ -23,10 +23,12 @@ public class CommandNick implements CommandExecutor {
 		
 		if(args.length < 1)
 		{
-			p.setDisplayName(p.getName());	
+			p.setDisplayName(p.getName());
 			return true;
 		}
 		p.setDisplayName(StringManager.Colorize(String.join("_", args)));
+		p.setCustomName(StringManager.Colorize(String.join("_", args)));
+		p.setCustomNameVisible(true);
 		return true;
     }
 }

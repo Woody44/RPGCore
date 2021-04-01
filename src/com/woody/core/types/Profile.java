@@ -15,11 +15,16 @@ import org.bukkit.inventory.ItemStack;
 import com.woody.core.Config;
 import com.woody.core.events.custom.ExperienceGainEvent;
 import com.woody.core.events.custom.LevelUpEvent;
+import com.woody.core.events.custom.ManaDrainEvent;
+import com.woody.core.events.custom.ManaRegenEvent;
+import com.woody.core.events.custom.MoneyGainEvent;
+import com.woody.core.events.custom.PlayerProfileSaveEvent;
+import com.woody.core.events.custom.SkillPointGainEvent;
 import com.woody.core.util.FileManager;
 import com.woody.core.util.StringManager;
 
 public class Profile {
-	public Player player = null;
+	private Player player = null;
 	public int id;
 	private int level;
 	private long experience;
@@ -27,11 +32,12 @@ public class Profile {
 	private int money;
 	public ItemStack[] items;
 	private HashMap<String, Object> customProperties = new HashMap<>();
+	private HashMap<String, Object> tempProperties = new HashMap<>();
 
 	private double baseMaxHealth;
 	private double baseMaxMana;
-	public double baseDamage;
-	public double speed;
+	private double baseDamage;
+	public double baseSpeed;
 
 	private double health;
 	private double mana;
@@ -55,7 +61,7 @@ public class Profile {
 		baseMaxHealth = fc.getDouble("baseMaxHealth");
 		baseMaxMana = fc.getDouble("baseMaxMana");
 		baseDamage = fc.getDouble("baseDamage");
-		speed = fc.getDouble("baseSpeed");
+		baseSpeed = fc.getDouble("baseSpeed");
 		mana = fc.getDouble("mana");
 		health = fc.getDouble("health");
 		manaRegenStrength = fc.getDouble("manaRegenStrength");
@@ -69,6 +75,16 @@ public class Profile {
 		if(cs !=null)
 			for(String key : cs.getKeys(false))
 				customProperties.put(key, cs.get(key));
+	}
+
+	public void setBaseDamage(double _value)
+	{
+		baseDamage = _value;
+	}
+
+	public double getBaseDamage()
+	{
+		return baseDamage;
 	}
 
 	public void setMaxBaseHealth(double _value)
@@ -128,6 +144,25 @@ public class Profile {
 	
 	public void addMana(double _value)
 	{
+		if(mana == 0)
+			return;
+		if(mana < 0)
+		{
+			ManaDrainEvent event = new ManaDrainEvent(player, _value * -1);
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled() || event.getMana() < 0)
+				return;
+			
+			_value = event.getMana() * -1;
+		}
+		else if(mana > 0)
+		{
+			ManaRegenEvent event = new ManaRegenEvent(player, _value * manaRegenStrength);
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled() || event.getMana() < 0)
+				return;
+			_value = event.getMana();
+		}
 		mana += _value;
 		if(mana < 0)
 			mana = 0;
@@ -181,7 +216,7 @@ public class Profile {
 	{
 		int level = getLevel();
 		long experience = getExp();
-		if(experience >= (int)Config.levels.get(level).get("xp"))
+		if(experience >= (int)Config.levels.get(level).get("xp") && level < Config.getMaxLevel())
 			return true;
 		return false;
 	}
@@ -193,7 +228,11 @@ public class Profile {
 
 	public void addSkillPoints(int count)
 	{
-		skillPoints += count;
+		SkillPointGainEvent event = new SkillPointGainEvent(player, count);
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled())
+			return;
+		skillPoints += event.getSkillPoints();
 	}
 
 	public int getSkillPoints()
@@ -208,7 +247,12 @@ public class Profile {
 
 	public int addMoney(int count) 
 	{
-		money += count;
+		MoneyGainEvent event = new MoneyGainEvent(player, count);
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled())
+			return money;
+
+		money += event.getMoney();
 		return money;
 	}
 
@@ -245,7 +289,7 @@ public class Profile {
 		toSave.put("baseMaxMana", baseMaxMana);
 		toSave.put("mana", mana);
 		toSave.put("baseDamage", baseDamage);
-		toSave.put("speed", speed);
+		toSave.put("speed", baseSpeed);
 		toSave.put("manaRegenStrength", manaRegenStrength);
 
 		toSave.put("inventory", getSavedInventory());
@@ -254,7 +298,14 @@ public class Profile {
 		lastLoc = player.getLocation();
 		toSave.put("LastLocation", lastLoc);
 		
-		FileManager.updateConfig("players/" + player.getUniqueId().toString() + "/profiles/" + id + "/profile.yml", toSave);
+		PlayerProfileSaveEvent event = new PlayerProfileSaveEvent(player, toSave);
+		Bukkit.getPluginManager().callEvent(event);
+		if(event.isCancelled())
+			return;
+		
+		toSave = event.getData();
+		if(toSave != null)
+			FileManager.updateConfig("players/" + player.getUniqueId().toString() + "/profiles/" + id + "/profile.yml", toSave);
 	}
 	
 	public void saveAll() 
@@ -262,34 +313,66 @@ public class Profile {
 		saveGeneral();
 		save();
 	}
-	
+
 	public boolean setProperty(String key, Object value, boolean force) 
+	{
+		return setProperty(key, value, force, false);
+	}
+	
+	public boolean setProperty(String key, Object value, boolean force, boolean temporary) 
 	{
 		if(value == null)
 		{
-			if(customProperties.containsKey(key))
-				customProperties.remove(key);
+			if(temporary){
+				if(tempProperties.containsKey(key))
+					tempProperties.remove(key);
+			}
+			else{
+				if(customProperties.containsKey(key))
+					customProperties.remove(key);
+			}
 			save();
 			return true;
 		}
 		else 
 		{
-			if(!customProperties.containsKey(key))
+			if(temporary)
 			{
-				customProperties.put(key, value);
-				save();
-				return true;
+				if(!tempProperties.containsKey(key))
+				{
+					tempProperties.put(key, value);
+					return true;
+				}
+				else
+				{
+					if(force)
+					{
+						tempProperties.remove(key);
+						tempProperties.put(key, value);
+						return true;
+					}
+					return false;
+				}
 			}
 			else
 			{
-				if(force)
+				if(!customProperties.containsKey(key))
 				{
-					customProperties.remove(key);
 					customProperties.put(key, value);
 					save();
 					return true;
 				}
-				return false;
+				else
+				{
+					if(force)
+					{
+						customProperties.remove(key);
+						customProperties.put(key, value);
+						save();
+						return true;
+					}
+					return false;
+				}
 			}
 		}
 	}
@@ -304,14 +387,19 @@ public class Profile {
 		items = i;
 	}
 	
-	public Object getProperty(String key) 
+	public Object getProperty(String key)
+	{
+		return getProperty(key, false);
+	}
+
+	public Object getProperty(String key, boolean temporary) 
 	{
 		return customProperties.get(key);
 	}
 
 	public void levelUp() 
 	{
-		int level = getLevel();
+		int _level = getLevel();
 		long _experience = getExp();
 		boolean leveled = false;
 		
@@ -319,20 +407,19 @@ public class Profile {
 		
 		while(canLevelUp())
 		{
-			if(level == Config.levels.size())
+			if(_level == Config.levels.size())
 				break;
 			
-			_experience -= (int)Config.levels.get(level).get("xp");
-			level ++;
+			_experience -= (int)Config.levels.get(_level).get("xp");
+			_level ++;
 			
-			setLevel(level);
+			setLevel(_level);
 			experience = _experience;
-			skillPoints += (int)Config.levels.get(level).get("sp");
+			skillPoints += (int)Config.levels.get(_level).get("sp");
 			save();
 			
 			leveled = true;
-			
-			event = new LevelUpEvent(player, level, _experience);
+			event = new LevelUpEvent(player, _level, _experience);
 			Bukkit.getPluginManager().callEvent(event);
 		}
 		
@@ -341,10 +428,10 @@ public class Profile {
 		
 		if(leveled)
 		{
-			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, ((float)((float)level / (float)Config.levels.size()) * 2));
+			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, ((float)((float)_level / (float)Config.levels.size()) * 2));
 		}
 		
-		if(level == Config.levels.size())
+		if(_level == Config.getMaxLevel())
 		{
 			Bukkit.broadcastMessage(StringManager.Colorize("&b&lGracz " + player.getDisplayName() + "&r&b osiągnął ostateczny poziom!"));
 			for(Player p: Bukkit.getOnlinePlayers()) 
@@ -356,6 +443,12 @@ public class Profile {
 	{
 		player.setLevel(getLevel());
 		
+		if(level >= Config.getMaxLevel())
+		{
+			player.setExp(0);	
+			return;
+		}
+
 		if((float)(getExp())/(int)Config.levels.get(getLevel()).get("xp") < 1)
 			player.setExp((float)(getExp())/(int)Config.levels.get(getLevel()).get("xp"));
 		else
@@ -365,10 +458,5 @@ public class Profile {
 	public void updateFoodBar()
 	{
 		player.setFoodLevel((int)((mana/baseMaxMana) * 20));
-	}
-
-	public void RegenMana(double _value)
-	{
-		addMana(_value * manaRegenStrength);
 	}
 }

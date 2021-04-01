@@ -104,17 +104,15 @@ public class Combat implements Listener{
 			return;
 		
 		ItemStack item = e.getItem().getItemStack();
-		if(item.getType() == Material.GOLD_NUGGET)
-			if(item.getEnchantmentLevel(Enchantment.DURABILITY) == 10)
-				if(item.getItemMeta().getDisplayName().contains(Config.currencySymbol))
-				{
-					e.setCancelled(true);
-					PlayerManager.getOnlinePlayer((Player)e.getEntity()).getProfile().addMoney(Integer.parseInt(StringManager.NoColors(item.getItemMeta().getDisplayName()).replace(" "+Config.currencySymbol, "")));
-					e.getItem().remove();
-					e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Podniesiono " + item.getItemMeta().getDisplayName()));
-					Player p = ((Player)e.getEntity());
-					p.playSound(p.getLocation(), Sound.BLOCK_VINE_STEP, 1, 2);
-				}
+		if(item.getType() == Material.GOLD_NUGGET && item.getEnchantmentLevel(Enchantment.DURABILITY) == 10 && item.getItemMeta().getDisplayName().contains(Config.currencySymbol))
+		{
+			e.setCancelled(true);
+			PlayerManager.getOnlinePlayer((Player)e.getEntity()).getProfile().addMoney(Integer.parseInt(StringManager.NoColors(item.getItemMeta().getDisplayName()).replace(" "+Config.currencySymbol, "")));
+			e.getItem().remove();
+			e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Picked up " + item.getItemMeta().getDisplayName()));
+			Player p = ((Player)e.getEntity());
+			p.playSound(p.getLocation(), Sound.BLOCK_VINE_STEP, 1, 2);
+		}
 	}
 	
 	@EventHandler
@@ -122,7 +120,6 @@ public class Combat implements Listener{
 	{
 		if(Config.moneyDrop) 
 		{
-			
 			int money = (int)Config.moneyCount;
 			CustomPlayer kcp = null, vcp = PlayerManager.getOnlinePlayer(e.getEntity());
 			if((Player)e.getEntity().getKiller() != null)
@@ -149,7 +146,6 @@ public class Combat implements Listener{
 				vcp.player.getWorld().dropItem(vcp.player.getLocation(), moneyItem(money));
 			
 			e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Utracono &a" + money + " &2&l" + Config.currencySymbol));
-				
 		}
 		
 	}

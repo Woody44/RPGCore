@@ -352,4 +352,15 @@ public class ItemManager {
 	public static boolean hasOwner(Item item){
 		return item.hasMetadata("woodycore_owner");
 	}
+
+	public static boolean willBreak(ItemStack item)
+	{
+		Damageable meta = (Damageable)item.getItemMeta();
+		int maxdmg = item.getType().getMaxDurability() - 1;
+		int dmg = meta.getDamage();
+		if(maxdmg > 0)
+			return dmg >= maxdmg; 
+		else
+			return false;
+	}
 }

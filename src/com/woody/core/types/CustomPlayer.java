@@ -14,14 +14,115 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.events.custom.PlayerProfileCreated;
 import com.woody.core.events.custom.PlayerProfileSwitch;
+import com.woody.core.events.custom.PlayerSendFriendRequest;
 import com.woody.core.util.FileManager;
+import com.woody.core.util.PlayerManager;
+import com.woody.core.util.StringManager;
 
 public class CustomPlayer {
 	private Profile profile;
 	public Player player;
-	
+	public FriendsList friends;
+	public class FriendRelation
+	{
+		String p, last;
+		FriendState state;
+		public FriendRelation(String _p, FriendState _state, String _last)
+		{
+			p = _p;
+			state = _state;
+			last = _last;
+		}
+	}
+
+	public class FriendsList
+	{
+		public HashMap<String, FriendRelation> friendsMap = new HashMap<>();
+		
+		public boolean Insert(FriendRelation fr, boolean force)
+		{
+			if(friendsMap.containsKey(fr.p))
+			{
+				if(!force)
+					return false;
+				else
+				{
+					friendsMap.replace(fr.p, fr);
+					return true;
+				}
+			}
+			else
+			{
+				friendsMap.put(fr.p, fr);
+				return true;
+			}
+		}
+
+		public void Invite(String _uuid)
+		{
+			if(friendsMap.containsKey(_uuid))
+			{
+				FriendRelation rell = friendsMap.get(_uuid);
+				if(rell.state == FriendState.Blocked && !rell.last.contentEquals(player.getUniqueId().toString()))
+					player.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "You can not invite this player."));
+				else if (friendsMap.get(_uuid).state == FriendState.Pending && rell.last.contentEquals(player.getUniqueId().toString()))
+					player.sendMessage(StringManager.Colorize(GLOBALVARIABLES.ERROR_PREFIX + "You have already invited this player."));
+				else if (friendsMap.get(_uuid).state == FriendState.Pending && !rell.last.contentEquals(player.getUniqueId().toString()))
+					Accept();
+			}
+
+			PlayerSendFriendRequest event = new PlayerSendFriendRequest(player.getUniqueId().toString(), _uuid);
+			Bukkit.getPluginManager().callEvent(event);
+
+			if(event.isCancelled())
+				return;
+
+			friendsMap.put(_uuid, new FriendRelation(_uuid, FriendState.Pending, player.getUniqueId().toString()));
+			if(PlayerManager.isOnline(_uuid))
+			{
+				PlayerManager.getOnlinePlayer(_uuid).friends.Insert(new FriendRelation(_uuid, FriendState.Pending, player.getUniqueId().toString()), false);
+				PlayerManager.getOnlinePlayer(_uuid).player.sendMessage(StringManager.Colorize(GLOBALVARIABLES.SYSTEM_PREFIX + "You've got friend request from &c" + player.getDisplayName() + "&6."));
+			}
+			else
+			{
+				FileConfiguration fc = FileManager.getConfig("players/" + _uuid + "/friends.yml");
+				if(fc == null)
+				{
+					FileManager.createFile("players/" + _uuid+ "/friends.yml");
+					return;
+				}
+
+				if(fc.contains(player.getUniqueId().toString()))
+				{
+
+				}
+			}
+		}
+		public void Accept(){}
+		public void Block(){}
+		public void Get(){}
+		public boolean IsFriend(){return false;} 
+		public void Load()
+		{
+			FileConfiguration fc = FileManager.getConfig("players/" + player.getUniqueId().toString() + "/friends.yml");
+			if(fc == null)
+			{
+				FileManager.createFile("players/" + player.getUniqueId().toString() + "/friends.yml");
+				return;
+			}
+
+			for(String key : fc.getKeys(false))
+			{
+				String _last = fc.getString("last");
+				FriendState _state = FriendState.valueOf(fc.getString("state"));
+				friendsMap.put(key, new FriendRelation(key, _state, _last));
+			}
+		}
+	}
+	//
 	public CustomPlayer(Player _player)
 	{
 		player = _player;
@@ -123,7 +224,7 @@ public class CustomPlayer {
 	
 	public void switchProfile(int _profileId) 
 	{
-		PlayerProfileSwitch event = new PlayerProfileSwitch(player, _profileId);
+		PlayerProfileSwitch event = new PlayerProfileSwitch(player, _profileId, profile.id);
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 			return;

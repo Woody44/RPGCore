@@ -7,7 +7,6 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.util.Vector;
@@ -25,14 +24,8 @@ public class Leveling implements Listener{
 	@EventHandler
 	public static void OnLevelUP(LevelUpEvent e) 
 	{
-		e.getPlayer().sendMessage(StringManager.Colorize("&6&lZdobyto poziom " + e.getLevel()));
+		e.getPlayer().sendMessage(StringManager.Colorize("&6&lYou have gained level " + e.getLevel() + " !"));
 	}
-	
-	@EventHandler
-	 public static void OnPlayerDeath(PlayerDeathEvent e) 
-	 {
-		CalculateOnDeath(e.getEntity());
-	 }
 	
 	public static long CalculateOnDeath(Player p) 
 	{
@@ -43,7 +36,7 @@ public class Leveling implements Listener{
 					
 			long lost = (long)(PlayerManager.getOnlinePlayer(p).getProfile().getExp() * Config.expLose);
 			PlayerManager.getOnlinePlayer(p).getProfile().addExp(lost * -1);
-			p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Utracono &c" + lost + "&6 doświadczenia!"));
+			p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Lost &c" + lost + "&6 experience!"));
 			
 			if(Config.convertExp) 
 			{

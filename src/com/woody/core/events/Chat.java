@@ -9,7 +9,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.util.Vector;
 
 import com.woody.core.Config;
-import com.woody.core.events.custom.ChatBadWordEvent;
 import com.woody.core.util.PlayerManager;
 import com.woody.core.util.StringManager;
 
@@ -19,27 +18,25 @@ public class Chat extends StringManager implements Listener{
 	public void OnChat(AsyncPlayerChatEvent e) 
 	{
 		e.setCancelled(true);
+		if(e.getMessage().startsWith("/"))
+			return;
+
+		Player sender = e.getPlayer();
 		String originalMessage = e.getMessage();
 
-		if(originalMessage.startsWith("/"))
-			return;
-		
-		Player sender = e.getPlayer();
-
-		if(StringManager.HasBadWords(originalMessage))
-		{
-			ChatBadWordEvent event = new ChatBadWordEvent(sender);
-			if(event.isMessageCancelled)
-				return;
-		}
-		
 		int lvl = PlayerManager.getOnlinePlayer(sender).getProfile().getLevel();
-		
-		
 		if(lvl < Config.chatLvlMin && Config.restrictChat)
 		{
 			e.getPlayer().sendMessage(StringManager.Colorize(StringManager.FillExp(Config.chatLowLvlMessage, sender)));
 			return;
+		}
+
+		if(StringManager.HasBadWords(originalMessage))
+		{
+			if(Config.censor)
+			{
+				sender.sendMessage(StringManager.Colorize("&c&lNie wolno używać takich słów!"));
+			}
 		}
 		
 		boolean canColor = Config.colors && sender.hasPermission("woody.chat.color");

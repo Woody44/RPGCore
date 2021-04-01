@@ -12,7 +12,7 @@ public class Economy implements Listener{
 	@EventHandler
     public void PlayerJoin(PlayerJoinEvent e)
     {
-		if(!e.getPlayer().hasPlayedBefore())
+		if(!PlayerManager.hasPlayedBefore(e.getPlayer()))
 		{
 			PlayerManager.getOnlinePlayer(e.getPlayer()).getProfile().addMoney(Config.startBalance);
 		}

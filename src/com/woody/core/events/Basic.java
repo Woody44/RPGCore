@@ -2,6 +2,7 @@ package com.woody.core.events;
 
 import java.io.File;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Egg;
@@ -26,7 +27,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.woody.core.Config;
+import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.commands.CommandPowerTool;
+import com.woody.core.events.custom.PlayerHitMobEvent;
+import com.woody.core.events.custom.PlayerHitPlayerEvent;
+import com.woody.core.events.custom.PlayerSuicideEvent;
 import com.woody.core.types.CustomPlayer;
 import com.woody.core.types.PowerToolInfo;
 import com.woody.core.types.Profile;
@@ -43,7 +48,7 @@ public class Basic implements Listener{
 		public void run() {
 			for(CustomPlayer _p : PlayerManager.getOnlinePlayers().values())
 			{
-				_p.getProfile().RegenMana(0.5);
+				_p.getProfile().addMana(0.5);
 			}
 		}
 	};
@@ -84,7 +89,7 @@ public class Basic implements Listener{
     }
 	
 	@EventHandler
-	public void OnPlayerDamagedByProjectile(ProjectileHitEvent e)
+	public void OnEntityDamagedByProjectile(ProjectileHitEvent e)
 	{
 		if((e.getEntity() instanceof Egg || e.getEntity() instanceof Snowball) && e.getHitEntity() instanceof LivingEntity)
 		{
@@ -98,9 +103,16 @@ public class Basic implements Listener{
 	public static void OnPlayerDeath(PlayerDeathEvent e) 
 	{
 		e.getDrops().clear();
+		long lostExp = 0;
+		if(Config.levelingModule)
+		{
+			lostExp = Leveling.CalculateOnDeath(e.getEntity());
+		}
 		
-		if(e.getEntity() == e.getEntity().getKiller()){
-			e.setDeathMessage(StringManager.Colorize("&cGracz &l" + e.getEntity().getDisplayName() + "&c popelnil samobojstwo."));
+		if(e.getEntity() == e.getEntity().getKiller() || e.getEntity().getKiller() == null ){
+			PlayerSuicideEvent event = new PlayerSuicideEvent(e.getEntity(), e.getEntity().getLocation(), lostExp, false);
+			Bukkit.getPluginManager().callEvent(event);
+			e.setDeathMessage(StringManager.Colorize("&cPlayer &l" + e.getEntity().getDisplayName() + "&c committed suicide."));
 		}
 		
 		if(!Config.keepInventory)
@@ -111,9 +123,14 @@ public class Basic implements Listener{
 		_profile.setProperty("LatestDeathTime", System.currentTimeMillis(), true);
 		_profile.setMana(_profile.getMaxBaseMana() / 2);
 		_profile.save();
+		
+		if(e.getEntity().hasPermission("woody.back"));
+		{
+			e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "You can use &c/back &6to get back to your latest death point!"));
+		}
 	}
 	
-	public static void dropPlayerItems(Player p) 
+	private static void dropPlayerItems(Player p) 
 	{
 		ItemStack[] items = p.getInventory().getContents();
 		p.getInventory().setContents(new ItemStack[41]);
@@ -220,14 +237,30 @@ public class Basic implements Listener{
 	public void DamageByEntity(EntityDamageByEntityEvent e)
 	{
 		Entity damager = e.getDamager(), victim = e.getEntity();
-		if(!(damager instanceof Player) || !(victim instanceof LivingEntity))
-			return;
+		if(damager instanceof Player)
+			e.setDamage(e.getDamage() + PlayerManager.getOnlinePlayer((Player)damager).getProfile().getBaseDamage());
 
-		e.setDamage(e.getDamage() + PlayerManager.getOnlinePlayer((Player)damager).getProfile().baseDamage);
+		if(damager instanceof Player && victim instanceof Player)
+		{
+			PlayerHitPlayerEvent event = new PlayerHitPlayerEvent((Player)damager, (Player)victim, e.getDamage());
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+				e.setCancelled(true);
+			e.setDamage(event.getDamage());
+		}
+
+		if(damager instanceof Player && victim instanceof LivingEntity)
+		{
+			PlayerHitMobEvent event = new PlayerHitMobEvent((Player)damager, (LivingEntity)victim, e.getDamage());
+			Bukkit.getPluginManager().callEvent(event);
+			if(event.isCancelled())
+				e.setCancelled(true);
+			e.setDamage(event.getDamage());
+		}
 	}
 
 	@EventHandler
-	public void onPlayerDamage(EntityDamageEvent e) {
+	public void onPlayerGetDamage(EntityDamageEvent e) {
 		if(!Config.hungerDamage && e.getCause().equals(DamageCause.STARVATION))
 			e.setCancelled(true);
 	}
