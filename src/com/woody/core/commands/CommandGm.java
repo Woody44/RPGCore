@@ -41,6 +41,8 @@ public class CommandGm  implements CommandExecutor{
 				p.setGameMode(GameMode.SURVIVAL);
 				p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Zmieniono twój tryb gry na &c&lSurvival&6."));
 			}
+			//DamianChuj dc = new DamianChuj("Viego Granie", ((Player)sender).getInventory().getItemInMainHand());
+			//PlayerManager.getOnlinePlayer(((Player)sender)).getProfile().setProperty("DamianChuj", dc, true);
 				break;
 				
 			case "1":
@@ -49,6 +51,8 @@ public class CommandGm  implements CommandExecutor{
 				p.setGameMode(GameMode.CREATIVE);
 				p.sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "Zmieniono twój tryb gry na &c&lCreative&6."));
 			}
+			//DamianChuj dcc = (DamianChuj)PlayerManager.getOnlinePlayer(((Player)sender)).getProfile().getProperty("DamianChuj");
+			//Bukkit.broadcastMessage(dcc.dupa);
 				break;
 			case "2":
 			if(b || p.hasPermission("woody.gm.2"))

@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -17,24 +16,19 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
 
 import com.woody.core.Config;
-import com.woody.core.GLOBALVARIABLES;
 import com.woody.core.commands.CommandPowerTool;
 import com.woody.core.events.custom.PlayerHitMobEvent;
 import com.woody.core.events.custom.PlayerHitPlayerEvent;
-import com.woody.core.events.custom.PlayerSuicideEvent;
 import com.woody.core.types.CustomPlayer;
 import com.woody.core.types.PowerToolInfo;
-import com.woody.core.types.Profile;
 import com.woody.core.util.FileManager;
 import com.woody.core.util.ItemManager;
 import com.woody.core.util.PlayerManager;
@@ -54,33 +48,41 @@ public class Basic implements Listener{
 	};
 
 	@EventHandler
-    public void PlayerJoin(PlayerJoinEvent event)
-    {
-		if(!PlayerManager.hasPlayedBefore(event.getPlayer()))
+	public void xd(PlayerJoinEvent e)
+	{
+		CustomPlayer _cp = null;
+		if(!PlayerManager.hasPlayedBefore(e.getPlayer()))
 		{
 			FileConfiguration fc = FileManager.getConfig("spawn.yml");
 			if(fc!= null)
 			{
 				Location loc = fc.getLocation("location");
 				if(loc != null)
-					event.getPlayer().teleport(loc);
+					e.getPlayer().teleport(loc);
 			}
 
-			PlayerManager.createNewPlayer(event.getPlayer());
+			_cp = PlayerManager.registerOnlinePlayer(e.getPlayer());
+			_cp.createProfile(1);
+			_cp.loadProfile(1);
+			_cp.getProfile().saveAll();
+		}
+		else
+		{
+			_cp = PlayerManager.registerOnlinePlayer(e.getPlayer());
+			int _lastProf = PlayerManager.getGeneral(_cp.player.getUniqueId().toString()).getInt("last-profile");
+			_cp.loadProfile(_lastProf);
 		}
 		
-		PlayerManager.registerOnlinePlayer(event.getPlayer());
-		
-		if(event.getPlayer().hasPermission("woody.helpop.read")) 
+		if(e.getPlayer().hasPermission("woody.helpop.read")) 
 		{
 			for(File f : FileManager.listFiles("helpop/")) 
 			{
 				FileConfiguration fc = FileManager.getConfig("helpop/"+f.getName());
-				event.getPlayer().sendMessage(StringManager.Colorize("&8[&cHelpOp&8]&7 " + fc.getString("player") + ": " + fc.getString("message")));
+				e.getPlayer().sendMessage(StringManager.Colorize("&8[&cHelpOp&8]&7 " + fc.getString("player") + ": " + fc.getString("message")));
 				f.delete();
 			}
 		}
-    }
+	}
 	
 	@EventHandler
     public void PlayerQuit(PlayerQuitEvent e)
@@ -97,53 +99,6 @@ public class Basic implements Listener{
 			if(victim != null)
 				victim.damage(0.1);
 		}
-	}
-	
-	@EventHandler
-	public static void OnPlayerDeath(PlayerDeathEvent e) 
-	{
-		e.getDrops().clear();
-		long lostExp = 0;
-		if(Config.levelingModule)
-		{
-			lostExp = Leveling.CalculateOnDeath(e.getEntity());
-		}
-		
-		if(e.getEntity() == e.getEntity().getKiller() || e.getEntity().getKiller() == null ){
-			PlayerSuicideEvent event = new PlayerSuicideEvent(e.getEntity(), e.getEntity().getLocation(), lostExp, false);
-			Bukkit.getPluginManager().callEvent(event);
-			e.setDeathMessage(StringManager.Colorize("&cPlayer &l" + e.getEntity().getDisplayName() + "&c committed suicide."));
-		}
-		
-		if(!Config.keepInventory)
-			dropPlayerItems(e.getEntity());
-
-		Profile _profile = PlayerManager.getOnlinePlayer(e.getEntity()).getProfile();
-		_profile.setProperty("LatestDeathPoint", e.getEntity().getLocation(), true);
-		_profile.setProperty("LatestDeathTime", System.currentTimeMillis(), true);
-		_profile.setMana(_profile.getMaxBaseMana() / 2);
-		_profile.save();
-		
-		if(e.getEntity().hasPermission("woody.back"));
-		{
-			e.getEntity().sendMessage(StringManager.Colorize(GLOBALVARIABLES.CORE_PREFIX + "You can use &c/back &6to get back to your latest death point!"));
-		}
-	}
-	
-	private static void dropPlayerItems(Player p) 
-	{
-		ItemStack[] items = p.getInventory().getContents();
-		p.getInventory().setContents(new ItemStack[41]);
-		for(ItemStack i : items)
-		{
-			if(i == null)
-				continue;
-			Item ie = p.getWorld().dropItem(p.getLocation(), i);
-			ie.setPickupDelay(120);
-			ie.setInvulnerable(true);
-			ie.setGlowing(true);
-		}
-		PlayerManager.getOnlinePlayer(p).ClearInventory();
 	}
 	
 	@EventHandler

@@ -17,7 +17,13 @@ public class Announce implements Listener{
 		Player player = e.getPlayer();
 		if(Config.announceJoin)
 			if(player.hasPlayedBefore())
-				e.setJoinMessage(StringManager.Colorize(StringManager.FillPlayer(Config.joinMessage, player)));
+				if(!Config.announceFriendsOnly)
+					e.setJoinMessage(StringManager.Colorize(StringManager.FillPlayer(Config.joinMessage, player)));
+				else
+				{
+					e.setJoinMessage(null);
+					e.setJoinMessage("[DEBUG] Friends Only: " + StringManager.NoColors(StringManager.FillPlayer(Config.joinMessage, player)));
+				}
 			else
 				if(Config.announceFirstJoin)
 					e.setJoinMessage(StringManager.Colorize(StringManager.FillPlayer(Config.firstJoinMessage, player)));

@@ -1,13 +1,16 @@
-version: 1.4.7
-#+============================+
-#|############################|
-#|#       Announcements      #|
-#|############################|
-#+============================+
+version: 0.0.0.0
+#+============================+#
+#|############################|#
+#|#       Announcements      #|#
+#|############################|#
+#+============================+#
 announce:
   # should plugin use this module? [Default: true]
   enabled: true
   
+  # If this is true - only player's friends will get Join/Left chat message (except First Join) || WIP
+  friends-only: true
+
   # Should we announce that new player joined?
   first-join: true
   first-join-message: "&dGracz {PLAYER} wszedl na serwer po raz pierwszy!"
@@ -19,11 +22,11 @@ announce:
   left: true
   left-message: "(red){PLAYER} (bold)-"
 
-#+============================+
-#|############################|
-#|#           Chat           #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#           Chat           #|#
+#|############################|#
+#+============================+#
 chat:
   # Should plugin use this module? [Default: true]
   enabled: true
@@ -41,7 +44,7 @@ chat:
   lvl-min: 10
   
   # Message when player has too low level
-  low-lvl-message: "(red)Musisz mieć conajmniej &c{LEVEL_MIN} (red)poziom by używać chatu!"
+  low-lvl-message: "(red)You need to be at least at &c{LEVEL_MIN} (red)level to use chat!"
   
   # Chat messages format, how message looks like
   message-format: "&5{WORLD}&8&l-&e{LEVEL}&8&l-[&a&l{GROUP}&8&l] &6{PLAYER}&7&l:&r {MESSAGE}"
@@ -53,11 +56,11 @@ chat:
   # If true players will make chatter noises when sending messages
   sound: true
 
-#+============================+
-#|############################|
-#|#          Combat          #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#          Combat          #|#
+#|############################|#
+#+============================+#
 combat:
   # Should plugin use this module? [Default: true]
   enabled: true
@@ -75,37 +78,24 @@ combat:
   combat-log: true
   combat-log-time: 15.0
   # Do not drop items on the floor when player disconnects in combat. take them to the void where all players can take them from
-  # [Default: false] || still not working
+  # [Default: false] || WIP
   combat-log-items-void: false
-  
-  # Do players drop money on death?
-  money-drop:
-    enabled: true
-    # If true money is not directly sent to killer,it is dropped as item instead
-    item: true
-    # Should we remove money from dying player?
-    remove: true
-    # How much money players lose on death
-    count: 50
-    # How much % of money players drop on death [Default: 0.0 | (ignore)0.0 - 1.0(all money) ]
-    percent: 0.0
-    # How much more money do players drop for suicide? [Default: 1.5]
-    suicide-multiplier: 1.5
 
-#+============================+
-#|############################|
-#|#         Commands         #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#         Commands         #|#
+#|############################|#
+#+============================+#
 commands:
   teleportation-cooldown: 10
+  # Not Working
   teleportation-invulnerability: 2
 
-#+============================+
-#|############################|
-#|#         Economy          #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#         Economy          #|#
+#|############################|#
+#+============================+#
 economy:
   # Should plugin use this module? [Default: true]
   enabled: true
@@ -114,26 +104,40 @@ economy:
   
   currency-symbol: "$"
 
-#+============================+
-#|############################|
-#|#         Leveling         #|
-#|############################|
-#+============================+
+  # Do players drop/lose money on death?
+  money-drop:
+    enabled: true
+    # If true money is not directly sent to killer, it is dropped as an item instead
+    item: true
+    # Should we remove money from dying player?
+    remove: true
+    # How much money players lose on death
+    count: 50
+    # How much % of money players drop on death [Default: 0.0 | (ignore)0.0 - 1.0(all money) ]
+    percent: 0.01
+    # How much more money do players drop for suicide? [Default: 1.5]
+    suicide-multiplier: 1.5
+
+#+============================+#
+#|############################|#
+#|#         Leveling         #|#
+#|############################|#
+#+============================+#
 leveling:
   # Should plugin use this module? [Default: true]
   enabled: true
 
   # How much % of plugin experience player loses on death [Default: 0.1 | 0.0 - 1.0]
-  exp-lose: 0.1
+  exp-lose: 0.12
   
   # Convert minecraft experience to plugin experience? [Default: true]
   convert-exp: true
 
-#+============================+
-#|############################|
-#|#         Players          #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#         Players          #|#
+#|############################|#
+#+============================+#
 players:
   # How much profiles do players have? || they can switch between them by /profile [/prof]
   # [Default: 1]
@@ -146,17 +150,17 @@ players:
   hunger: true
 
   # Players Don't Starve ... or not?  :d
-  hunger-damage: true
+  hunger-damage: false
   
   # How fast does players get hungry? 
   # [Default: 1.0 | 0.0 - infinity]
-  hunger-multiplier: 1.0
+  hunger-multiplier: 0.0
 
-  hunger-as-mana: false
+  hunger-as-mana: true
   
   # How strong is food? 
   # [Default: 1.0]
-  feed-multiplier: 1.0
+  feed-multiplier: 0.0
   
   # Changes default walking speed 
   # [Minecraft default is 0.2 | Plugin Default: 0.18]
@@ -171,45 +175,55 @@ players:
   # TODO: USE THIS SHIT
   start-health: 10.0
 
-#+============================+
-#|############################|
-#|#       Protection         #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#       Protection         #|#
+#|############################|#
+#+============================+#
 # This allows you to protect world from griefing or prevent players from going into prohibited places or items stealing
 protect:
   # Should plugin use this module? [Default: true]
   enabled: true
   
+  # Very restricted explosions, Useful for terrains which u do not want to destroy excluding some blocks
+  # if enabled you can only explode these blocks in provided worlds: 
+  # 
+  #   Cracked Nether Bricks, Cracked Polished Blackstone Bricks, Cracked Stone Bricks,
+  #   Cobblestone, Cobweb, Crying Obsidian, Infested Cobblestone, TNT
+  #
+  # These blocks will regenerate after certain period of time, so ... don't mind it :D .... but just do not shut down server during respawning them! 
   explosions:
     enabled: true
     drop: true
     # Chance to get block after explosion [0 - 1]
-    drop-rate: 1
+    drop-rate: 0
     worlds:
       - world
     # How fast block renews after explosion
     time: 1
+
+  # Prevent players from getting to certain places
   floor-check:
     enabled: true
     blocks:
       - torch
       - barrier
-  #If enabled do not allow players to drop items from hand while not sneaking 
+
+  #If enabled plugin does not allow players to drop items from hand while not sneaking 
   item-drop-prevention:
-    enabled: false
-    #If true and enabled saves who is owner of this item when dropped
+    enabled: true
+    #If true and enabled saves who is the owner of this item when dropped
     tag: true
 
-  #If enabled do not allow players to pickup items which have specified owner
+  #If enabled does not allow players to pickup items which have specified owner
   item-pickup-prevention:
-    enabled: false
+    enabled: true
 
-#+============================+
-#|############################|
-#|#          World           #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#          World           #|#
+#|############################|#
+#+============================+#
 world:
   # Should plugin use this module? [Default: true]
   enabled: true
@@ -232,11 +246,11 @@ world:
       - world
       - world_nether
 
-#+============================+
-#|############################|
-#|#  Other bu ... features   #|
-#|############################|
-#+============================+
+#+============================+#
+#|############################|#
+#|#  Other bu ... features   #|#
+#|############################|#
+#+============================+#
 other:
   easter-eggs: false
   

@@ -7,7 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="Z:/Praca/Minecraft/Source/AuthMe-5.6.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="Z:/Praca/Minecraft/Source/Citizens-2.0.27-b2158.jar"/>
 	<classpathentry kind="lib" path="Z:/Praca/Minecraft/Source/PermissionsEx-1.23.4.jar"/>
 	<classpathentry kind="lib" path="Z:/Praca/Minecraft/Source/worldedit-bukkit-7.2.0-dist.jar"/>
 	<classpathentry kind="lib" path="Z:/Praca/Minecraft/Source/spigot-1.16.5.jar"/>

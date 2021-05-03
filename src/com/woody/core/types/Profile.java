@@ -331,7 +331,6 @@ public class Profile {
 				if(customProperties.containsKey(key))
 					customProperties.remove(key);
 			}
-			save();
 			return true;
 		}
 		else 
@@ -359,7 +358,6 @@ public class Profile {
 				if(!customProperties.containsKey(key))
 				{
 					customProperties.put(key, value);
-					save();
 					return true;
 				}
 				else
@@ -368,7 +366,6 @@ public class Profile {
 					{
 						customProperties.remove(key);
 						customProperties.put(key, value);
-						save();
 						return true;
 					}
 					return false;
@@ -416,7 +413,6 @@ public class Profile {
 			setLevel(_level);
 			experience = _experience;
 			skillPoints += (int)Config.levels.get(_level).get("sp");
-			save();
 			
 			leveled = true;
 			event = new LevelUpEvent(player, _level, _experience);

@@ -1,5 +1,7 @@
 package com.woody.core.events;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -19,8 +21,21 @@ import com.woody.core.Main;
 import com.woody.core.util.ExternalTools;
 import com.woody.core.util.ItemManager;
 
+
 public class Protect implements Listener{
 	
+	ArrayList<Material> explodableMats = new ArrayList<>(Arrays.asList(
+		Material.CRACKED_NETHER_BRICKS,
+		Material.CRACKED_POLISHED_BLACKSTONE_BRICKS,
+		Material.CRACKED_STONE_BRICKS,
+		Material.INFESTED_CRACKED_STONE_BRICKS,
+		Material.COBBLESTONE,
+		Material.COBWEB,
+		Material.CRYING_OBSIDIAN,
+		Material.INFESTED_COBBLESTONE,
+		Material.TNT
+		));
+
 	@EventHandler
 	public void OnEntityDamage(EntityDamageByEntityEvent event) 
 	{
@@ -72,13 +87,9 @@ public class Protect implements Listener{
 		for(Block b : Blocks) 
 		{
 			Material mat = b.getType();
-			if(mat == Material.BEDROCK ||
-					mat == Material.CHEST ||
-					mat == Material.FURNACE ||
-					mat == Material.TRAPPED_CHEST ||
-					mat == Material.BLAST_FURNACE) 
+			if(!explodableMats.contains(mat))
 				continue;
-			
+
 			if(mat == Material.TNT) 
 			{
 				b.setType(Material.AIR);
@@ -91,10 +102,7 @@ public class Protect implements Listener{
 					if(ExternalTools.Chance(Config.explosionsDropRate))
 						b.breakNaturally();
 				}
-				if(b.getType() != Material.CRACKED_STONE_BRICKS && b.getType() != Material.INFESTED_CRACKED_STONE_BRICKS && b.getType() != Material.CRACKED_POLISHED_BLACKSTONE_BRICKS && b.getType() != Material.CRACKED_NETHER_BRICKS && b.getType() != Material.GLASS && b.getType() != Material.GLASS_PANE && b.getType() != Material.COBBLESTONE && b.getType() != Material.TALL_GRASS && b.getType() != Material.GRASS)
-					b.setType(Material.BEDROCK);
-				else
-					b.setType(Material.AIR);
+				b.setType(Material.AIR);
 				Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, () -> {
 					b.setType(mat);
 				}, n * (int)(20 *Config.renewTime));

@@ -30,8 +30,6 @@ public class CommandHeal implements CommandExecutor{
 			p = Bukkit.getPlayer(args[0]);
 		else
 			p = (Player)sender;
-		
-		Bukkit.broadcastMessage(label);
 
 		if(label.contains("heal"))
 		{

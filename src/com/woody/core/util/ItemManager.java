@@ -12,11 +12,20 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
 
 public class ItemManager {
 
+	public static void AddPotion(ItemStack item, PotionEffect potion)
+	{
+		PotionMeta meta = (PotionMeta)item.getItemMeta();
+		meta.addCustomEffect(potion, true);
+		item.setItemMeta(meta);
+	}
+	
 	public static ItemStack AddLore(ItemStack item, String[] value) 
 	{
 		ArrayList<String> lore;
@@ -258,7 +267,6 @@ public class ItemManager {
 		{
 			int dmg = (int) (item.getType().getMaxDurability() * (Integer.parseInt(value.replace("%", "")) * 0.01));
 	        meta.setDamage(dmg);
-	        Bukkit.broadcastMessage("" + dmg);
 		}
 		else
 		{

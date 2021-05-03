@@ -30,7 +30,8 @@ public class Config {
 	public static boolean 
 		announceFirstJoin,
 		announceJoin,
-		announceLeft;
+		announceLeft,
+		announceFriendsOnly;
 	public static String 
 		firstJoinMessage,
 		joinMessage, 
@@ -55,14 +56,10 @@ public class Config {
 	public static boolean 
 		allowHeadshots,
 		combatLog,
-		combatLogVoidItems,
-		moneyDrop, moneyItem, removeMoney;
+		combatLogVoidItems;
 	public static double 
 		headshotMultiplier,
-		combatLogTime,
-		moneyCount,
-		moneyPercent,
-		suicideMultiplier;
+		combatLogTime;
 	
 	//Commands Module
 	public static int
@@ -74,6 +71,10 @@ public class Config {
 	public static String 
 		currencySymbol;
 	public static int startBalance;
+	public static boolean 
+		moneyDrop, moneyItem, removeMoney;
+	public static double 
+		moneyCount, moneyPercent, suicideMultiplier;
 	
 	//Leveling Module
 	public static HashMap<Integer, HashMap<String, Object>>
@@ -153,6 +154,7 @@ public class Config {
 	//Announce Module
 		if(announcementsModule)
 		{
+			announceFriendsOnly = config.getBoolean("announce.friends-only");
 			announceFirstJoin = config.getBoolean("announce.first-join");
 			announceJoin = config.getBoolean("announce.join");
 			announceLeft = config.getBoolean("announce.left");
@@ -199,23 +201,6 @@ public class Config {
 				combatLog = false;
 			
 			combatLogVoidItems = config.getBoolean("combat.combat-log-items-void");
-			moneyDrop = config.getBoolean("combat.money-drop.enabled");
-			moneyItem = config.getBoolean("combat.money-drop.item");
-			removeMoney = config.getBoolean("combat.money-drop.remove");
-			moneyCount = config.getDouble("combat.money-drop.count");
-			if(moneyCount < 0.0)
-				moneyCount = 0.0;
-			
-			moneyPercent = config.getDouble("combat.money-drop.percent");
-			if(moneyPercent > 1.0)
-				moneyPercent = 1.0;
-			else
-				if(moneyPercent < 0.0)
-					moneyPercent = 0.0;
-			
-			suicideMultiplier = config.getDouble("combat.money-drop.suicide-multiplier");
-			if(suicideMultiplier < 0.0)
-				suicideMultiplier = 1.0;
 		}
 		
 	//Commands
@@ -226,6 +211,23 @@ public class Config {
 		{
 			currencySymbol = config.getString("economy.currency-symbol");
 			startBalance = config.getInt("economy.start-balance");
+			moneyDrop = config.getBoolean("economy.money-drop.enabled");
+			moneyItem = config.getBoolean("economy.money-drop.item");
+			removeMoney = config.getBoolean("economy.money-drop.remove");
+			moneyCount = config.getDouble("economy.money-drop.count");
+			if(moneyCount < 0.0)
+				moneyCount = 0.0;
+			
+			moneyPercent = config.getDouble("economy.money-drop.percent");
+			if(moneyPercent > 1.0)
+				moneyPercent = 1.0;
+			else
+				if(moneyPercent < 0.0)
+					moneyPercent = 0.0;
+			
+			suicideMultiplier = config.getDouble("economy.money-drop.suicide-multiplier");
+			if(suicideMultiplier < 0.0)
+				suicideMultiplier = 1.0;
 		}
 		
 	//Leveling Module

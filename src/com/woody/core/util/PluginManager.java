@@ -50,12 +50,13 @@ public class PluginManager {
 		
 		ArrayList<Listener> events = new ArrayList<Listener>();
 			events.add(new Basic());
+			events.add(new MyEvents());
 		if(Config.announcementsModule)
 			events.add(new Announce());
 		if(Config.chatModule)
 			events.add(new Chat());
-		if(Config.combatModule)
-			events.add(new Combat());
+		/*if(Config.combatModule)
+			events.add(new Combat());*/
 		if(Config.economyModule)
 			events.add(new Economy());
 		if(Config.levelingModule)

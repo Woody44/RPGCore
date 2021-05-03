@@ -28,12 +28,16 @@ public class PlayerManager{
 		return onlinePlayers;
 	}
 	
-	public static void registerOnlinePlayer(Player player)
+	public static CustomPlayer registerOnlinePlayer(Player player)
 	{
+		CustomPlayer _toReturn;
 		if(!hasPlayedBefore(player))
-			onlinePlayers.put(player.getUniqueId().toString(), createNewPlayer(player));
+			_toReturn = createNewPlayer(player);
 		else
-			onlinePlayers.put(player.getUniqueId().toString(), loadPlayer(player));
+			_toReturn = loadPlayer(player);
+			
+		onlinePlayers.put(player.getUniqueId().toString(), _toReturn);
+		return _toReturn;
 	}
 	
 	public static void unregisterOnlinePlayer(Player player) 
@@ -48,7 +52,7 @@ public class PlayerManager{
 	}
 
 	public static CustomPlayer loadPlayer(Player p){
-		return new CustomPlayer(p, getGeneral(p.getUniqueId().toString()).getInt("last-profile"));
+		return new CustomPlayer(p);
 	}
 	
 	public static void HideFromOthers(Player p) 

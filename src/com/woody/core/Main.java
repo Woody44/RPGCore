@@ -15,70 +15,66 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import com.woody.core.events.Basic;
+import com.woody.core.events.custom.CoreReloadedEvent;
 import com.woody.core.tabs.*;
+import com.woody.core.types.CustomPlayer;
 
 public class Main extends JavaPlugin implements Listener{
 	public static Main instance;
 	@Override
 	public void onLoad()
 	{
+		System.out.println("PLUGIN Woody_core IS TAGGED AS ALPHA VERSION, IT CAN BE UNSTABLE!\nSEND ANY FEEDBACK TO OWNER PLEASE");
+		LocalDate ld = LocalDate.now();
+		int year = ld.getYear();
+		Month month = ld.getMonth();
+		int day = ld.getDayOfMonth();
+		String actualDate = day + "." + month.getValue() + "."+year;
+
 		instance = this;
 		saveDefaultConfig();
 		if(!FileManager.checkFileExistence("badwords.yml"))
 			saveResource("badwords.yml", false);
 		if(!FileManager.checkFileExistence("levels.yml"))
 			saveResource("levels.yml", false);
-	}
-	
-	@Override
-	public void onEnable() 
-	{
-		LocalDate ld = LocalDate.now();
-		int year = ld.getYear();
-		Month month = ld.getMonth();
-		int day = ld.getDayOfMonth();
-		String actualDate = day + "." + month.getValue() + "."+year;
-		/*if(Config.demo)
-		{
-			if(year >= 2021 && month.getValue() >= 4 && day >=30)
-			{
-				BukkitRunnable run = new BukkitRunnable() {
 
-					@Override
-					public void run() {
-						getLogger().warning("Wersja Demonstracyjna wygasla z dniem " + "30.04.2021" + ".! Skontaktuj sie z autorem pluginu.");
-						Bukkit.getPluginManager().disablePlugin(instance);
-					}
-					
-				};
-				
-				run.runTaskLater(this, 1L);
+		if(instance.getConfig() != null && instance.getConfig().getString("version") != null && !instance.getConfig().getString("version").contentEquals(this.getDescription().getVersion()))
+		{
+			if(instance.getConfig().getString("version") == "0.0.0.0")
+			{
+				getConfig().set("version", Main.instance.getDescription().getVersion());
+				saveConfig();
 			}
 			else
 			{
-				getLogger().warning("Wersja Demonstracyjna jest aktualna do " + "30.04.2021" + ".!");
+				getLogger().warning("Config File Version is incompatible with Plugin version!");
+				getLogger().warning("Dumping old Config!");
+				
+				new File(getDataFolder() + "/config.yml").renameTo(new File(getDataFolder() + "/config.yml.old_" + actualDate));
+				saveDefaultConfig();
+				getConfig().set("version", Main.instance.getDescription().getVersion());
+				saveConfig();
 			}
-		}*/
-		
-		if(!instance.getConfig().getString("version").contentEquals(this.getDescription().getVersion()))
-		{
-			getLogger().warning("Config File Version is incompatible with Plugin version!");
-			getLogger().warning("Dumping old Config!");
-			
-			new File(getDataFolder() + "/config.yml").renameTo(new File(getDataFolder() + "/config.yml.old_" + actualDate));
-			saveDefaultConfig();
-			getConfig().set("version", Main.instance.getDescription().getVersion());
 		}
-		
+
 		Config.Reload();
+
+		if(Bukkit.getOnlinePlayers().size() > 0)
+		{
+			CoreReloadedEvent event = new CoreReloadedEvent();
+			Bukkit.getPluginManager().callEvent(event);
+			afterReload();
+		}
+	}
+	
+	@Override
+	public void onEnable()
+	{
 		PluginManager.registerCommands();
 		PluginManager.registerEvents();
 		registerOther();
 		if(Config.hungerAsMana)
 			Bukkit.getScheduler().runTaskTimer(instance, Basic.manaRegenTask, 60, 60);
-		
-		if(Bukkit.getOnlinePlayers().size() > 0)
-		afterReload();
 	}
 	
 	@Override
@@ -102,7 +98,11 @@ public class Main extends JavaPlugin implements Listener{
 		Bukkit.getLogger().warning("I see you are reloading server ... u r lucky bcs my plugin handles it correctly! but do not do this pls, other plugins may die.");
 		for(Player p : Bukkit.getOnlinePlayers())
 			if(p!=null)
-				PlayerManager.registerOnlinePlayer(p);
+			{
+				CustomPlayer _cp = PlayerManager.registerOnlinePlayer(p);
+				int _lastProf = PlayerManager.getGeneral(_cp.player.getUniqueId().toString()).getInt("last-profile");
+				_cp.loadProfile(_lastProf);
+			}
 	}
 	
 	private static void beforeReload() 
@@ -112,25 +112,17 @@ public class Main extends JavaPlugin implements Listener{
 				PlayerManager.getOnlinePlayer(p).getProfile().saveAll();
 	}
 	//TODO: Quest z SkyJumpem, Secret
+
 	//TODO: Przywitanie gracza
-	//TODO: Startowe Questy
-	//TODO: LootboxSystem
-	//TODO: Poprawić Wybuchy
-	//TODO: NPC Randomowi
-	//TODO: NPC Fabularni
 	//TODO: Kolorowe Tabliczki
 	//TODO: Nawigacja po punktach
-	//TODO: Kanałyh na chacie
+	//TODO: Kanały na chacie
 	//TODO: Lista znajomych
 	//TODO: Party
-	//TODO: Exp Share
-	//TODO: Loot Share
 	//TODO: Menu graficzne Profili
 	//TODO: Menu Graficzne Party
 	//TODO: Menu Graficzne Listy Znajomych
 	//TODO: Tab Completery
 	//TODO: TPA
-	//TODO: Wylaczanie graczy
-	//TODO: Conversation System
-	//TODO: Dawanie pieniedzy
+	//TODO: Trades
 }

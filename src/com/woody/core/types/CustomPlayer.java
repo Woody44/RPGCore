@@ -15,8 +15,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.woody.core.Config;
 import com.woody.core.GLOBALVARIABLES;
-import com.woody.core.events.custom.PlayerProfileCreated;
-import com.woody.core.events.custom.PlayerProfileSwitch;
+import com.woody.core.events.custom.PlayerProfileCreationEvent;
+import com.woody.core.events.custom.PlayerProfileLoadedEvent;
+import com.woody.core.events.custom.PlayerProfileSwitchEvent;
 import com.woody.core.events.custom.PlayerSendFriendRequest;
 import com.woody.core.util.FileManager;
 import com.woody.core.util.PlayerManager;
@@ -123,22 +124,10 @@ public class CustomPlayer {
 		}
 	}
 	//
-	public CustomPlayer(Player _player)
-	{
-		player = _player;
-		createProfile(1);
-		loadProfile(1);
-		profile.saveAll();
-	}
 	
-	public CustomPlayer(Player _player, int profileId) 
+	public CustomPlayer(Player _player) 
 	{
 		player = _player;
-		if(!isProfileValid(profileId))
-			profileId = Integer.parseInt(getProfilesIdsList().get(0));
-
-		loadProfile(profileId);
-		profile.levelUp();
 	}
 	
 	public CustomPlayer(String _player, int profileId) 
@@ -146,9 +135,6 @@ public class CustomPlayer {
 		player = Bukkit.getPlayer(UUID.fromString(_player));
 		if(!isProfileValid(profileId))
 			profileId = Integer.parseInt(getProfilesIdsList().get(0));
-
-		loadProfile(profileId);
-		profile.levelUp();
 	}
 	
 	public boolean isProfileValid(int id) 
@@ -180,7 +166,7 @@ public class CustomPlayer {
 		return toreturn;
 	}
 	
-	private void loadProfile(int profileId) 
+	public void loadProfile(int profileId) 
 	{
 		if(!isProfileValid(profileId))
 			return;
@@ -203,12 +189,16 @@ public class CustomPlayer {
 			}
 		}
 
+		profile.levelUp();
 		player.getInventory().setContents(new ItemStack[41]);
 		player.getInventory().setContents(profile.getSavedInventory());
 		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(profile.getMaxBaseHealth());
 		player.setHealth(profile.getHealth());
 		profile.updateFoodBar();
 		profile.updateExpBar();
+
+		PlayerProfileLoadedEvent event = new PlayerProfileLoadedEvent(player, profile.id);
+		Bukkit.getPluginManager().callEvent(event);
 	}
 	
 	public Profile getProfile() 
@@ -224,7 +214,12 @@ public class CustomPlayer {
 	
 	public void switchProfile(int _profileId) 
 	{
-		PlayerProfileSwitch event = new PlayerProfileSwitch(player, _profileId, profile.id);
+		PlayerProfileSwitchEvent event;
+		if(profile == null)
+			event = new PlayerProfileSwitchEvent(player, _profileId, -1);
+		else
+			event = new PlayerProfileSwitchEvent(player, _profileId, profile.id);
+		
 		Bukkit.getPluginManager().callEvent(event);
 		if(event.isCancelled())
 			return;
@@ -244,7 +239,7 @@ public class CustomPlayer {
 	
 	public Profile createProfile(int profileId)
 	{
-		PlayerProfileCreated event = new PlayerProfileCreated(player, profileId);
+		PlayerProfileCreationEvent event = new PlayerProfileCreationEvent(player, profileId);
 		Bukkit.getPluginManager().callEvent(event);
 
 		if(event.isCancelled())
